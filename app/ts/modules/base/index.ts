@@ -24,6 +24,8 @@
 
 import * as angular from "angular"
 import * as bind from "./bind"
+import {downgradeInjectable} from "@angular/upgrade/static"
+
 import {ConfigurationService} from "./conf"
 import {ContribUserSettingsController, ContribController} from "./contrib"
 import {FiltersStorageService} from "./filters"
@@ -45,7 +47,7 @@ module.directive("tgBoAlt", bind.BindOnceAltDirective);
 module.directive("tgBoTitle", bind.BindOnceTitleDirective);
 module.directive("tgBindTitle", bind.BindTitleDirective);
 module.directive("tgBindHtml", bind.BindHtmlDirective);
-module.service("$tgConfig", ConfigurationService);
+module.service("$tgConfig", downgradeInjectable(ConfigurationService));
 module.controller("ContribUserSettingsController", ContribUserSettingsController);
 module.controller("ContribController", ContribController);
 module.service("FiltersStorageService", FiltersStorageService);

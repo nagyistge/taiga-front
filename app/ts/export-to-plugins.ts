@@ -24,7 +24,6 @@
 
 import * as utils from "./utils"
 import * as _ from "lodash"
-import * as Promise from "bluebird"
 
 var taiga = {
     addClass: utils.addClass,
@@ -61,4 +60,3 @@ var taiga = {
 
 (<any>window).taiga = taiga;
 (<any>window)._ = _;
-(<any>window).Promise = Promise;

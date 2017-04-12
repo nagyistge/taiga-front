@@ -23,9 +23,12 @@
  */
 
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
 
+@Injectable()
 export class ConfigurationService {
-    config:any
+    config: any;
+
     constructor() {
         this.config = (<any>window).taigaConfig;
     }

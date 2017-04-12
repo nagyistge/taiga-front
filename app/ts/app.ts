@@ -32,6 +32,12 @@ import {checksley} from "./libs/checksley"
 declare var _version:string;
 declare var ljs:any;
 
+import 'reflect-metadata'
+import 'zone.js'
+import { UpgradeModule } from '@angular/upgrade/static';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app.module';
+
 import "ng-infinite-scroll"
 import "angular-route"
 import "angular-sanitize"
@@ -1033,5 +1039,8 @@ export function run() {
         init
     ]);
 
-    angular.bootstrap(document, ['taiga']);
+    platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
+      const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
+      upgrade.bootstrap(document.body, ['taiga'], {strictDi: true});
+    });
 }
