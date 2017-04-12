@@ -22,18 +22,11 @@
  * File: modules/base/storage.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
 
-export class StorageService extends Service {
-    static initClass() {
-        this.$inject = ["$rootScope"];
-    }
-
-    constructor($rootScope) {
-        super();
-    }
-
+@Injectable()
+export class StorageService {
     get(key, _default=null) {
         let serializedValue = localStorage.getItem(key);
         if (serializedValue === null) {
@@ -66,4 +59,3 @@ export class StorageService extends Service {
         return localStorage.clear();
     }
 }
-StorageService.initClass();

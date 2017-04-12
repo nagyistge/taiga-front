@@ -57,8 +57,8 @@ module.factory("$tgModel", ["$q", "$http", "$tgUrls", "$tgStorage", modelProvide
 module.service("$tgNavUrls", NavigationUrlsService);
 module.directive("tgNav", ["$tgNavUrls", "$tgAuth", "$q", "$tgLocation", "lightboxService", NavigationUrlsDirective]);
 module.service("$tgRepo", RepositoryService);
-module.service("$tgStorage", StorageService);
-module.service('$tgUrls', UrlsService);
+module.service("$tgStorage", downgradeInjectable(StorageService));
+module.service('$tgUrls', downgradeInjectable(UrlsService));
 
 //############################################################################
 //# Main Directive

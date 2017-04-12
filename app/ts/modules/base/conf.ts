@@ -33,8 +33,7 @@ export class ConfigurationService {
         this.config = (<any>window).taigaConfig;
     }
 
-    get(key, defaultValue) {
-        if (defaultValue == null) { defaultValue = null; }
+    get(key, defaultValue=null) {
         if (_.has(this.config, key)) {
             return this.config[key];
         }

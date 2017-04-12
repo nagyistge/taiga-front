@@ -22,27 +22,21 @@
  * File: modules/base/http.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {ConfigurationService} from "./conf"
 
 let format = function(fmt, obj) {
     obj = _.clone(obj);
     return fmt.replace(/%s/g, match => String(obj.shift()));
 };
 
-export class UrlsService extends Service {
-    config:any
-    urls:any
+@Injectable()
+export class UrlsService {
+    urls:any = {}
     mainUrl:any
 
-    static initClass() {
-        this.$inject = ["$tgConfig"];
-    }
-
-    constructor(config) {
-        super()
-        this.config = config;
-        this.urls = {};
+    constructor(private config: ConfigurationService) {
         this.mainUrl = this.config.get("api");
     }
 
@@ -77,4 +71,3 @@ export class UrlsService extends Service {
         return `${window.location.protocol}//${window.location.host}/${url}`;
     }
 }
-UrlsService.initClass();
