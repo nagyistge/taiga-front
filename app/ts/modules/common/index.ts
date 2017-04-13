@@ -39,7 +39,8 @@ import {LoaderDirective, Loader} from "./loader"
 import {TgLoadingService, LoadingDirective} from "./loading"
 import {UsStatusDirective, RelatedTaskStatusDirective} from "./popovers"
 import {ExceptionHandlerFactory} from "./raven-logger"
-import {TagsDirective, ColorizeTagsBacklogDirective, LbTagLineDirective} from "./tags"
+import {TagsDirective, ColorizeBacklogTags, LbTagLineDirective} from "./tags"
+import {downgradeComponent} from "@angular/upgrade/static"
 
 export let module = angular.module("taigaCommon", []);
 // common analytics
@@ -140,7 +141,7 @@ module.factory("$exceptionHandler", ["$log", "$tgConfig", ExceptionHandlerFactor
 
 // Common tags
 module.directive("tgTags", TagsDirective);
-module.directive("tgColorizeBacklogTags", ColorizeTagsBacklogDirective);
+module.directive("tgColorizeBacklogTags", downgradeComponent({component: ColorizeBacklogTags}));
 module.directive("tgLbTagLine", ["$tgResources", "$tgTemplate", "$compile", LbTagLineDirective]);
 
 //############################################################################

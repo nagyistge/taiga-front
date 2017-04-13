@@ -26,6 +26,7 @@ import {bindOnce, trim} from "../../utils"
 import {Awesomplete} from "awesomplete"
 import * as angular from "angular"
 import * as _ from "lodash"
+import {Component, Input} from "@angular/core"
 
 // Directive that parses/format tags inputfield.
 
@@ -57,41 +58,42 @@ export let TagsDirective = function() {
     };
 };
 
-export let ColorizeTagsBacklogDirective = function() {
-    let template = _.template(`\
-<% _.each(tags, function(tag) { %>
-    <% if (tag[1] !== null) { %>
-    <span class="tag"
-          style="border-left: 5px solid <%- tag[1] %>"
-          title="<%- tag[0] %>">
-          <%- tag[0] %>
-    </span>
-    <% } %>
-<% }) %>
-<% _.each(tags, function(tag) { %>
-    <% if (tag[1] === null) { %>
-    <span class="tag"
-          title="<%- tag[0] %>">
-          <%- tag[0] %>
-    </span>
-    <% } %>
-<% }) %>\
-`);
+@Component({
+  selector: 'tg-colorize-backlog-tag',
+  styles: ['h1 { font-weight: normal; }'],
+  template: `
+      <span
+          class="tag"
+          [style.border-left]="getBorder()"
+          title="{{name}}">
+          {{name}}
+      </span>
+  `
+})
+export class ColorizeBacklogTag {
+    @Input("name") name: any = [];
+    @Input("color") color: any = [];
 
-    let link = function($scope, $el, $attrs, $ctrl) {
-        let render = function(tags) {
-            let html = template({tags});
-            return $el.html(html);
-        };
+    getBorder() {
+        if(this.color === null) {
+            return ""
+        }
+        return `5px solid ${this.color}`
+    }
+};
 
-        $scope.$watch($attrs.tgColorizeBacklogTags, function(tags) {
-            if (tags != null) { return render(tags); }
-        });
-
-        return $scope.$on("$destroy", () => $el.off());
-    };
-
-    return {link};
+@Component({
+  selector: 'tg-colorize-backlog-tags',
+  template: `
+     <tg-colorize-backlog-tag
+        *ngFor="let tag of tags"
+        [name]="tag[0]"
+        [color]="tag[1]">
+     </tg-colorize-backlog-tag>
+  `
+})
+export class ColorizeBacklogTags {
+    @Input("tags") tags: any = [];
 };
 
 //############################################################################
