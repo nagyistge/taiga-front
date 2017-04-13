@@ -39,7 +39,8 @@ import {LoaderDirective, Loader} from "./loader"
 import {TgLoadingService, LoadingDirective} from "./loading"
 import {UsStatusDirective, RelatedTaskStatusDirective} from "./popovers"
 import {ExceptionHandlerFactory} from "./raven-logger"
-import {TagsDirective, ColorizeBacklogTags, LbTagLineDirective} from "./tags"
+import {TagsDirective, LbTagLineDirective} from "./tags"
+import {ColorizeBacklogTags} from "./tags.component"
 import {downgradeComponent} from "@angular/upgrade/static"
 
 export let module = angular.module("taigaCommon", []);

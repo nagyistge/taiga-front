@@ -58,44 +58,6 @@ export let TagsDirective = function() {
     };
 };
 
-@Component({
-  selector: 'tg-colorize-backlog-tag',
-  styles: ['h1 { font-weight: normal; }'],
-  template: `
-      <span
-          class="tag"
-          [style.border-left]="getBorder()"
-          title="{{name}}">
-          {{name}}
-      </span>
-  `
-})
-export class ColorizeBacklogTag {
-    @Input("name") name: any = [];
-    @Input("color") color: any = [];
-
-    getBorder() {
-        if(this.color === null) {
-            return ""
-        }
-        return `5px solid ${this.color}`
-    }
-};
-
-@Component({
-  selector: 'tg-colorize-backlog-tags',
-  template: `
-     <tg-colorize-backlog-tag
-        *ngFor="let tag of tags"
-        [name]="tag[0]"
-        [color]="tag[1]">
-     </tg-colorize-backlog-tag>
-  `
-})
-export class ColorizeBacklogTags {
-    @Input("tags") tags: any = [];
-};
-
 //############################################################################
 //# TagLine  Directive (for Lightboxes)
 //############################################################################
