@@ -75,10 +75,7 @@ div.wrapper
                             tg-nav="user-profile:username=member.get('username')",
                             title="{{::member.get('full_name')}}"
                         )
-                            img(
-                                tg-avatar="member"
-                                alt="{{::member.get('full_name')}}"
-                            )
+                            tg-avatar([user]="member")
                             tg-svg(
                                 ng-if="member.get('id') == vm.project.getIn(['owner', 'id'])"
                                 svg-icon="icon-badge"

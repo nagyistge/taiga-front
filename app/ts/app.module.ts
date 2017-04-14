@@ -5,6 +5,8 @@ import { UpgradeModule } from "@angular/upgrade/static"
 import { ConfigurationService } from './modules/base/conf';
 import { StorageService } from './modules/base/storage';
 import { Svg } from './modules/common';
+import { Avatar } from '../modules/components/avatar/avatar.component';
+import { AvatarService } from '../modules/components/avatar/avatar.service';
 import { UrlsService } from './modules/base/urls';
 import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.component';
 
@@ -17,15 +19,18 @@ import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.c
     ColorizeBacklogTag,
     ColorizeBacklogTags,
     Svg,
+    Avatar,
   ],
   providers: [
     ConfigurationService,
     StorageService,
     UrlsService,
+    AvatarService,
   ],
   entryComponents: [
     ColorizeBacklogTags,
     Svg,
+    Avatar,
   ]
 })
 export class AppModule {

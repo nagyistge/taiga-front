@@ -18,6 +18,7 @@
  */
 
 import * as angular from "angular"
+import {downgradeComponent, downgradeInjectable} from "@angular/upgrade/static"
 
 import {AssignedItemDirective} from "./assigned-to/assigned-item/assigned-item.directive"
 import {AssignedToController} from "./assigned-to/assigned-to.controller"
@@ -39,7 +40,8 @@ import {AttachmentsSimpleController} from "./attachments-simple/attachments-simp
 import {AttachmentsSimpleDirective} from "./attachments-simple/attachments-simple.directive"
 import {AttachmentSortableDirective} from "./attachments-sortable/attachments-sortable.directive"
 import {AutoSelectDirective} from "./auto-select/auto-select.directive"
-import {AvatarDirective} from "./avatar/avatar.directive"
+import {Avatar} from "./avatar/avatar.component"
+import {AvatarService} from "./avatar/avatar.service"
 import {BelongToEpicsDirective} from "./belong-to-epics/belong-to-epics.directive"
 import {BindCode} from "./bind-code.directive"
 import {BoardZoomDirective} from "./board-zoom/board-zoom.directive"
@@ -112,8 +114,8 @@ module.controller("AttachmentsSimple", AttachmentsSimpleController);
 module.directive("tgAttachmentsSimple", AttachmentsSimpleDirective);
 module.directive("tgAttachmentsSortable", AttachmentSortableDirective);
 module.directive("tgAutoSelect", AutoSelectDirective);
-module.directive("tgAvatar", AvatarDirective);
-module.directive("tgAvatarBig", AvatarDirective);
+module.directive("tgAvatar", downgradeComponent({component: Avatar}));
+module.service("tgAvatarService", downgradeInjectable(AvatarService));
 module.directive("tgBelongToEpics", BelongToEpicsDirective);
 module.directive("tgBindCode", ["$sce", "$parse", "$compile", "tgWysiwygService", "tgWysiwygCodeHightlighterService", BindCode]);
 module.directive("tgBoardZoom", [BoardZoomDirective]);

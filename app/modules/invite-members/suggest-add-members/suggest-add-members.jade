@@ -24,8 +24,5 @@
             tg-repeat="contact in vm.filteredContacts"
             ng-click="vm.setInvited(contact)"
         )
-            img.add-member-suggest-avatar(
-                tg-avatar="contact"
-                alt="{{contact.get('full_name_display')}}"
-            )
+            tg-avatar.add-member-suggest-avatar([user]="contact")
             span.add-member-suggest-name {{contact.get('full_name_display')}}

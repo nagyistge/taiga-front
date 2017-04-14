@@ -4,10 +4,7 @@ form.invite-members-form(ng-submit="vm.sendInvites(vm.inviteContacts)")
             ng-repeat="contact in vm.contactsToInvite | toMutable track by contact.id"
         )
             .invite-members-single-data
-                img.invite-members-single-avatar(
-                    tg-avatar="contact"
-                    alt="{{contact.full_name}}"
-                )
+                tg-avatar.invite-members-single-avatar([user]="contact")
                 span.invite-members-single-name {{contact.full_name}}
                 a.invite-members-single-remove.e2e-invite-members-single-remove(
                     href=""

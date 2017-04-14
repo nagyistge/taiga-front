@@ -1,8 +1,5 @@
 .comment-wrapper(ng-if="!vm.comment.delete_comment_date")
-    img.comment-avatar(
-        tg-avatar="vm.comment.user"
-        ng-alt="{{vm.comment.user.name}}"
-    )
+    tg-avatar.comment-avatar([user]="vm.comment.user")
     .comment-main
         .comment-data
             span.comment-creator {{vm.comment.user.name}}

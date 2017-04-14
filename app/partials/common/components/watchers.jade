@@ -1,9 +1,6 @@
 .user-list-single(ng-repeat="watcher in watchers")
     .user-list-avatar
-        img(
-            tg-avatar="watcher"
-            alt="{{watcher.full_name_display}}"
-        )
+        tg-avatar([user]="watcher")
     .user-list-name
         span {{watcher.full_name_display}}
 

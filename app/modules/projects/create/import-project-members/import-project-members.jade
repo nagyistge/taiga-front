@@ -46,7 +46,7 @@
                         tg-svg(svg-icon="icon-close")
                     span {{vm.getUser(member).get('full_name') || vm.getUser(member)}}
                     span.import-project-members-selected-img
-                        img(tg-avatar="vm.getUser(member)")
+                        tg-avatar([user]="vm.getUser(member)")
 
                 button.button.button-trans.import-project-members-choose.ng-animate-disabled(
                     ng-if="!vm.getUser(member) && !vm.showSuggestedMatch(member)"

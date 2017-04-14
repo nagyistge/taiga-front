@@ -2,11 +2,7 @@ a.user-avatar(
     tg-nav="profile"
     title="{{ vm.user.get('full_name_display') }}"
     ) {{ vm.user.get('full_name_display') }}
-    img(
-        tg-avatar="vm.user"
-        alt="{{ vm.user.get('full_name_display') }}"
-        height="40px"
-    )
+    tg-avatar([user]="vm.user")
 
 div.navbar-dropdown.dropdown-user
     ul

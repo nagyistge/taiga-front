@@ -1,9 +1,8 @@
 .card-owner
     .card-owner-info(ng-if="vm.item.get('assigned_to')")
         .card-owner-avatar
-            img(
+            tg-avatar([user]="vm.item.get('assigned_to')"
                 ng-class="{'is-iocaine': vm.item.getIn(['model', 'is_iocaine'])}"
-                tg-avatar="vm.item.get('assigned_to')"
             )
         span.card-owner-name(ng-if="vm.visible('owner')") {{vm.item.getIn(['assigned_to', 'full_name'])}}
         div(ng-if="!vm.visible('owner')")

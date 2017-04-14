@@ -18,7 +18,7 @@ tg-lightbox-close
                     href="#"
                     title="{{'COMMON.ASSIGNED_TO.TITLE' | translate}}"
                 )
-                    img(tg-avatar="vm.selected")
+                    tg-avatar([user]="vm.selected")
             a.user-list-name(
                 href=""
                 title="{{vm.selected.full_name_display}}"
@@ -33,7 +33,7 @@ tg-lightbox-close
                     href="#"
                     title="{{'COMMON.ASSIGNED_TO.TITLE' | translate}}"
                 )
-                    img(tg-avatar="user")
+                    tg-avatar([user]="user")
 
             a.user-list-name(
                 href=""

@@ -1,8 +1,5 @@
 .entry-wrapper
-    img.entry-avatar(
-        tg-avatar="entry.user"
-        ng-alt="{{entry.user.name}}"
-    )
+    tg-avatar.entry-avatar([user]="entry.user")
     .entry-main
         .entry-data
             span.entry-creator {{entry.user.full_name_display}}

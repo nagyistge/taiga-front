@@ -73,7 +73,7 @@ tg-lightbox-close(on-close="vm.onClose()")
                         href="#"
                         title="{{'COMMON.ASSIGNED_TO.TITLE' | translate}}"
                     )
-                        img(tg-avatar="user")
+                        tg-avatar([user]="user")
                 a.user-list-name(
                     href=""
                     title="{{user.full_name_display || user.full_name || user}}"

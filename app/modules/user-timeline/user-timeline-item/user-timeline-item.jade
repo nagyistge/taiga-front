@@ -7,16 +7,10 @@
         // profile image with url
         .profile-contact-picture(ng-if="timeline.getIn(['data', 'user', 'is_profile_visible'])")
             a(tg-nav="user-profile:username=timeline.getIn(['data', 'user', 'username'])", title="{{::timeline.getIn(['data', 'user', 'name']) }}")
-                img(
-                    tg-avatar="timeline.getIn(['data', 'user'])"
-                    alt="{{::timeline.getIn(['data', 'user', 'name'])}}"
-                )
+                tg-avatar([user]="timeline.getIn(['data', 'user'])")
         // profile image without url
         .profile-contact-picture(ng-if="!timeline.getIn(['data', 'user', 'is_profile_visible'])")
-            img(
-                tg-avatar="timeline.getIn(['data', 'user'])"
-                alt="{{::timeline.getIn(['data', 'user', 'name'])}}"
-            )
+            tg-avatar([user]="timeline.getIn(['data', 'user'])")
 
         p(tg-compile-html="timeline.get('title_html')")
 
@@ -25,10 +19,7 @@
 
     .activity-member-view(ng-if="::timeline.has('member')")
         a.profile-member-picture(tg-nav="user-profile:username=timeline.getIn(['member', 'user', 'username'])", title="{{::timeline.getIn(['member', 'user', 'name'])}}")
-            img(
-                tg-avatar="timeline.getIn(['member', 'user'])"
-                alt="{{::timeline.getIn(['member','user', 'name'])}}"
-            )
+            tg-avatar([user]="timeline.getIn(['member', 'user'])")
         .activity-member-info
             a(tg-nav="user-profile:username=timeline.getIn(['member', 'user', 'username'])", title="{{::timeline.getIn(['member','user', 'name'])}}")
                 span {{::timeline.getIn(['member','user', 'name'])}}

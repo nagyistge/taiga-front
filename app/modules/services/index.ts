@@ -22,7 +22,6 @@ import {module} from "../../ts/modules/common"
 
 import {AppMetaService} from "./app-meta.service"
 import {AttachmentsService} from "./attachments.service"
-import {AvatarService} from "./avatar.service"
 import {CheckPermissionsService} from "./check-permissions.service"
 import {CurrentUserService} from "./current-user.service"
 import {ErrorHandlingService} from "./error-handling.service"
@@ -37,7 +36,6 @@ import {xhrError} from "./xhrError.service"
 
 module.service("tgAppMetaService", AppMetaService);
 module.service("tgAttachmentsService", AttachmentsService);
-module.service("tgAvatarService", ["$tgConfig", AvatarService]);
 module.service("tgCheckPermissionsService", CheckPermissionsService);
 module.service("tgCurrentUserService", CurrentUserService);
 module.service("tgErrorHandlingService", ErrorHandlingService);

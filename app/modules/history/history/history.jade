@@ -1,10 +1,7 @@
 section.activities
     .activities-wrapper
         .activity(ng-repeat="activity in activities track by activity.id")
-            img.activity-avatar(
-                tg-avatar="activity.user"
-                ng-alt="{{activity.user.name}}"
-            )
+            tg-avatar.activity-avatar([user]="activity.user")
             .activity-main
                 .activity-data
                     span.activity-creator {{activity.user.name}}

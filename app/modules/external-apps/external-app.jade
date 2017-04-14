@@ -9,10 +9,7 @@ section.external-app-wrapper
     div.user-card.avatar
         .card-inner
             div.user-image
-                img(
-                    tg-avatar="vm.user"
-                    alt="{{::vm.user.get('full_name_display')}}"
-                )
+                tg-avatar([user]="vm.user")
             div.user-data
                 h3 {{ ::vm.user.get("full_name_display") }}
                 p {{ ::vm.user.get("email") }}

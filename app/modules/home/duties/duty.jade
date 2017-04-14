@@ -9,10 +9,9 @@ a.list-itemtype-ticket(
             title="{{ ::vm.duty.getIn(['project', 'name']) }}"
         )
     div.list-itemtype-avatar(ng-if="vm.type == 'watching'")
-        img(
+        tg-avatar(
             ng-if="vm.duty.get('assigned_to_extra_info')"
-            title="{{ ::vm.duty.get('assigned_to_extra_info').get('full_name_display') }}"
-            tg-avatar="vm.duty.get('assigned_to_extra_info')"
+            [user]="vm.duty.get('assigned_to_extra_info')"
         )
         img(
             ng-if="!vm.duty.get('assigned_to_extra_info')"

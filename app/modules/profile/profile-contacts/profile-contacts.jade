@@ -17,10 +17,7 @@ section.profile-contacts
 
     div.list-itemtype-user(tg-repeat="contact in ::vm.contacts")
         a.list-itemtype-avatar(tg-nav="user-profile:username=contact.get('username')", title="{{::contact.get('name')}}")
-            img(
-                tg-avatar="contact"
-                alt="{{::contact.get('full_name')}}"
-            )
+            tg-avatar([user]="contact")
 
         div.list-itemtype-user-data
             h2

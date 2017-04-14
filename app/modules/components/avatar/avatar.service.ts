@@ -17,19 +17,21 @@
  * File: avatar.service.coffee
  */
 
-import {sizeFormat, cartesianProduct} from "../../ts/utils"
-import {murmurhash3_32_gc} from "../../ts/libs/murmurhash3_gc"
+import {sizeFormat, cartesianProduct} from "../../../ts/utils"
+import {murmurhash3_32_gc} from "../../../ts/libs/murmurhash3_gc"
 import * as angular from "angular"
 import * as Immutable from "immutable"
 import * as _ from "lodash"
 declare var _version:string;
 
-export class AvatarService {
-    config:any
-    logos:any
+import {Injectable} from "@angular/core"
+import {ConfigurationService} from "../../../ts/modules/base/conf"
 
-    constructor(config) {
-        this.config = config;
+@Injectable()
+export class AvatarService {
+    private logos:any
+
+    constructor(private config:ConfigurationService) {
         let IMAGES = [
             `/${_version}/images/user-avatars/user-avatar-01.png`,
             `/${_version}/images/user-avatars/user-avatar-02.png`,
@@ -62,24 +64,16 @@ export class AvatarService {
         };
     }
 
-    getAvatar(user, type) {
-        let gravatar, logo, root;
+    getAvatar(user) {
+        let gravatar, logo, root, photo;
         if (!user) { return this.getUnnamed(); }
-
-        let avatarParamName = 'photo';
-
-        if (type === 'avatarBig') {
-            avatarParamName = 'big_photo';
-        }
-
-        let photo = null;
 
         if (user instanceof Immutable.Map) {
             gravatar = user.get('gravatar_id');
-            photo = user.get(avatarParamName);
+            photo = user.get('photo');
         } else {
             gravatar = user.gravatar_id;
-            photo = user[avatarParamName];
+            photo = user.photo;
         }
 
         if (!gravatar) { return this.getUnnamed(); }
