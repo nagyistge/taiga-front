@@ -22,6 +22,9 @@
  * File: modules/common.coffee
  */
 
+import {downgradeComponent} from "@angular/upgrade/static"
+import {Component, Input, ElementRef} from "@angular/core"
+
 import {Service} from "../../classes"
 import * as angular from "angular"
 import * as _ from "lodash"
@@ -41,7 +44,6 @@ import {UsStatusDirective, RelatedTaskStatusDirective} from "./popovers"
 import {ExceptionHandlerFactory} from "./raven-logger"
 import {TagsDirective, LbTagLineDirective} from "./tags"
 import {ColorizeBacklogTags} from "./tags.component"
-import {downgradeComponent} from "@angular/upgrade/static"
 
 export let module = angular.module("taigaCommon", []);
 // common analytics
@@ -570,28 +572,30 @@ let LightboxClose = function() {
 
 module.directive("tgLightboxClose", [LightboxClose]);
 
-let Svg = function() {
-    let template = `\
-<svg class="{{ 'icon ' + svgIcon }}">
-    <use xlink:href="" ng-attr-xlink:href="{{ '#' + svgIcon }}">
-        <title ng-if="svgTitle">{{svgTitle}}</title>
-        <title ng-if="svgTitleTranslate">{{svgTitleTranslate | translate: svgTitleTranslateValues}}</title>
-    </use>
-</svg>\
-`;
+@Component({
+    selector: "tg-svg",
+    template: `
+      <svg [ngClass]="['icon', svgIcon]">
+          <use [attr.xlink:href]="'#' + svgIcon">
+              <title *ngIf="svgTitle">{{svgTitle}}</title>
+              <title *ngIf="svgTitleTranslate" i18n>{{svgTitleTranslate}}</title>
+          </use>
+      </svg>
+    `
+})
+export class Svg {
+    @Input("svg-icon") svgIcon: string = "";
+    @Input("svg-title") svgTitle: string = "";
+    @Input("svg-title-translate") svgTitleTranslate: string = "";
 
-    return {
-        scope: {
-            svgIcon: "@",
-            svgTitle: "@",
-            svgTitleTranslate: "@",
-            svgTitleTranslateValues: "="
-        },
-        template
-    };
+    constructor(elm: ElementRef) {
+        this.svgIcon = elm.nativeElement.getAttribute('svg-icon');
+        this.svgTitle = elm.nativeElement.getAttribute('svg-title');
+        this.svgTitleTranslate = elm.nativeElement.getAttribute('svg-title-translate');
+    }
 };
 
-module.directive("tgSvg", [Svg]);
+module.directive("tgSvg", downgradeComponent({component: Svg}));
 
 let Autofocus = ($timeout, $parse, animationFrame) =>
   ({
