@@ -15,6 +15,7 @@ import { Svg, LightboxClose } from './modules/common';
 import { Avatar } from '../modules/components/avatar/avatar.component';
 import { BelongToEpics } from '../modules/components/belong-to-epics/belong-to-epics.component';
 import { AvatarService } from '../modules/components/avatar/avatar.service';
+import { TermsOfServiceAndPrivacyPolicyNotice } from '../modules/components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.component'
 import { ErrorHandlingService } from '../modules/services/error-handling.service';
 import { xhrError } from '../modules/services/xhrError.service';
 import { ThemeService } from '../modules/services/theme.service';
@@ -53,6 +54,7 @@ export function HttpLoaderFactory(http: Http) {
     Avatar,
     BelongToEpics,
     LightboxClose,
+    TermsOfServiceAndPrivacyPolicyNotice,
   ],
   providers: [
     ConfigurationService,
@@ -73,6 +75,7 @@ export function HttpLoaderFactory(http: Http) {
     Avatar,
     BelongToEpics,
     LightboxClose,
+    TermsOfServiceAndPrivacyPolicyNotice,
   ]
 })
 export class AppModule {

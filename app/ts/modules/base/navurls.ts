@@ -24,6 +24,7 @@
 
 import {trim, bindOnce} from "../../../ts/utils"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
 
 //############################################################################
 //# Navigation Urls Service

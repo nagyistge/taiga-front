@@ -22,17 +22,19 @@
  * File: modules/components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.directive.coffee
  */
 
+import {ConfigurationService} from "../../../ts/modules/base/conf"
+import {Component} from "@angular/core"
 
-export let TermsOfServiceAndPrivacyPolicyNoticeDirective = function($config) {
-    let link = function(scope, el, attrs) {
-        scope.privacyPolicyUrl = $config.get("privacyPolicyUrl");
-        return scope.termsOfServiceUrl = $config.get("termsOfServiceUrl");
-    };
+@Component({
+    selector: "tg-terms-of-service-and-privacy-policy-notice",
+    templateUrl: "components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.html"
+})
+export class TermsOfServiceAndPrivacyPolicyNotice {
+    privacyPolicyUrl: string;
+    termsOfServiceUrl: string;
 
-    return {
-        restrict: "AE",
-        scope: {},
-        link,
-        templateUrl: "components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.html"
+    constructor(config: ConfigurationService) {
+        this.privacyPolicyUrl = config.get("privacyPolicyUrl");
+        this.termsOfServiceUrl = config.get("termsOfServiceUrl");
     };
 };

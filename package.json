@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@angular/router": "^4.0.2",
+    "@ngx-translate/http-loader": "0.0.3",
     "angular-mocks": "1.5.5",
     "babel-cli": "^6.23.0",
     "babel-polyfill": "^6.7.4",

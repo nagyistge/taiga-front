@@ -76,7 +76,7 @@ import {TagLineDirective} from "./tags/tag-line-detail/tag-line-detail.directive
 import {TagLineService} from "./tags/tag-line.service"
 import {TagDirective} from "./tags/tag/tag.directive"
 import {TaskboardZoomDirective} from "./taskboard-zoom/taskboard-zoom.directive"
-import {TermsOfServiceAndPrivacyPolicyNoticeDirective} from "./terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.directive"
+import {TermsOfServiceAndPrivacyPolicyNotice} from "./terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.component"
 import {TribeButtonDirective} from "./tribe-button/tribe-button.directive"
 import {TribeLinkedDirective} from "./tribe-button/tribe-linked.directive"
 import {VoteButtonController} from "./vote-button/vote-button.controller"
@@ -150,7 +150,7 @@ module.directive("tgTagLine", TagLineDirective);
 module.service("tgTagLineService", TagLineService);
 module.directive("tgTag", TagDirective);
 module.directive("tgTaskboardZoom", ["$tgStorage", TaskboardZoomDirective]);
-module.directive("tgTermsOfServiceAndPrivacyPolicyNotice", ["$tgConfig", TermsOfServiceAndPrivacyPolicyNoticeDirective]);
+module.directive("tgTermsOfServiceAndPrivacyPolicyNotice", downgradeComponent({component: TermsOfServiceAndPrivacyPolicyNotice}));
 module.directive("tgTribeButton", TribeButtonDirective);
 module.directive("tgTribeLinked", TribeLinkedDirective);
 module.controller("VoteButton", VoteButtonController);
