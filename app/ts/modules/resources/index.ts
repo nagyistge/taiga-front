@@ -34,7 +34,6 @@ import {InvitationsResourcesProvider} from "./invitations"
 import {IssuesResourcesProvider} from "./issues"
 import {KanbanResourcesProvider} from "./kanban"
 import {LocalesResourcesProvider} from "./locales"
-import {MdRenderResourcesProvider} from "./mdrender"
 import {MembershipsResourcesProvider} from "./memberships"
 import {ModulesResourcesProvider} from "./modules"
 import {NotifyPoliciesResourcesProvider} from "./notify-policies"
@@ -60,7 +59,6 @@ module.factory("$tgInvitationsResourcesProvider", ["$tgRepo", InvitationsResourc
 module.factory("$tgIssuesResourcesProvider", ["$tgRepo", "$tgHttp", "$tgUrls", "$tgStorage", "$q", IssuesResourcesProvider]);
 module.factory("$tgKanbanResourcesProvider", ["$tgStorage", KanbanResourcesProvider]);
 module.factory("$tgLocalesResourcesProvider", ["$tgRepo", LocalesResourcesProvider]);
-module.factory("$tgMdRenderResourcesProvider", ["$tgRepo", "$tgUrls", "$tgHttp", MdRenderResourcesProvider]);
 module.factory("$tgMembershipsResourcesProvider", ["$tgRepo", "$tgHttp", "$tgUrls", MembershipsResourcesProvider]);
 module.factory("$tgModulesResourcesProvider", ["$tgRepo", ModulesResourcesProvider]);
 module.factory("$tgNotifyPoliciesResourcesProvider", ["$tgRepo", "$tgHttp", "$tgUrls", NotifyPoliciesResourcesProvider]);
