@@ -23,6 +23,10 @@ import {Injectable} from "@angular/core"
 export class ErrorHandlingService {
     static errorHandling:any = {}
 
+    init() {
+        return ErrorHandlingService.errorHandling = {};
+    }
+
     notfound() {
         ErrorHandlingService.errorHandling.showingError = true;
         return ErrorHandlingService.errorHandling.notfound = true;

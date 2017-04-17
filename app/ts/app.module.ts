@@ -5,6 +5,7 @@ import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
 
 import { ConfigurationService } from './modules/base/conf';
 import { StorageService } from './modules/base/storage';
+import { ModelService } from './modules/base/model';
 import { Svg } from './modules/common';
 import { Avatar } from '../modules/components/avatar/avatar.component';
 import { AvatarService } from '../modules/components/avatar/avatar.service';
@@ -42,6 +43,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     xhrError,
     ThemeService,
     ProjectLogoService,
+    ModelService,
     { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [

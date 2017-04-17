@@ -22,8 +22,8 @@
  * File: modules/base/model.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
 
 export class Model {
     _attrs:any
@@ -189,45 +189,20 @@ export class Model {
 }
 
 
-class ModelService extends Service {
-    q:any
-    urls:any
-    storage:any
-    http:any
+@Injectable()
+export class ModelService {
+    cls = Model;
 
-    static initClass() {
-        this.$inject = ["$q", "$tgUrls", "$tgStorage", "$tgHttp"];
-    }
-
-    constructor(q, urls, storage, http) {
-        super()
-        this.q = q;
-        this.urls = urls;
-        this.storage = storage;
-        this.http = http;
-        super();
-    }
-}
-ModelService.initClass();
-
-export function modelProvider($q, $http, $gmUrls, $gmStorage) {
-    let service:any = {};
-    service.make_model = function(name, data, cls, dataTypes) {
-        if (cls == null) { cls = Model; }
-        if (dataTypes == null) { dataTypes = {}; }
+    make_model(name, data, cls=Model, dataTypes={}) {
         return new cls(name, data, dataTypes);
     };
 
-    service.cls = Model;
-    service.casts = {
+    casts = {
         int(value) {
             return parseInt(value, 10);
         },
-
         float(value) {
             return parseFloat(value);
         }
     };
-
-    return service;
-};
+}

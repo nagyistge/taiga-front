@@ -30,7 +30,7 @@ import {ConfigurationService} from "./conf"
 import {ContribUserSettingsController, ContribController} from "./contrib"
 import {HttpService} from "./http"
 import {locationFactory} from "./location"
-import {modelProvider} from "./model"
+import {ModelService} from "./model"
 import {NavigationUrlsService, NavigationUrlsDirective} from "./navurls"
 import {RepositoryService} from "./repository"
 import {StorageService} from "./storage"
@@ -51,7 +51,7 @@ module.controller("ContribUserSettingsController", ContribUserSettingsController
 module.controller("ContribController", ContribController);
 module.service("$tgHttp", HttpService);
 module.factory("$tgLocation", ["$location", "$route", "$rootScope", locationFactory]);
-module.factory("$tgModel", ["$q", "$http", "$tgUrls", "$tgStorage", modelProvider]);
+module.service("$tgModel", downgradeInjectable(ModelService));
 module.service("$tgNavUrls", NavigationUrlsService);
 module.directive("tgNav", ["$tgNavUrls", "$tgAuth", "$q", "$tgLocation", "lightboxService", NavigationUrlsDirective]);
 module.service("$tgRepo", RepositoryService);

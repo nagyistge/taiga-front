@@ -40,8 +40,10 @@ export class Avatar implements OnChanges{
         this.avatar = this.avatarService.getAvatar(this.user);
         if (this.user instanceof Immutable.Map) {
             this.fullname = this.user.get("full_name_display");
-        } else {
+        } else if (this.user) {
             this.fullname = this.user.full_name_display;
+        } else {
+            this.fullname = ""
         }
     }
 }

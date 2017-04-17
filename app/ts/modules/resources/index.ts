@@ -318,7 +318,6 @@ module.run([
     "$tgIssuesResourcesProvider",
     "$tgWikiResourcesProvider",
     "$tgSearchResourcesProvider",
-    "$tgMdRenderResourcesProvider",
     "$tgHistoryResourcesProvider",
     "$tgKanbanResourcesProvider",
     "$tgModulesResourcesProvider",

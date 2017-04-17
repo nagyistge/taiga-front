@@ -32,10 +32,6 @@ import * as _ from "lodash"
 
 export class WikiPagesListController extends PageMixin {
     scope: angular.IScope
-    rootscope: angular.IScope
-    repo: any
-    model:any
-    confirm:any
     rs:any
     params:any
     q:any
@@ -59,14 +55,10 @@ export class WikiPagesListController extends PageMixin {
         ];
     }
 
-    constructor(scope, rootscope, repo, model, confirm, rs, params, q,
+    constructor(scope, rs, params, q,
                   navUrls, errorHandlingService, projectService) {
         super()
         this.scope = scope;
-        this.rootscope = rootscope;
-        this.repo = repo;
-        this.model = model;
-        this.confirm = confirm;
         this.rs = rs;
         this.params = params;
         this.q = q;
