@@ -28,23 +28,19 @@ import * as angular from "angular"
 
 export class HttpService extends Service {
     http:any
-    q:any
     storage:any
-    rootScope:any
     cacheFactory:any
     translate:any
     cache:any
 
     static initClass() {
-        this.$inject = ["$http", "$q", "$tgStorage", "$rootScope", "$cacheFactory", "$translate"];
+        this.$inject = ["$http", "$tgStorage", "$cacheFactory", "$translate"];
     }
 
-    constructor(http, q, storage, rootScope, cacheFactory, translate) {
+    constructor(http, storage, cacheFactory, translate) {
         super();
         this.http = http;
-        this.q = q;
         this.storage = storage;
-        this.rootScope = rootScope;
         this.cacheFactory = cacheFactory;
         this.translate = translate;
         this.cache = this.cacheFactory("httpget");
