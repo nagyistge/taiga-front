@@ -17,33 +17,18 @@
  * File: belong-to-epics.directive.coffee
  */
 
-import * as angular from "angular"
 import * as Immutable from "immutable"
+import {Component, Input} from "@angular/core"
 
-export let BelongToEpicsDirective = function() {
+@Component({
+    selector: "tg-belong-to-epics",
+    templateUrl: "components/belong-to-epics/belong-to-epics.html"
+})
+export class BelongToEpics {
+    @Input() epics: Immutable.List<Immutable.Map<string, string>>;
+    @Input() format: string;
 
-    let link = (scope, el, attrs) =>
-        scope.$watch('epics', function(epics) {
-            if (epics && !epics.isIterable) {
-              return scope.epics = Immutable.fromJS(epics);
-          }
-        })
-    ;
-
-    let templateUrl = function(el, attrs) {
-        if (attrs.format) {
-            return `components/belong-to-epics/belong-to-epics-${attrs.format}.html`;
-        }
-        return "components/belong-to-epics/belong-to-epics-pill.html";
-    };
-
-    return {
-        link,
-        scope: {
-            epics: '='
-        },
-        templateUrl
-    };
-};
-
-
+    getTitle(epic) {
+        return `#${epic.get('id')} ${epic.get('subject')}`
+    }
+}

@@ -28,19 +28,17 @@ import * as _ from "lodash"
 export class RepositoryService extends Service {
     q:any
     model:any
-    storage:any
     http:any
     urls:any
 
     static initClass() {
-        this.$inject = ["$q", "$tgModel", "$tgStorage", "$tgHttp", "$tgUrls"];
+        this.$inject = ["$q", "$tgModel", "$tgHttp", "$tgUrls"];
     }
 
-    constructor(q, model, storage, http, urls) {
+    constructor(q, model, http, urls) {
         super();
         this.q = q;
         this.model = model;
-        this.storage = storage;
         this.http = http;
         this.urls = urls;
     }

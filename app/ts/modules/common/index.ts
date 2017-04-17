@@ -23,7 +23,7 @@
  */
 
 import {downgradeComponent} from "@angular/upgrade/static"
-import {Component, Input, ElementRef} from "@angular/core"
+import {Component, Input, Output, ElementRef, EventEmitter} from "@angular/core"
 
 import {Service} from "../../classes"
 import * as angular from "angular"
@@ -552,25 +552,22 @@ let Capslock = function() {
 
 module.directive("tgCapslock", [Capslock]);
 
-let LightboxClose = function() {
-    let template = `\
-<a class="close" ng-click="onClose()" href="" title="{{'COMMON.CLOSE' | translate}}">
-    <tg-svg svg-icon="icon-close"></tg-svg>
-</a>\
-`;
+@Component({
+    selector: "tg-lightbox-close",
+    template: `
+        <a class="close" ng-click="close()" href="" title="{{'COMMON.CLOSE' | translate}}">
+            <tg-svg svg-icon="icon-close"></tg-svg>
+        </a>`
+})
+export class LightboxClose {
+    @Output("on-close") onClose = new EventEmitter();
 
-    let link = function(scope, elm, attrs) {};
+    close() {
+        this.onClose.emit()
+    }
+}
 
-    return {
-        scope: {
-            onClose: '&'
-        },
-        link,
-        template
-    };
-};
-
-module.directive("tgLightboxClose", [LightboxClose]);
+module.directive("tgLightboxClose", downgradeComponent({component: LightboxClose}));
 
 @Component({
     selector: "tg-svg",

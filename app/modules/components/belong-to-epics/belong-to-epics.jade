@@ -1,0 +1,17 @@
+template(*ngIf="format !== 'text'")
+    span.belong-to-epic-pill-wrapper(*ngFor="let epic of epics")
+        .belong-to-epic-pill(
+            "[style.background]"="epic.get('color')"
+            "[style.border-color]"="epic.get('color') | darker: -0.2"
+            title="{{getTitle(epic)}}"
+        )
+template(*ngIf="format === 'text'")
+    span.belong-to-epic-text-wrapper(*ngFor="let epic of epics")
+        a.belong-to-epic-text(
+            href=""
+            tg-nav="project-epics-detail:project=epic.getIn(['project', 'slug']),ref=epic.get('ref')"
+        ) {{getTitle(epic)}}
+        span.belong-to-epic-label(
+            "[style.background-color]"="epic.get('color')"
+            [translate]="EPICS.EPIC"
+        )

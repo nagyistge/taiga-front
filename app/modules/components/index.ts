@@ -42,7 +42,7 @@ import {AttachmentSortableDirective} from "./attachments-sortable/attachments-so
 import {AutoSelectDirective} from "./auto-select/auto-select.directive"
 import {Avatar} from "./avatar/avatar.component"
 import {AvatarService} from "./avatar/avatar.service"
-import {BelongToEpicsDirective} from "./belong-to-epics/belong-to-epics.directive"
+import {BelongToEpics} from "./belong-to-epics/belong-to-epics.component"
 import {BindCode} from "./bind-code.directive"
 import {BoardZoomDirective} from "./board-zoom/board-zoom.directive"
 import {CardController} from "./card/card.controller"
@@ -116,7 +116,7 @@ module.directive("tgAttachmentsSortable", AttachmentSortableDirective);
 module.directive("tgAutoSelect", AutoSelectDirective);
 module.directive("tgAvatar", downgradeComponent({component: Avatar}));
 module.service("tgAvatarService", downgradeInjectable(AvatarService));
-module.directive("tgBelongToEpics", BelongToEpicsDirective);
+module.directive("tgBelongToEpics", downgradeComponent({component: BelongToEpics}));
 module.directive("tgBindCode", ["$sce", "$parse", "$compile", "tgWysiwygService", "tgWysiwygCodeHightlighterService", BindCode]);
 module.directive("tgBoardZoom", [BoardZoomDirective]);
 module.controller('Card', CardController);
