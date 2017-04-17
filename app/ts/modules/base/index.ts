@@ -28,7 +28,6 @@ import {downgradeInjectable} from "@angular/upgrade/static"
 
 import {ConfigurationService} from "./conf"
 import {ContribUserSettingsController, ContribController} from "./contrib"
-import {FiltersStorageService} from "./filters"
 import {HttpService} from "./http"
 import {locationFactory} from "./location"
 import {modelProvider} from "./model"
@@ -50,7 +49,6 @@ module.directive("tgBindHtml", bind.BindHtmlDirective);
 module.service("$tgConfig", downgradeInjectable(ConfigurationService));
 module.controller("ContribUserSettingsController", ContribUserSettingsController);
 module.controller("ContribController", ContribController);
-module.service("FiltersStorageService", FiltersStorageService);
 module.service("$tgHttp", HttpService);
 module.factory("$tgLocation", ["$location", "$route", "$rootScope", locationFactory]);
 module.factory("$tgModel", ["$q", "$http", "$tgUrls", "$tgStorage", modelProvider]);
