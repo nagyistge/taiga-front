@@ -42,7 +42,7 @@ module.service("tgCurrentUserService", CurrentUserService);
 module.service("tgErrorHandlingService", downgradeInjectable(ErrorHandlingService));
 module.service("tgLightboxFactory", LightboxFactory);
 module.factory("tgPaginateResponseService", PaginateResponse);
-module.service("tgProjectLogoService", ProjectLogoService);
+module.service("tgProjectLogoService", downgradeInjectable(ProjectLogoService));
 module.service("tgProjectService", ProjectService);
 module.service("tgThemeService", downgradeInjectable(ThemeService));
 module.service("tgUserActivityService", UserActivityService);

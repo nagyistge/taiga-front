@@ -17,14 +17,15 @@
  * File: project-logo.service.coffee
  */
 
-import * as angular from "angular"
-import * as _ from "lodash"
 import {cartesianProduct} from "../../ts/utils"
 import {murmurhash3_32_gc} from "../../ts/libs/murmurhash3_gc"
 declare var _version:string;
+import {Injectable} from "@angular/core"
 
+@Injectable()
 export class ProjectLogoService {
     logos: any
+
     constructor() {
         let IMAGES = [
             `/${_version}/images/project-logos/project-logo-01.png`,
