@@ -8,6 +8,7 @@ import { TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ConfigurationService } from './modules/base/conf';
+import { NavigationUrlsService } from './modules/base/navurls';
 import { StorageService } from './modules/base/storage';
 import { ModelService } from './modules/base/model';
 import { Svg, LightboxClose } from './modules/common';
@@ -63,6 +64,7 @@ export function HttpLoaderFactory(http: Http) {
     ThemeService,
     ProjectLogoService,
     ModelService,
+    NavigationUrlsService,
     { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [

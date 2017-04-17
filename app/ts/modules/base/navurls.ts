@@ -22,7 +22,6 @@
  * File: modules/base/navurl.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import {trim, bindOnce} from "../../../ts/utils"
 import * as _ from "lodash"
 
@@ -30,10 +29,11 @@ import * as _ from "lodash"
 //# Navigation Urls Service
 //############################################################################
 
-export class NavigationUrlsService extends Service {
+@Injectable()
+export class NavigationUrlsService {
     urls:any
+
     constructor() {
-        super()
         this.urls = {};
     }
 

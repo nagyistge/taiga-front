@@ -52,7 +52,7 @@ module.controller("ContribController", ContribController);
 module.service("$tgHttp", HttpService);
 module.factory("$tgLocation", ["$location", "$route", "$rootScope", locationFactory]);
 module.service("$tgModel", downgradeInjectable(ModelService));
-module.service("$tgNavUrls", NavigationUrlsService);
+module.service("$tgNavUrls", downgradeInjectable(NavigationUrlsService));
 module.directive("tgNav", ["$tgNavUrls", "$tgAuth", "$q", "$tgLocation", "lightboxService", NavigationUrlsDirective]);
 module.service("$tgRepo", RepositoryService);
 module.service("$tgStorage", downgradeInjectable(StorageService));
