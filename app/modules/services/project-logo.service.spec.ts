@@ -18,35 +18,22 @@
  */
 
 declare var describe:any;
-declare var angular:any;
-let module = angular.mock.module;;
 declare var inject:any;
 declare var it:any;
 declare var expect:any;
 declare var beforeEach:any;
-import * as Immutable from "immutable"
-declare var sinon:any;
+import {ProjectLogoService} from "./project-logo.service"
 
 describe("tgProjectLogoService", function() {
-    let $provide = null;
-    let projectLogoService = null;
-
-    let _inject = () =>
-        inject(_tgProjectLogoService_ => projectLogoService = _tgProjectLogoService_)
-    ;
-
-    let _setup = () => _inject();
+    let service: ProjectLogoService;
 
     beforeEach(function() {
         (<any>window)._version = '123';
-        module("taigaCommon");
-
-        return _setup();
+        service = new ProjectLogoService()
     });
 
     return it("get default project logo", function() {
-
-        let logo = projectLogoService.getDefaultProjectLogo('slug/slug', 2);
+        let logo = service.getDefaultProjectLogo('slug/slug', 2);
 
         expect(logo.src).to.be.equal('/123/images/project-logos/project-logo-04.png');
         return expect(logo.color).to.be.equal('rgba( 152, 224, 168,  1 )');

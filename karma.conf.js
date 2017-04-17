@@ -22,13 +22,15 @@ module.exports = function(config) {
       'node_modules/jquery/dist/jquery.js',
       'karma.app.conf.js',
       'node_modules/chai-jquery/chai-jquery.js',
+      'node_modules/angular/angular.js',
+      'node_modules/reflect-metadata/Reflect.js',
       'test-utils.js',
-      'dist/**/js/app.js',
-      'dist/**/js/templates.js',
+      // 'dist/**/js/app.js',
+      // 'dist/**/js/templates.js',
+      'app/**/*.ts',
       'node_modules/angular-mocks/angular-mocks.js',
-      'app/**/*spec.ts'
+      // 'app/**/*.spec.ts'
     ],
-
 
     // list of files to exclude
     exclude: [
@@ -38,22 +40,9 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '**/*.spec.ts': ['karma-typescript'],
+      '**/*.ts': ['karma-typescript'],
       'dist/js/app.js': ['sourcemap']
     },
-
-    coffeePreprocessor: {
-      // options passed to the coffee compiler
-      options: {
-        bare: true,
-        sourceMap: true
-      },
-      // transforming the filenames
-      transformPath: function(path) {
-        return path.replace(/\.coffee$/, '.js');
-      }
-    },
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress'

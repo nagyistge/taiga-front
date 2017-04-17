@@ -19,32 +19,24 @@
 
 declare var describe:any;
 declare var angular:any;
-let module = angular.mock.module;;
-declare var inject:any;
 declare var it:any;
 declare var expect:any;
 declare var beforeEach:any;
-import * as Immutable from "immutable"
-declare var sinon:any;
+import {ThemeService} from "./theme.service"
 
 describe("ThemeService", function() {
-    let themeService = null;
+    let service: ThemeService;
     let data = {
         theme: "testTheme"
     };
 
-    let _inject = () =>
-        inject(_tgThemeService_ => themeService = _tgThemeService_)
-    ;
-
     beforeEach(function() {
-        module("taigaCommon");
-        return _inject();
+        service = new ThemeService();
     });
 
     return it("use a test theme", function() {
         (<any>window)._version = '123';
-        themeService.use(data.theme);
+        service.use(data.theme);
         return expect($("link[rel='stylesheet']")).to.have.attr("href", `/123/styles/theme-${data.theme}.css`);
     });
 });

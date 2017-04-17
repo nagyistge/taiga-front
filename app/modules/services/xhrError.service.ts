@@ -23,7 +23,7 @@ import {Injectable} from "@angular/core"
 
 @Injectable()
 export class xhrError {
-    constructor(private errorHandling:ErrorHandlingService) {}
+    constructor(private errorHandling:ErrorHandlingService) { }
 
     notFound() {
         return this.errorHandling.notfound();
@@ -37,7 +37,6 @@ export class xhrError {
         if (xhr) {
             if (xhr.status === 404) {
                 this.notFound();
-
             } else if (xhr.status === 403) {
                 this.permissionDenied();
             }

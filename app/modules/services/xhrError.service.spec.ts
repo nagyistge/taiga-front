@@ -18,82 +18,39 @@
  */
 
 declare var describe:any;
-declare var angular:any;
-let module = angular.mock.module;;
-declare var inject:any;
 declare var it:any;
 declare var expect:any;
 declare var beforeEach:any;
-import * as Immutable from "immutable"
 declare var sinon:any;
+import {xhrError} from "./xhrError.service"
 
 describe("tgXhrErrorService", function() {
-    let provide;
-    let xhrErrorService = (provide = null);
-    let mocks:any = {};
-
-    let _mockQ = function() {
-        mocks.q = {
-            reject: sinon.spy()
-        };
-
-        return provide.value("$q", mocks.q);
-    };
-
-
-    let _mockErrorHandling = function() {
-        mocks.errorHandling = {
-            notfound: sinon.stub(),
-            permissionDenied: sinon.stub()
-        };
-
-        return provide.value("tgErrorHandlingService", mocks.errorHandling);
-    };
-
-    let _inject = (callback=null) =>
-        inject(function(_tgXhrErrorService_) {
-            xhrErrorService = _tgXhrErrorService_;
-            if (callback) { return callback(); }
-        })
-    ;
-
-    let _mocks = () =>
-        module(function($provide) {
-            provide = $provide;
-            _mockQ();
-            _mockErrorHandling();
-
-            return null;
-        })
-    ;
-
-    let _setup = () => _mocks();
+    let service: xhrError
+    let errorHandlingMock
 
     beforeEach(function() {
-        module("taigaCommon");
-        _setup();
-        return _inject();
+        errorHandlingMock = {
+            notfound: sinon.stub(),
+            permissionDenied: sinon.stub()
+        }
+        service = new xhrError(errorHandlingMock)
     });
 
     it("404 status redirect to not-found page", function() {
-        let xhr = {
-            status: 404
-        };
+        let xhr = { status: 404 };
 
-        xhrErrorService.response(xhr);
+        let promise = service.response(xhr);
 
-        expect(mocks.q.reject.withArgs(xhr)).to.be.calledOnce;
-        return expect(mocks.errorHandling.notfound).to.be.calledOnce;
+        expect(promise).to.be.rejectedWith(xhr);
+        return expect(errorHandlingMock.notfound).to.be.calledOnce;
     });
 
-    return it("403 status redirect to permission-denied page", function() {
-        let xhr = {
-            status: 403
-        };
+    it("403 status redirect to permission-denied page", function() {
+        let xhr = { status: 403 };
 
-        xhrErrorService.response(xhr);
+        let promise = service.response(xhr);
 
-        expect(mocks.q.reject.withArgs(xhr)).to.be.calledOnce;
-        return expect(mocks.errorHandling.permissionDenied).to.be.calledOnce;
+        expect(promise).to.be.rejectedWith(xhr);
+        return expect(errorHandlingMock.permissionDenied).to.be.calledOnce;
     });
 });
