@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core"
 import { BrowserModule } from '@angular/platform-browser';
 import { UpgradeModule } from "@angular/upgrade/static"
+import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
 
 import { ConfigurationService } from './modules/base/conf';
 import { StorageService } from './modules/base/storage';
@@ -14,10 +15,17 @@ import { ProjectLogoService } from '../modules/services/project-logo.service';
 import { UrlsService } from './modules/base/urls';
 import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.component';
 
+class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
+  shouldProcessUrl(url: UrlTree) { return false; }
+  extract(url: UrlTree) { return url; }
+  merge(url: UrlTree, whole: UrlTree) { return url; }
+}
+
 @NgModule({
   imports: [
     BrowserModule,
-    UpgradeModule
+    UpgradeModule,
+    RouterModule.forRoot([]),
   ],
   declarations: [
     ColorizeBacklogTag,
@@ -34,6 +42,7 @@ import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.c
     xhrError,
     ThemeService,
     ProjectLogoService,
+    { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [
     ColorizeBacklogTags,

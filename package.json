@@ -23,6 +23,7 @@
     "watch": "webpack --watch"
   },
   "devDependencies": {
+    "@angular/router": "^4.0.2",
     "angular-mocks": "1.5.5",
     "babel-cli": "^6.23.0",
     "babel-polyfill": "^6.7.4",
