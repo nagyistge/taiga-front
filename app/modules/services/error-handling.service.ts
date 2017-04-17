@@ -17,43 +17,29 @@
  * File: error-handling.service.coffee
  */
 
-import * as angular from "angular"
+import {Injectable} from "@angular/core"
 
+@Injectable()
 export class ErrorHandlingService {
-    rootScope: angular.IScope
-
-    static initClass() {
-        this.$inject = [
-            "$rootScope"
-        ];
-    }
-
-    constructor(rootScope) {
-        this.rootScope = rootScope;
-    }
-
-    init() {
-        return this.rootScope.errorHandling = {};
-    }
+    static errorHandling:any = {}
 
     notfound() {
-        this.rootScope.errorHandling.showingError = true;
-        return this.rootScope.errorHandling.notfound = true;
+        ErrorHandlingService.errorHandling.showingError = true;
+        return ErrorHandlingService.errorHandling.notfound = true;
     }
 
     error() {
-        this.rootScope.errorHandling.showingError = true;
-        return this.rootScope.errorHandling.error = true;
+        ErrorHandlingService.errorHandling.showingError = true;
+        return ErrorHandlingService.errorHandling.error = true;
     }
 
     permissionDenied() {
-        this.rootScope.errorHandling.showingError = true;
-        return this.rootScope.errorHandling.permissionDenied = true;
+        ErrorHandlingService.errorHandling.showingError = true;
+        return ErrorHandlingService.errorHandling.permissionDenied = true;
     }
 
     block() {
-        this.rootScope.errorHandling.showingError = true;
-        return this.rootScope.errorHandling.blocked = true;
+        ErrorHandlingService.errorHandling.showingError = true;
+        return ErrorHandlingService.errorHandling.blocked = true;
     }
 }
-ErrorHandlingService.initClass();

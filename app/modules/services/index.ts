@@ -19,6 +19,7 @@
 
 import * as angular from "angular"
 import {module} from "../../ts/modules/common"
+import {downgradeInjectable} from "@angular/upgrade/static"
 
 import {AppMetaService} from "./app-meta.service"
 import {AttachmentsService} from "./attachments.service"
@@ -38,7 +39,7 @@ module.service("tgAppMetaService", AppMetaService);
 module.service("tgAttachmentsService", AttachmentsService);
 module.service("tgCheckPermissionsService", CheckPermissionsService);
 module.service("tgCurrentUserService", CurrentUserService);
-module.service("tgErrorHandlingService", ErrorHandlingService);
+module.service("tgErrorHandlingService", downgradeInjectable(ErrorHandlingService));
 module.service("tgLightboxFactory", LightboxFactory);
 module.factory("tgPaginateResponseService", PaginateResponse);
 module.service("tgProjectLogoService", ProjectLogoService);
@@ -46,4 +47,4 @@ module.service("tgProjectService", ProjectService);
 module.service("tgThemeService", ThemeService);
 module.service("tgUserActivityService", UserActivityService);
 module.service("tgUserService", UserService);
-module.service("tgXhrErrorService", xhrError);
+module.service("tgXhrErrorService", downgradeInjectable(xhrError));

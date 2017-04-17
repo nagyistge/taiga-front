@@ -17,32 +17,20 @@
  * File: xhrError.service.coffee
  */
 
-import {Service} from "../../ts/classes"
-import * as angular from "angular"
+import * as Promise from "bluebird"
+import {ErrorHandlingService} from "./error-handling.service"
+import {Injectable} from "@angular/core"
 
-export class xhrError extends Service {
-    q:any
-    errorHandlingService:any
-
-    static initClass() {
-        this.$inject = [
-            "$q",
-            "tgErrorHandlingService"
-        ];
-    }
-
-    constructor(q, errorHandlingService) {
-        super()
-        this.q = q;
-        this.errorHandlingService = errorHandlingService;
-    }
+@Injectable()
+export class xhrError {
+    constructor(private errorHandling:ErrorHandlingService) {}
 
     notFound() {
-        return this.errorHandlingService.notfound();
+        return this.errorHandling.notfound();
     }
 
     permissionDenied() {
-        return this.errorHandlingService.permissionDenied();
+        return this.errorHandling.permissionDenied();
     }
 
     response(xhr) {
@@ -55,7 +43,6 @@ export class xhrError extends Service {
             }
         }
 
-        return this.q.reject(xhr);
+        return Promise.reject(xhr);
     }
 }
-xhrError.initClass();
