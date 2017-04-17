@@ -9,6 +9,7 @@ import { Avatar } from '../modules/components/avatar/avatar.component';
 import { AvatarService } from '../modules/components/avatar/avatar.service';
 import { ErrorHandlingService } from '../modules/services/error-handling.service';
 import { xhrError } from '../modules/services/xhrError.service';
+import { ThemeService } from '../modules/services/theme.service';
 import { UrlsService } from './modules/base/urls';
 import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.component';
 
@@ -30,6 +31,7 @@ import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.c
     AvatarService,
     ErrorHandlingService,
     xhrError,
+    ThemeService,
   ],
   entryComponents: [
     ColorizeBacklogTags,

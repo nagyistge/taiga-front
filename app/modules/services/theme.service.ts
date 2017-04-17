@@ -20,10 +20,10 @@
 declare var $:any;
 declare var _version:string;
 
-import {Service} from "../../ts/classes"
-import * as angular from "angular"
+import {Injectable} from "@angular/core"
 
-export class ThemeService extends Service {
+@Injectable()
+export class ThemeService {
     use(themeName) {
         let stylesheetEl = $("link[rel='stylesheet']:first");
 
@@ -35,4 +35,3 @@ export class ThemeService extends Service {
         return stylesheetEl.attr("href", `/${_version}/styles/theme-${themeName}.css`);
     }
 }
-
