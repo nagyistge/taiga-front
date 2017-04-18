@@ -18,9 +18,9 @@
  */
 
 import {Injectable} from "@angular/core"
-import {RepositoryService} from "../base/repository"
-import {UrlsService} from "../base/urls"
-import {HttpService} from "../base/http"
+import {RepositoryService} from "../../ts/modules/base/repository"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
 @Injectable()
 export class WebhooksResource {

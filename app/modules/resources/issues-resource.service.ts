@@ -18,6 +18,8 @@
  */
 
 import * as Immutable from "immutable"
+import * as _ from "lodash"
+import {generateHash} from "../../ts/app"
 
 import {Injectable} from "@angular/core"
 import {UrlsService} from "../../ts/modules/base/urls"
@@ -46,10 +48,6 @@ export class IssuesResource {
         params.project = projectId;
         params.ref = ref;
         return this.repo.queryOne("issues", "by_ref", params);
-    }
-
-    listInAllProjects(filters) {
-        return this.repo.queryMany("issues", filters);
     }
 
     list(projectId, filters, options) {

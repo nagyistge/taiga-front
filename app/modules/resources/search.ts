@@ -25,9 +25,9 @@
 
 import * as _ from "lodash"
 import {Injectable} from "@angular/core"
-import {RepositoryService} from "../base/repository"
-import {HttpService} from "../base/http"
-import {UrlsService} from "../base/urls"
+import {RepositoryService} from "../../ts/modules/base/repository"
+import {HttpService} from "../../ts/modules/base/http"
+import {UrlsService} from "../../ts/modules/base/urls"
 
 @Injectable()
 export class SearchResource {

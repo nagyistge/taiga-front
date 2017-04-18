@@ -20,6 +20,10 @@
 import {Service} from "../../ts/classes"
 import {groupBy} from "../../ts/utils"
 
+import {Injectable} from "@angular/core"
+import {ResourcesService} from "../resources/resources.service"
+import {ProjectUrlService} from "../../ts/modules/common"
+
 @Injectable()
 export class ProjectsService {
     constructor(private rs: ResourcesService,

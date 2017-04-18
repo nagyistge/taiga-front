@@ -19,6 +19,8 @@
 
 import * as Immutable from "immutable"
 
+import {Injectable} from "@angular/core"
+
 @Injectable()
 export class PaginateResponseService {
     paginate(result) {

@@ -20,7 +20,7 @@
 import {Injectable} from "@angular/core"
 
 @Injectable()
-export class ThemeService {
+export class GlobalDataService {
     private data;
 
     get(key:string):any {
@@ -29,5 +29,9 @@ export class ThemeService {
 
     set(key:string, value:any):void {
         this.data[key] = value;
+    }
+
+    unset(key:string):void {
+        delete this.data[key];
     }
 }

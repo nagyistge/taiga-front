@@ -57,7 +57,15 @@ export class HttpService {
     request(options) {
         options.headers = _.assign({}, options.headers || {}, this.headers());
 
-        return <Promise<any>>this.http.request(options).toPromise(Promise);
+        return new Promise(function (resolve, reject) {
+            // No cancellation can be done
+            let value:any;
+            this.http.request(options).subscribe(function (v) {
+                value = v;
+            }, reject, function () {
+               resolve(value);
+            });
+        });
     }
 
     get(url, params=null, options:any={}) {

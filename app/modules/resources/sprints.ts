@@ -24,9 +24,9 @@
 
 import * as _ from "lodash"
 import {Injectable} from "@angular/core"
-import {RepositoryService} from "../base/repository"
-import {ModelService} from "../base/model"
-import {StorageService} from "../base/storage"
+import {RepositoryService} from "../../ts/modules/base/repository"
+import {ModelService} from "../../ts/modules/base/model"
+import {StorageService} from "../../ts/modules/base/storage"
 
 @Injectable()
 export class SprintsResource {

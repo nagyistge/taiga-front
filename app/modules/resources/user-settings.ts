@@ -23,14 +23,14 @@
  */
 
 
-import {sizeFormat} from "../../utils"
+import {sizeFormat} from "../../ts/utils"
 import * as angular from "angular"
 import * as Promise from "bluebird"
 import {Injectable} from "@angular/core"
-import {RepositoryService} from "../base/repository"
-import {UrlsService} from "../base/urls"
-import {HttpService} from "../base/http"
-import {ConfigurationService} from "../base/conf"
+import {RepositoryService} from "../../ts/modules/base/repository"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
+import {ConfigurationService} from "../../ts/modules/base/conf"
 
 @Injectable()
 export class UserSettingsResource {

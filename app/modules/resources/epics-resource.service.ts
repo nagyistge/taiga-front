@@ -17,10 +17,11 @@
  * File: epics-resource.service.coffee
  */
 
-import {generateHash} from "../../app"
+import {generateHash} from "../../ts/app"
 
 import * as angular from "angular"
 import * as Immutable from "immutable"
+import * as Promise from "bluebird"
 
 import {Injectable} from "@angular/core"
 import {UrlsService} from "../../ts/modules/base/urls"

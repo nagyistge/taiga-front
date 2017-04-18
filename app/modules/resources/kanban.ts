@@ -22,10 +22,10 @@
  * File: modules/resources/kanban.coffee
  */
 
-import {generateHash} from "../../app"
+import {generateHash} from "../../ts/app"
 
 import {Injectable} from "@angular/core"
-import {StorageService} from "../base/storage"
+import {StorageService} from "../../ts/modules/base/storage"
 
 @Injectable()
 export class KanbanResource {

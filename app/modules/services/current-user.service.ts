@@ -22,9 +22,10 @@ import * as angular from "angular"
 import * as Immutable from "immutable"
 import * as Promise from "bluebird"
 
+import {Injectable} from "@angular/core"
 import {ProjectsService} from "../projects/projects.service"
 import {StorageService} from "../../ts/modules/base/storage"
-import {ResourcesService} from "../../ts/modules/resources/resources.service"
+import {ResourcesService} from "../resources/resources.service"
 
 @Injectable()
 export class CurrentUserService {

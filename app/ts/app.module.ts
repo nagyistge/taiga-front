@@ -15,7 +15,7 @@ import { ModelService } from './modules/base/model';
 import { UrlsService } from './modules/base/urls';
 import { RepositoryService } from './modules/base/repository';
 import { HttpService } from './modules/base/http';
-import { ResourcesService } from './modules/resources/resources.service';
+import { ResourcesService } from '../modules/resources/resources.service';
 import { Svg, LightboxClose } from './modules/common';
 import { DateRange } from './modules/common/components';
 import { Avatar } from '../modules/components/avatar/avatar.component';

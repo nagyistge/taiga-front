@@ -18,6 +18,7 @@
  */
 
 import * as Immutable from "immutable"
+import * as Promise from "bluebird"
 
 import {Injectable} from "@angular/core"
 import {UrlsService} from "../../ts/modules/base/urls"

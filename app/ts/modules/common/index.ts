@@ -22,8 +22,9 @@
  * File: modules/common.coffee
  */
 
-import {downgradeComponent} from "@angular/upgrade/static"
-import {Component, Input, Output, ElementRef, EventEmitter} from "@angular/core"
+import {downgradeComponent, downgradeInjectable} from "@angular/upgrade/static"
+import {Injectable, Component, Input, Output, ElementRef, EventEmitter} from "@angular/core"
+import {NavigationUrlsService} from "../base/navurls"
 
 import {Service} from "../../classes"
 import * as angular from "angular"
@@ -371,8 +372,11 @@ module.directive("tgToggleComment", ToggleCommentDirective);
 //# according to his enabled modules and user permisions
 //############################################################################
 
-let ProjectUrl = function($navurls) {
-    let get = function(project) {
+@Injectable()
+export class ProjectUrlService {
+    constructor(private navurls: NavigationUrlsService) {}
+
+    get(project) {
         if (project.toJS) {
             project = project.toJS();
         }
@@ -380,25 +384,23 @@ let ProjectUrl = function($navurls) {
         let ctx = {project: project.slug};
 
         if (project.is_backlog_activated && (project.my_permissions.indexOf("view_us") > -1)) {
-            return $navurls.resolve("project-backlog", ctx);
+            return this.navurls.resolve("project-backlog", ctx);
         }
         if (project.is_kanban_activated && (project.my_permissions.indexOf("view_us") > -1)) {
-            return $navurls.resolve("project-kanban", ctx);
+            return this.navurls.resolve("project-kanban", ctx);
         }
         if (project.is_wiki_activated && (project.my_permissions.indexOf("view_wiki_pages") > -1)) {
-            return $navurls.resolve("project-wiki", ctx);
+            return this.navurls.resolve("project-wiki", ctx);
         }
         if (project.is_issues_activated && (project.my_permissions.indexOf("view_issues") > -1)) {
-            return $navurls.resolve("project-issues", ctx);
+            return this.navurls.resolve("project-issues", ctx);
         }
 
-        return $navurls.resolve("project", ctx);
+        return this.navurls.resolve("project", ctx);
     };
-
-    return {get};
 };
 
-module.factory("$projectUrl", ["$tgNavUrls", ProjectUrl]);
+module.factory("$projectUrl", downgradeInjectable(ProjectUrlService));
 
 
 //############################################################################
