@@ -22,12 +22,25 @@ import * as Immutable from "immutable"
 import {Injectable} from "@angular/core"
 import {UrlsService} from "../../ts/modules/base/urls"
 import {HttpService} from "../../ts/modules/base/http"
+import {PaginateResponseService} from "../services/paginate-response.service"
 
 @Injectable()
-export class UserResource {
+export class UsersResource {
     constructor(private urls: UrlsService,
                 private http: HttpService,
                 private paginateResponse: PaginateResponseService) {}
+
+    contacts(userId:number, options:any={}):Promise<any[]> {
+        let url = this.urls.resolve("user-contacts", userId);
+        let httpOptions = {headers: {}};
+
+        if (!options.enablePagination) {
+            httpOptions.headers["x-disable-pagination"] =  "1";
+        }
+
+        return this.http.get(url, {}, httpOptions)
+            .then((result:any) => result.data);
+    };
 
     getUserByUsername(username) {
         let url = this.urls.resolve("by_username");
@@ -91,7 +104,7 @@ export class UserResource {
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponse.paginate(result);
+            return this.paginateResponse.paginate(result);
         });
     };
 
@@ -109,7 +122,7 @@ export class UserResource {
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponse.paginate(result);
+            return this.paginateResponse.paginate(result);
         });
     };
 
@@ -127,7 +140,7 @@ export class UserResource {
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponse.paginate(result);
+            return this.paginateResponse.paginate(result);
         });
     };
 
@@ -145,7 +158,7 @@ export class UserResource {
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponse.paginate(result);
+            return this.paginateResponse.paginate(result);
         });
     };
 
@@ -165,7 +178,7 @@ export class UserResource {
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponse.paginate(result);
+            return this.paginateResponse.paginate(result);
         });
     };
 };

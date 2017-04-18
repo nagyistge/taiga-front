@@ -22,11 +22,94 @@ import * as Immutable from "immutable"
 import {Injectable} from "@angular/core"
 import {UrlsService} from "../../ts/modules/base/urls"
 import {HttpService} from "../../ts/modules/base/http"
+// TODO: Remove repository usage
+import {RepositoryService} from "../../ts/modules/base/repository"
+import {StorageService} from "../../ts/modules/base/storage"
 
 @Injectable()
 export class IssuesResource {
-    constructor(private urls: UrlsService,
-                private http: HttpService) {}
+    hashSuffix = "issues-queryparams";
+
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private storage: StorageService) {}
+
+    get(projectId, issueId) {
+        let params = this.getQueryParams(projectId);
+        params.project = projectId;
+        return this.repo.queryOne("issues", issueId, params);
+    }
+
+    getByRef(projectId, ref) {
+        let params = this.getQueryParams(projectId);
+        params.project = projectId;
+        params.ref = ref;
+        return this.repo.queryOne("issues", "by_ref", params);
+    }
+
+    listInAllProjects(filters) {
+        return this.repo.queryMany("issues", filters);
+    }
+
+    list(projectId, filters, options) {
+        let params = {project: projectId};
+        params = _.extend({}, params, filters || {});
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryPaginated("issues", params, options);
+    }
+
+    bulkCreate(projectId, data) {
+        let url = this.urls.resolve("bulk-create-issues");
+        let params = {project_id: projectId, bulk_issues: data};
+        return this.http.post(url, params);
+    }
+
+    upvote(issueId) {
+        let url = this.urls.resolve("issue-upvote", issueId);
+        return this.http.post(url);
+    }
+
+    downvote(issueId) {
+        let url = this.urls.resolve("issue-downvote", issueId);
+        return this.http.post(url);
+    }
+
+    watch(issueId) {
+        let url = this.urls.resolve("issue-watch", issueId);
+        return this.http.post(url);
+    }
+
+    unwatch(issueId) {
+        let url = this.urls.resolve("issue-unwatch", issueId);
+        return this.http.post(url);
+    }
+
+    stats(projectId) {
+        return this.repo.queryOneRaw("projects", `${projectId}/issues_stats`);
+    }
+
+    filtersData(params) {
+        return this.repo.queryOneRaw("issues-filters", null, params);
+    }
+
+    listValues(projectId, type) {
+        let params = {"project": projectId};
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryMany(type, params);
+    }
+
+    storeQueryParams(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffix}`;
+        let hash = generateHash([projectId, ns]);
+        return this.storage.set(hash, params);
+    }
+
+    getQueryParams(projectId) {
+        let ns = `${projectId}:${this.hashSuffix}`;
+        let hash = generateHash([projectId, ns]);
+        return this.storage.get(hash) || {};
+    }
 
     listInAllProjects(params) {
         let url = this.urls.resolve("issues");

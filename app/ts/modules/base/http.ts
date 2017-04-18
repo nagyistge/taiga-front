@@ -57,7 +57,7 @@ export class HttpService {
     request(options) {
         options.headers = _.assign({}, options.headers || {}, this.headers());
 
-        return this.http.request(options).toPromise(Promise);
+        return <Promise<any>>this.http.request(options).toPromise(Promise);
     }
 
     get(url, params=null, options:any={}) {

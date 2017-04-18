@@ -157,7 +157,7 @@ export class RepositoryService {
         })
     }
 
-    queryMany(name, params={}, options:any={}, headers=false) {
+    queryMany(name, params={}, options:any={}, headers=false):Promise<any> {
         let url = this.urls.resolve(name);
         let httpOptions = {headers: {}};
 
@@ -176,7 +176,7 @@ export class RepositoryService {
         });
     }
 
-    queryOneAttribute(name, id, attribute, params={}, options:any={}) {
+    queryOneAttribute(name, id, attribute, params={}, options:any={}):Promise<any> {
         let url = this.urls.resolve(name, id);
         let httpOptions = {headers: {}};
 
@@ -192,7 +192,7 @@ export class RepositoryService {
         });
     }
 
-    queryOne(name, id, params={}, options:any={}) {
+    queryOne(name, id, params={}, options:any={}):Promise<any> {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = {headers: {}};
@@ -205,7 +205,7 @@ export class RepositoryService {
         });
     }
 
-    queryOneRaw(name, id, params={}, options:any={}) {
+    queryOneRaw(name, id, params={}, options:any={}):Promise<any> {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
@@ -217,7 +217,7 @@ export class RepositoryService {
         });
     }
 
-    queryPaginated(name, params={}, options={}) {
+    queryPaginated(name, params={}, options={}):Promise<any> {
         let url = this.urls.resolve(name);
         let httpOptions = _.merge({headers: {}}, options);
         return this.http.get(url, params, httpOptions).then((data:any) => {
@@ -231,7 +231,7 @@ export class RepositoryService {
         });
     }
 
-    queryOnePaginatedRaw(name, id, params={}, options={}) {
+    queryOnePaginatedRaw(name, id, params={}, options={}):Promise<any> {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
