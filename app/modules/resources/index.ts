@@ -31,4 +31,4 @@ let module = angular.module("taigaResources", ["taigaBase"]);
 module.service("$tgResources", downgradeInjectable(ResourcesService));
 
 let module2 = angular.module("taigaResources2", ["taigaBase"]);
-module2.service("$tgResources", downgradeInjectable(ResourcesService));
+module2.service("tgResources", downgradeInjectable(ResourcesService));

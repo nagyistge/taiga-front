@@ -33,8 +33,19 @@ export class CustomAttributesValuesResource {
         return this.repo.queryOne(resource, objectId);
     }
 
-    epic = { get(objectId) { return this._get(objectId, "custom-attributes-values/epic"); } };
-    userstory = { get(objectId) { return this._get(objectId, "custom-attributes-values/userstory"); } };
-    task = { get(objectId) { return this._get(objectId, "custom-attributes-values/task"); } };
-    issue = { get(objectId) { return this._get(objectId, "custom-attributes-values/issue"); } };
+    get_epic(objectId) {
+        return this._get(objectId, "custom-attributes-values/epic");
+    };
+
+    get_userstory(objectId) {
+        return this._get(objectId, "custom-attributes-values/userstory");
+    }
+
+    get_task(objectId) {
+        return this._get(objectId, "custom-attributes-values/task");
+    }
+
+    get_issue(objectId) {
+        return this._get(objectId, "custom-attributes-values/issue");
+    }
 };

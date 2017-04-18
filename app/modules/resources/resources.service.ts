@@ -32,7 +32,7 @@ import {UsersResource} from "./users-resource.service"
 import {UserstoriesResource} from "./userstories-resource.service"
 import {WikiHistoryResource} from "./wiki-history-resource.service"
 
-const urls = {
+const api_urls = {
     // Auth
     "auth": "/auth",
     "auth-register": "/auth/register",
@@ -268,6 +268,6 @@ export class ResourcesService {
                 public userstories: UserstoriesResource,
                 public wikiHistory: WikiHistoryResource,
                 private urls:UrlsService) {
-        this.urls.update(urls);
+        this.urls.update(api_urls);
     }
 }

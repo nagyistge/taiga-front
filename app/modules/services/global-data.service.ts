@@ -21,7 +21,7 @@ import {Injectable} from "@angular/core"
 
 @Injectable()
 export class GlobalDataService {
-    private data;
+    private data:any = {};
 
     get(key:string):any {
         return this.data[key]

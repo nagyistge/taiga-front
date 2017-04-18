@@ -26,33 +26,28 @@ import * as _ from "lodash"
 import {Injectable} from "@angular/core"
 import {ConfigurationService} from "./conf"
 
-let format = function(fmt, obj) {
-    obj = _.clone(obj);
-    return fmt.replace(/%s/g, match => String(obj.shift()));
-};
-
 @Injectable()
 export class UrlsService {
-    urls:any = {}
-    mainUrl:any
+    urls:any = {};
+    mainUrl:any;
 
     constructor(private config: ConfigurationService) {
         this.mainUrl = this.config.get("api");
     }
 
+    private format(fmt, obj) {
+        obj = _.clone(obj);
+        return fmt.replace(/%s/g, match => String(obj.shift()));
+    };
+
     update(urls) {
         return this.urls = _.merge(this.urls, urls);
     }
 
-    resolve(...args) {
-        if (args.length === 0) {
-            throw Error("wrong arguments to setUrls");
-        }
+    resolve(name, ...args) {
+        let url = this.format(this.urls[name], args);
 
-        let name = args.slice(0, 1)[0];
-        let url = format(this.urls[name], args.slice(1));
-
-        return format("%s/%s", [
+        return this.format("%s/%s", [
             _.trimEnd(this.mainUrl, "/"),
             _.trimStart(url, "/")
         ]);

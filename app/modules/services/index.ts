@@ -37,7 +37,7 @@ import {xhrError} from "./xhrError.service"
 module.service("tgAppMetaService", AppMetaService);
 module.service("tgAttachmentsService", AttachmentsService);
 module.service("tgCheckPermissionsService", CheckPermissionsService);
-module.service("tgCurrentUserService", CurrentUserService);
+module.service("tgCurrentUserService", downgradeInjectable(CurrentUserService));
 module.service("tgErrorHandlingService", downgradeInjectable(ErrorHandlingService));
 module.service("tgLightboxFactory", LightboxFactory);
 module.service("tgProjectLogoService", downgradeInjectable(ProjectLogoService));

@@ -72,6 +72,7 @@ export var DiscoverProjectsService = (function() {
             let _params = _.extend({}, _discoverParams, params);
             return this.rs.projects.getProjects(_params, false)
                 .then(result => {
+                    console.log(result);
                     let data = result.data.slice(0, 5);
 
                     let projects = Immutable.fromJS(data);
@@ -123,7 +124,7 @@ export var DiscoverProjectsService = (function() {
             let _params = _.extend({}, _discoverParams, params);
             return this.rs.projects.getProjects(_params)
                 .then(result => {
-                    this._nextSearchPage = !!result.headers('X-Pagination-Next');
+                    this._nextSearchPage = !!result.headers['X-Pagination-Next'];
 
                     let projects = Immutable.fromJS(result.data);
                     projects = projects.map(this.decorate);

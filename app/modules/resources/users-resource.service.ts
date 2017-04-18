@@ -106,7 +106,7 @@ export class UsersResource {
         }).then(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
-        });
+        }.bind(this));
     };
 
     getVoted(userId, page, type, q) {
@@ -124,7 +124,7 @@ export class UsersResource {
         }).then(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
-        });
+        }.bind(this));
     };
 
     getWatched(userId, page, type, q) {
@@ -142,7 +142,7 @@ export class UsersResource {
         }).then(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
-        });
+        }.bind(this));
     };
 
     getProfileTimeline(userId, page) {
@@ -160,7 +160,7 @@ export class UsersResource {
         }).then(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
-        });
+        }.bind(this));
     };
 
     getUserTimeline(userId, page) {
@@ -180,6 +180,6 @@ export class UsersResource {
         }).then(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
-        });
+        }.bind(this));
     };
 };

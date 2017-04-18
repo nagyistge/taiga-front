@@ -23,13 +23,15 @@ import {Injectable} from "@angular/core"
 
 @Injectable()
 export class PaginateResponseService {
-    paginate(result) {
+    paginate(result: Immutable.Map<string, any>) {
+        let data = result.get("data");
+        let headers = result.get("headers");
         let paginateResponse = Immutable.Map({
-            "data": result.get("data"),
-            "next": !!result.get("headers")("x-pagination-next"),
-            "prev": !!result.get("headers")("x-pagination-prev"),
-            "current": result.get("headers")("x-pagination-current"),
-            "count": result.get("headers")("x-pagination-count")
+            "data": data,
+            "next": !!headers.get("x-pagination-next"),
+            "prev": !!headers.get("x-pagination-prev"),
+            "current": headers.get("x-pagination-current"),
+            "count": headers.get("x-pagination-count")
         });
         return paginateResponse;
     }

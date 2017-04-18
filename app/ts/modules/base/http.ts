@@ -37,7 +37,9 @@ export class HttpService {
                 private translate: TranslateService) {}
 
     headers() {
-        let headers = {};
+        let headers = {
+            "Content-Type": "application/json"
+        };
 
         // Authorization
         let token = this.storage.get('token');
@@ -56,16 +58,16 @@ export class HttpService {
 
     request(options) {
         options.headers = _.assign({}, options.headers || {}, this.headers());
+        if (options.data) {
+            options.body = JSON.stringify(options.data);
+        }
 
-        return new Promise(function (resolve, reject) {
-            // No cancellation can be done
-            let value:any;
-            this.http.request(options).subscribe(function (v) {
-                value = v;
-            }, reject, function () {
-               resolve(value);
-            });
-        });
+        return this.http.request(options.url, options)
+                        .map(function(res) {
+                            (<any>res).data = res.json();
+                            return res;
+                        })
+                        .toPromise(Promise);
     }
 
     get(url, params=null, options:any={}) {

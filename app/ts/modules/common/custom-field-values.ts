@@ -106,7 +106,7 @@ class CustomAttributesValuesController extends Controller {
 
     loadCustomAttributesValues() {
         if (!this.objectId) { return this.customAttributesValues; }
-        return this.rs.customAttributesValues[this.type].get(this.objectId).then(customAttributesValues => {
+        return this.rs.customAttributesValues[`get_${this.type}`](this.objectId).then(customAttributesValues => {
             this.customAttributes = this.project[`${this.type}_custom_attributes`];
             this.customAttributesValues = customAttributesValues;
             return customAttributesValues;

@@ -38,7 +38,6 @@ import {ModelService} from "./base/model"
 import {HttpService} from "./base/http"
 import {UrlsService} from "./base/urls"
 import {ConfigurationService} from "./base/conf"
-import {ResourcesService} from "../../modules/resources/resources.service"
 import {TranslateService} from "@ngx-translate/core"
 import {CurrentUserService} from "../../modules/services/current-user.service"
 import {ThemeService} from "../../modules/services/theme.service"
@@ -94,7 +93,6 @@ export class AuthService {
     constructor(private globalData: GlobalDataService,
                 private storage: StorageService,
                 private model: ModelService,
-                private rs: ResourcesService,
                 private http: HttpService,
                 private urls: UrlsService,
                 private config: ConfigurationService,
@@ -249,10 +247,6 @@ export class AuthService {
             this.setUser(user);
             return user;
         });
-    }
-
-    getInvitation(token) {
-        return this.rs.invitations.get(token);
     }
 
     acceptInvitiationWithNewUser(data) {
@@ -567,12 +561,12 @@ module.directive("tgChangePasswordFromRecovery", ["$tgAuth", "$tgConfirm", "$tgL
 //# Invitation
 //############################################################################
 
-let InvitationDirective = function($auth, $confirm, $location, $config, $params, $navUrls, $analytics, $translate, config) {
+let InvitationDirective = function($auth, $rs, $confirm, $location, $config, $params, $navUrls, $analytics, $translate, config) {
     let link = function($scope, $el, $attrs) {
         let data;
         let { token } = $params;
 
-        let promise = $auth.getInvitation(token);
+        let promise = $rs.invitations.get(token);
         promise.then(function(invitation) {
             $scope.invitation = invitation;
             return $scope.publicRegisterEnabled = config.get("publicRegisterEnabled");
@@ -662,7 +656,7 @@ let InvitationDirective = function($auth, $confirm, $location, $config, $params,
     return {link};
 };
 
-module.directive("tgInvitation", ["$tgAuth", "$tgConfirm", "$tgLocation", "$tgConfig", "$routeParams",
+module.directive("tgInvitation", ["$tgAuth", "$tgResources", "$tgConfirm", "$tgLocation", "$tgConfig", "$routeParams",
                                   "$tgNavUrls", "$tgAnalytics", "$translate", "$tgConfig", InvitationDirective]);
 
 

@@ -35,7 +35,7 @@ export class SprintsResource {
                 private storage: StorageService) {}
 
     get(projectId, sprintId) {
-        return this.repo.queryOne("milestones", sprintId).then(function(sprint:any) {
+        return this.repo.queryOne("milestones", sprintId).then((sprint:any) => {
             let uses = sprint.user_stories;
             uses = _.map(uses, u => this.model.make_model("userstories", u));
             sprint._attrs.user_stories = uses;
@@ -62,8 +62,8 @@ export class SprintsResource {
 
             return {
                 milestones,
-                closed: parseInt(headers("Taiga-Info-Total-Closed-Milestones"), 10),
-                open: parseInt(headers("Taiga-Info-Total-Opened-Milestones"), 10)
+                closed: parseInt(headers["Taiga-Info-Total-Closed-Milestones"], 10),
+                open: parseInt(headers["Taiga-Info-Total-Opened-Milestones"], 10)
             };
         });
     };

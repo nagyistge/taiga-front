@@ -75,7 +75,7 @@ export class EpicsService {
 
                 this._loadingEpics = false;
 
-                return this._disablePagination = !result.headers('x-pagination-next');
+                return this._disablePagination = !result.headers['x-pagination-next'];
         }).catch(xhr => {
                 return this.xhrError.response(xhr);
         });

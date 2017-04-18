@@ -18,6 +18,7 @@
  */
 
 import * as angular from "angular"
+import {downgradeInjectable} from "@angular/upgrade/static"
 
 import {BlockedProjectExplanationDirective} from "./components/blocked-project-explanation.directive"
 import {ContactProjectButtonController} from "./components/contact-project-button/contact-project-button.controller"
@@ -139,7 +140,7 @@ module.service("tgTrelloImportService", TrelloImportService);
 module.directive("tgWarningUserImportLightbox", WarningUserImportDirective);
 module.controller("ProjectsListing", ProjectsListingController);
 module.controller("Project", ProjectController);
-module.service("tgProjectsService", ProjectsService);
+module.service("tgProjectsService", downgradeInjectable(ProjectsService));
 module.directive("tgCantOwnProjectExplanation", CantOwnProjectExplanationDirective);
 module.controller("TransferProjectController", TransferProject);
 module.directive('tgTransferProject', TransferProjectDirective);

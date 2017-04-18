@@ -29,7 +29,7 @@ import {PaginateResponseService} from "../services/paginate-response.service"
 import {TranslateService} from "@ngx-translate/core"
 import {RepositoryService} from "../../ts/modules/base/repository"
 import {ConfigurationService} from "../../ts/modules/base/conf"
-import {AuthService} from "../../ts/modules/auth"
+import {StorageService} from "../../ts/modules/base/storage"
 
 @Injectable()
 export class ProjectsResource {
@@ -37,7 +37,7 @@ export class ProjectsResource {
                 private translate: TranslateService,
                 private urls: UrlsService,
                 private http: HttpService,
-                private auth: AuthService,
+                private storage: StorageService,
                 private config: ConfigurationService,
                 private paginateResponse: PaginateResponseService) {}
 
@@ -214,7 +214,7 @@ export class ProjectsResource {
             xhr.addEventListener("error", failed, false);
 
             xhr.open("POST", this.urls.resolve("importer"));
-            xhr.setRequestHeader("Authorization", `Bearer ${this.auth.getToken()}`);
+            xhr.setRequestHeader("Authorization", `Bearer ${this.storage.get("token")}`);
             xhr.setRequestHeader('Accept', 'application/json');
             xhr.send(data);
         });
@@ -337,9 +337,11 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
-            result = Immutable.fromJS(result);
-            return this.paginateResponse.paginate(result);
-        });
+            return this.paginateResponse.paginate(Immutable.fromJS({
+                "data": result.data,
+                "headers": result.headers
+            }));
+        }.bind(this));
     };
 
     likeProject(projectId) {
