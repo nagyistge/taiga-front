@@ -22,23 +22,19 @@
  * File: modules/resources/custom-field-values.coffee
  */
 
-export function CustomAttributesValuesResourcesProvider($repo) {
-    let _get = (objectId, resource) => $repo.queryOne(resource, objectId);
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-    let service = {
-        epic: {
-            get(objectId) { return _get(objectId, "custom-attributes-values/epic"); }
-        },
-        userstory: {
-            get(objectId) { return _get(objectId, "custom-attributes-values/userstory"); }
-        },
-        task: {
-            get(objectId) { return _get(objectId, "custom-attributes-values/task"); }
-        },
-        issue: {
-            get(objectId) { return _get(objectId, "custom-attributes-values/issue"); }
-        }
-    };
+@Injectable()
+export class CustomAttributesValuesResource {
+    constructor(private repo: RepositoryService) {}
 
-    return instance => instance.customAttributesValues = service;
+    _get(objectId:number, resource:string) {
+        return this.repo.queryOne(resource, objectId);
+    }
+
+    epic = { get(objectId) { return this._get(objectId, "custom-attributes-values/epic"); } };
+    userstory = { get(objectId) { return this._get(objectId, "custom-attributes-values/userstory"); } };
+    task = { get(objectId) { return this._get(objectId, "custom-attributes-values/task"); } };
+    issue = { get(objectId) { return this._get(objectId, "custom-attributes-values/issue"); } };
 };

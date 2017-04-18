@@ -17,11 +17,11 @@
  * File: paginate-response.service.coffee
  */
 
-import * as angular from "angular"
 import * as Immutable from "immutable"
 
-export let PaginateResponse = () =>
-    function(result) {
+@Injectable()
+export class PaginateResponseService {
+    paginate(result) {
         let paginateResponse = Immutable.Map({
             "data": result.get("data"),
             "next": !!result.get("headers")("x-pagination-next"),
@@ -29,7 +29,6 @@ export let PaginateResponse = () =>
             "current": result.get("headers")("x-pagination-current"),
             "count": result.get("headers")("x-pagination-count")
         });
-
         return paginateResponse;
     }
-;
+}

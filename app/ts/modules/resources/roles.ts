@@ -22,12 +22,21 @@
  * File: modules/resources/memberships.coffee
  */
 
-export function RolesResourcesProvider($repo, $http, $urls) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
 
-    service.get = id => $repo.queryOne("roles", id);
+@Injectable()
+export class RolesResource {
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService) {}
+    get(id) {
+        return this.repo.queryOne("roles", id);
+    }
 
-    service.list = projectId => $repo.queryMany("roles", {project: projectId});
-
-    return instance => instance.roles = service;
+    list(projectId) {
+        return this.repo.queryMany("roles", {project: projectId});
+    }
 };

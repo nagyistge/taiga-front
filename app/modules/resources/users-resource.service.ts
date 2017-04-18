@@ -19,11 +19,18 @@
 
 import * as Immutable from "immutable"
 
-export let UsersResource = function(urlsService, http, paginateResponseService) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.getUserByUsername = function(username) {
-        let url = urlsService.resolve("by_username");
+@Injectable()
+export class UserResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService,
+                private paginateResponse: PaginateResponseService) {}
+
+    getUserByUsername(username) {
+        let url = this.urls.resolve("by_username");
 
         let httpOptions = {
             headers: {
@@ -35,12 +42,12 @@ export let UsersResource = function(urlsService, http, paginateResponseService) 
             username
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.getStats = function(userId) {
-        let url = urlsService.resolve("user-stats", userId);
+    getStats(userId) {
+        let url = this.urls.resolve("user-stats", userId);
 
         let httpOptions = {
             headers: {
@@ -48,12 +55,12 @@ export let UsersResource = function(urlsService, http, paginateResponseService) 
             }
         };
 
-        return http.get(url, {}, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, {}, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.getContacts = function(userId, excludeProjectId) {
-        let url = urlsService.resolve("user-contacts", userId);
+    getContacts(userId, excludeProjectId) {
+        let url = this.urls.resolve("user-contacts", userId);
 
         let params:any = {};
         if (excludeProjectId != null) { params.exclude_project = excludeProjectId; }
@@ -64,12 +71,12 @@ export let UsersResource = function(urlsService, http, paginateResponseService) 
             }
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.getLiked = function(userId, page, type, q) {
-        let url = urlsService.resolve("user-liked", userId);
+    getLiked(userId, page, type, q) {
+        let url = this.urls.resolve("user-liked", userId);
 
         let params:any = {};
         if (page != null) { params.page = page; }
@@ -78,90 +85,87 @@ export let UsersResource = function(urlsService, http, paginateResponseService) 
 
         params.only_relevant = true;
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
 
-    service.getVoted = function(userId, page, type, q) {
-        let url = urlsService.resolve("user-voted", userId);
+    getVoted(userId, page, type, q) {
+        let url = this.urls.resolve("user-voted", userId);
 
         let params:any = {};
         if (page != null) { params.page = page; }
         if (type != null) { params.type = type; }
         if (q != null) { params.q = q; }
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
 
-    service.getWatched = function(userId, page, type, q) {
-        let url = urlsService.resolve("user-watched", userId);
+    getWatched(userId, page, type, q) {
+        let url = this.urls.resolve("user-watched", userId);
 
         let params:any = {};
         if (page != null) { params.page = page; }
         if (type != null) { params.type = type; }
         if (q != null) { params.q = q; }
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
 
-    service.getProfileTimeline = function(userId, page) {
+    getProfileTimeline(userId, page) {
         let params = {
             page
         };
 
-        let url = urlsService.resolve("timeline-profile");
+        let url = this.urls.resolve("timeline-profile");
         url = `${url}/${userId}`;
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
 
-    service.getUserTimeline = function(userId, page) {
+    getUserTimeline(userId, page) {
         let params = {
             page,
             only_relevant: true
         };
 
-        let url = urlsService.resolve("timeline-user");
+        let url = this.urls.resolve("timeline-user");
         url = `${url}/${userId}`;
 
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
-
-    return () => ({"users": service});
 };
-UsersResource.$inject = ["$tgUrls", "$tgHttp", "tgPaginateResponseService"];

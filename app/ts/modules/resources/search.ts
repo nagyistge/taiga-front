@@ -23,20 +23,23 @@
  */
 
 
-import * as angular from "angular"
+import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
 
-export function SearchResourcesProvider($repo, $urls, $http, $q) {
-    let service:any = {};
+@Injectable()
+export class SearchResource {
+    constructor(private repo: RepositoryService,
+                private urls: UrlsService,
+                private http: HttpService) {}
 
-    service.do = function(projectId, term) {
-        let deferredAbort = $q.defer();
-
-        let url = $urls.resolve("search");
+    do(projectId, term) {
+        let url = this.urls.resolve("search");
         let params = {
             url,
             method: "GET",
-            timeout: deferredAbort.promise,
-            cancelable: true,
             params: {
                 project: projectId,
                 text: term,
@@ -44,17 +47,6 @@ export function SearchResourcesProvider($repo, $urls, $http, $q) {
             }
         };
 
-        let request = $http.request(params).then(data => data.data);
-
-        request.abort = () => deferredAbort.resolve();
-
-        request.finally = function() {
-            request.abort = angular.noop;
-            return deferredAbort = (request = null);
-        };
-
-        return request;
+        return this.http.request(params).then((data:any) => data.data);
     };
-
-    return instance => instance.search = service;
 };

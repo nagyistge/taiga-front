@@ -27,7 +27,6 @@ import {CheckPermissionsService} from "./check-permissions.service"
 import {CurrentUserService} from "./current-user.service"
 import {ErrorHandlingService} from "./error-handling.service"
 import {LightboxFactory} from "./lightbox-factory.service"
-import {PaginateResponse} from "./paginate-response.service"
 import {ProjectLogoService} from "./project-logo.service"
 import {ProjectService} from "./project.service"
 import {ThemeService} from "./theme.service"
@@ -41,7 +40,6 @@ module.service("tgCheckPermissionsService", CheckPermissionsService);
 module.service("tgCurrentUserService", CurrentUserService);
 module.service("tgErrorHandlingService", downgradeInjectable(ErrorHandlingService));
 module.service("tgLightboxFactory", LightboxFactory);
-module.factory("tgPaginateResponseService", PaginateResponse);
 module.service("tgProjectLogoService", downgradeInjectable(ProjectLogoService));
 module.service("tgProjectService", ProjectService);
 module.service("tgThemeService", downgradeInjectable(ThemeService));

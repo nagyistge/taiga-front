@@ -20,19 +20,10 @@
 import {Service} from "../../ts/classes"
 import {groupBy} from "../../ts/utils"
 
-export class ProjectsService extends Service {
-    rs:any
-    projectUrl:any
-
-    static initClass() {
-        this.$inject = ["tgResources", "$projectUrl"];
-    }
-
-    constructor(rs, projectUrl) {
-        super()
-        this.rs = rs;
-        this.projectUrl = projectUrl;
-    }
+@Injectable()
+export class ProjectsService {
+    constructor(private rs: ResourcesService,
+                private projectUrl: ProjectUrlService) {}
 
     create(data) {
         return this.rs.projects.create(data);
@@ -53,7 +44,7 @@ export class ProjectsService extends Service {
         return this.rs.projects.getProjectStats(projectId);
     }
 
-    getProjectsByUserId(userId, paginate) {
+    getProjectsByUserId(userId, paginate=false) {
         return this.rs.projects.getProjectsByUserId(userId, paginate)
             .then(projects => {
                 return projects.map(this._decorate.bind(this));
@@ -84,4 +75,3 @@ export class ProjectsService extends Service {
         return this.rs.projects.transferReject(projectId, token, reason);
     }
 }
-ProjectsService.initClass();

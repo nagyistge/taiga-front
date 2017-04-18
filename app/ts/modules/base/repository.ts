@@ -22,28 +22,20 @@
  * File: modules/base/repository.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import * as _ from "lodash"
+import * as Promise from "bluebird"
+import {Injectable} from "@angular/core"
+import {UrlsService} from "./urls"
+import {ModelService} from "./model"
+import {HttpService} from "./http"
 
-export class RepositoryService extends Service {
-    q:any
-    model:any
-    http:any
-    urls:any
+@Injectable()
+export class RepositoryService {
+    constructor(private model: ModelService,
+                private http: HttpService,
+                private urls: UrlsService) {}
 
-    static initClass() {
-        this.$inject = ["$q", "$tgModel", "$tgHttp", "$tgUrls"];
-    }
-
-    constructor(q, model, http, urls) {
-        super();
-        this.q = q;
-        this.model = model;
-        this.http = http;
-        this.urls = urls;
-    }
-
-    resolveUrlForModel(model) {
+    resolveUrlForModel(model):string {
         let idAttrName = model.getIdAttrName();
         return `${this.urls.resolve(model.getName())}/${model[idAttrName]}`;
     }
@@ -52,138 +44,120 @@ export class RepositoryService extends Service {
         return this.urls.resolve(model.getName(), model.parent);
     }
 
-    create(name, data, dataTypes, extraParams) {
-        if (dataTypes == null) { dataTypes = {}; }
-        if (extraParams == null) { extraParams = {}; }
-        let defered = this.q.defer();
-        let url = this.urls.resolve(name);
+    create(name, data, dataTypes={}, extraParams={}) {
+        return new Promise(function(resolve, reject) {
+            let url = this.urls.resolve(name);
 
-        let promise = this.http.post(url, JSON.stringify(data), extraParams);
-        promise.success((_data, _status) => {
-            return defered.resolve(this.model.make_model(name, _data, null, dataTypes));
-        });
+            let promise = this.http.post(url, JSON.stringify(data), extraParams);
+            promise.success((_data, _status) => {
+                return resolve(this.model.make_model(name, _data, null, dataTypes));
+            });
 
-        promise.error((data, status) => {
-            return defered.reject(data);
-        });
-
-        return defered.promise;
+            promise.error((data, status) => {
+                return reject(data);
+            });
+        })
     }
 
-    remove(model, params) {
-        if (params == null) { params = {}; }
-        let defered = this.q.defer();
-        let url = this.resolveUrlForModel(model);
+    remove(model, params={}) {
+        return new Promise(function(resolve, reject) {
+            let url = this.resolveUrlForModel(model);
 
-        let promise = this.http.delete(url, {}, params);
-        promise.success((data, status) => defered.resolve(model));
-
-        promise.error((data, status) => defered.reject(model));
-
-        return defered.promise;
+            let promise = this.http.delete(url, {}, params);
+            promise.success((data, status) => resolve(model));
+            promise.error((data, status) => reject(model));
+        });
     }
 
-    saveAll(models, patch) {
-        if (patch == null) { patch = true; }
+    saveAll(models, patch=true) {
         let promises = _.map(models, x => this.save(x, true));
-        return this.q.all(promises);
+        return Promise.all(promises);
     }
 
     save(model, patch=true, params={}, options={}, returnHeaders=false) {
+        return new Promise(function(resolve, reject) {
         let promise;
-        let defered = this.q.defer();
-
-        if (!model.isModified() && patch) {
-            defered.resolve(model);
-            return defered.promise;
-        }
-
-        let url = this.resolveUrlForModel(model);
-
-        let data = JSON.stringify(model.getAttrs(patch));
-
-        if (patch) {
-            promise = this.http.patch(url, data, params, options);
-        } else {
-            promise = this.http.put(url, data, params, options);
-        }
-
-        promise.success((data, status, headers, response) => {
-            model._isModified = false;
-            model._attrs = _.extend(model.getAttrs(), data);
-            model._modifiedAttrs = {};
-
-            model.applyCasts();
-
-            if (returnHeaders) {
-                return defered.resolve([model, headers()]);
-            } else {
-                return defered.resolve(model);
+            if (!model.isModified() && patch) {
+                return resolve(model);
             }
+
+            let url = this.resolveUrlForModel(model);
+
+            let data = JSON.stringify(model.getAttrs(patch));
+
+            if (patch) {
+                promise = this.http.patch(url, data, params, options);
+            } else {
+                promise = this.http.put(url, data, params, options);
+            }
+
+            promise.success((data, status, headers, response) => {
+                model._isModified = false;
+                model._attrs = _.extend(model.getAttrs(), data);
+                model._modifiedAttrs = {};
+
+                model.applyCasts();
+
+                if (returnHeaders) {
+                    return resolve([model, headers()]);
+                } else {
+                    return resolve(model);
+                }
+            });
+
+            promise.error((data, status) => reject(data));
         });
-
-        promise.error((data, status) => defered.reject(data));
-
-        return defered.promise;
     }
 
-    saveAttribute(model, attribute, patch) {
-        let promise;
-        if (patch == null) { patch = true; }
-        let defered = this.q.defer();
+    saveAttribute(model, attribute, patch=true) {
+        return new Promise(function(resolve, reject) {
+            if (!model.isModified() && patch) {
+                return resolve(model);
+            }
 
-        if (!model.isModified() && patch) {
-            defered.resolve(model);
-            return defered.promise;
-        }
+            let url = this.resolveUrlForAttributeModel(model);
 
-        let url = this.resolveUrlForAttributeModel(model);
+            let data = {};
 
-        let data = {};
+            data[attribute] = model.getAttrs();
 
-        data[attribute] = model.getAttrs();
+            let promise;
+            if (patch) {
+                promise = this.http.patch(url, data);
+            } else {
+                promise = this.http.put(url, data);
+            }
 
-        if (patch) {
-            promise = this.http.patch(url, data);
-        } else {
-            promise = this.http.put(url, data);
-        }
+            promise.success((data, status) => {
+                model._isModified = false;
+                model._attrs = _.extend(model.getAttrs(), data);
+                model._modifiedAttrs = {};
 
-        promise.success((data, status) => {
-            model._isModified = false;
-            model._attrs = _.extend(model.getAttrs(), data);
-            model._modifiedAttrs = {};
+                model.applyCasts();
+                return resolve(model);
+            });
 
-            model.applyCasts();
-            return defered.resolve(model);
+            promise.error((data, status) => reject(data));
         });
-
-        promise.error((data, status) => defered.reject(data));
-
-        return defered.promise;
     }
 
     refresh(model) {
-        let defered = this.q.defer();
+        return new Promise(function(resolve, reject) {
+            let url = this.resolveUrlForModel(model);
+            let promise = this.http.get(url);
+            promise.success(function(data, status) {
+                model._modifiedAttrs = {};
+                model._attrs = data;
+                model._isModified = false;
+                model.applyCasts();
+                return resolve(model);
+            });
 
-        let url = this.resolveUrlForModel(model);
-        let promise = this.http.get(url);
-        promise.success(function(data, status) {
-            model._modifiedAttrs = {};
-            model._attrs = data;
-            model._isModified = false;
-            model.applyCasts();
-            return defered.resolve(model);
-        });
-
-        promise.error((data, status) => defered.reject(data));
-
-        return defered.promise;
+            promise.error((data, status) => reject(data));
+        })
     }
 
-    queryMany(name, params, options, headers) {
-        if (options == null) { options = {}; }
-        if (headers == null) { headers = false; }
+    queryMany(name, params={}, options:any={}, headers=false) {
         let url = this.urls.resolve(name);
         let httpOptions = {headers: {}};
 
@@ -191,7 +165,7 @@ export class RepositoryService extends Service {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             let result =  _.map(data.data, x => this.model.make_model(name, x));
 
             if (headers) {
@@ -202,8 +176,7 @@ export class RepositoryService extends Service {
         });
     }
 
-    queryOneAttribute(name, id, attribute, params, options) {
-        if (options == null) { options = {}; }
+    queryOneAttribute(name, id, attribute, params={}, options:any={}) {
         let url = this.urls.resolve(name, id);
         let httpOptions = {headers: {}};
 
@@ -211,16 +184,15 @@ export class RepositoryService extends Service {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             let model = this.model.make_model(name, data.data[attribute]);
-            model.parent = id;
+            (<any>model).parent = id;
 
             return model;
         });
     }
 
-    queryOne(name, id, params, options) {
-        if (options == null) { options = {}; }
+    queryOne(name, id, params={}, options:any={}) {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = {headers: {}};
@@ -228,29 +200,27 @@ export class RepositoryService extends Service {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             return this.model.make_model(name, data.data);
         });
     }
 
-    queryOneRaw(name, id, params, options) {
-        if (options == null) { options = {}; }
+    queryOneRaw(name, id, params={}, options:any={}) {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
         if (!options.enablePagination) {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             return data.data;
         });
     }
 
-    queryPaginated(name, params, options) {
-        if (options == null) { options = {}; }
+    queryPaginated(name, params={}, options={}) {
         let url = this.urls.resolve(name);
         let httpOptions = _.merge({headers: {}}, options);
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             let headers = data.headers();
             let result:any = {};
             result.models = _.map(data.data, x => this.model.make_model(name, x));
@@ -261,13 +231,12 @@ export class RepositoryService extends Service {
         });
     }
 
-    queryOnePaginatedRaw(name, id, params, options) {
-        if (options == null) { options = {}; }
+    queryOnePaginatedRaw(name, id, params={}, options={}) {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
 
-        return this.http.get(url, params, httpOptions).then(data => {
+        return this.http.get(url, params, httpOptions).then((data:any) => {
             let headers = data.headers();
             let result:any = {};
             result.data = data.data;
@@ -293,4 +262,3 @@ export class RepositoryService extends Service {
         return this.queryOneRaw("resolver", null, params, {cache});
     }
 }
-RepositoryService.initClass();

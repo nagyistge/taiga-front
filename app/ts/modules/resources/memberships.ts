@@ -22,42 +22,48 @@
  * File: modules/resources/memberships.coffee
  */
 
-
 import * as _ from "lodash"
 
-export function MembershipsResourcesProvider($repo, $http, $urls) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
 
-    service.get = id => $repo.queryOne("memberships", id);
+@Injectable()
+export class MembershipsResource {
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService) {}
 
-    service.list = function(projectId, filters, enablePagination) {
+    get(id) {
+        return this.repo.queryOne("memberships", id);
+    }
+
+    list(projectId, filters, enablePagination=true) {
         let options;
-        if (enablePagination == null) { enablePagination = true; }
         let params = {project: projectId};
         params = _.extend({}, params, filters || {});
         if (enablePagination) {
-            return $repo.queryPaginated("memberships", params);
+            return this.repo.queryPaginated("memberships", params);
         }
 
-        return $repo.queryMany("memberships", params, (options={enablePagination}));
+        return this.repo.queryMany("memberships", params, (options={enablePagination}));
     };
 
-    service.listByUser = function(userId, filters) {
+    listByUser(userId, filters) {
         let params = {user: userId};
         params = _.extend({}, params, filters || {});
-        return $repo.queryPaginated("memberships", params);
+        return this.repo.queryPaginated("memberships", params);
     };
 
-    service.resendInvitation = function(id) {
-        let url = $urls.resolve("memberships");
-        return $http.post(`${url}/${id}/resend_invitation`, {});
+    resendInvitation(id) {
+        let url = this.urls.resolve("memberships");
+        return this.http.post(`${url}/${id}/resend_invitation`, {});
     };
 
-    service.bulkCreateMemberships = function(projectId, data, invitation_extra_text) {
-        let url = $urls.resolve("bulk-create-memberships");
+    bulkCreateMemberships(projectId, data, invitation_extra_text) {
+        let url = this.urls.resolve("bulk-create-memberships");
         let params = {project_id: projectId, bulk_memberships: data, invitation_extra_text};
-        return $http.post(url, params);
+        return this.http.post(url, params);
     };
-
-    return instance => instance.memberships = service;
 };

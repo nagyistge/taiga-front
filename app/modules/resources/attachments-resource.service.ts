@@ -26,11 +26,22 @@
 import {sizeFormat} from "../../ts/utils"
 import * as angular from "angular"
 import * as Immutable from "immutable"
+import * as Promise from "bluebird"
 
-export let AttachmentsResource = function(urlsService, http, config, $rootScope, $q, storage) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
+import {ConfigurationService} from "../../ts/modules/base/conf"
+import {StorageService} from "../../ts/modules/base/storage"
 
-    service.list = function(type, objectId, projectId) {
+@Injectable()
+export class AttachmentsResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService,
+                private config: ConfigurationService,
+                private storage: StorageService) {}
+
+    list(type, objectId, projectId) {
         let urlname = `attachments/${type}`;
 
         let params = {object_id: objectId, project: projectId};
@@ -40,65 +51,43 @@ export let AttachmentsResource = function(urlsService, http, config, $rootScope,
             }
         };
 
-        let url = urlsService.resolve(urlname);
+        let url = this.urls.resolve(urlname);
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.delete = function(type, id) {
+    delete(type, id) {
         let urlname = `attachments/${type}`;
 
-        let url = urlsService.resolve(urlname) + `/${id}`;
+        let url = this.urls.resolve(urlname) + `/${id}`;
 
-        return http.delete(url);
+        return this.http.delete(url);
     };
 
-    service.patch = function(type, id, patch) {
+    patch(type, id, patch) {
         let urlname = `attachments/${type}`;
 
-        let url = urlsService.resolve(urlname) + `/${id}`;
+        let url = this.urls.resolve(urlname) + `/${id}`;
 
-        return http.patch(url, patch);
+        return this.http.patch(url, patch);
     };
 
-    service.create = function(type, projectId, objectId, file, from_comment) {
+    create(type, projectId, objectId, file, from_comment) {
         let response;
         let urlname = `attachments/${type}`;
 
-        let url = urlsService.resolve(urlname);
+        let url = this.urls.resolve(urlname);
 
-        let defered = $q.defer();
-
-        if (file === undefined) {
-            defered.reject(null);
-            return defered.promise;
-        }
-
-        let maxFileSize = config.get("maxUploadFileSize", null);
-
-        if (maxFileSize && (file.size > maxFileSize)) {
-            response = {
-                status: 413,
-                data: { _error_message: `'${file.name}' (${sizeFormat(file.size)}) is too heavy for our oompa \
-loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
-            }
-            };
-            defered.reject(response);
-            return defered.promise;
-        }
-
-        let uploadProgress = evt => {
-            return $rootScope.$apply(() => {
+        return new Promise(function(resolve, reject) {
+            function uploadProgress(evt) {
                 file.status = "in-progress";
                 file.size = sizeFormat(evt.total);
                 file.progressMessage = `upload ${sizeFormat(evt.loaded)} of ${sizeFormat(evt.total)}`;
                 return file.progressPercent = `${Math.round((evt.loaded / evt.total) * 100)}%`;
-            });
-        };
+            }
 
-        let uploadComplete = evt => {
-            return $rootScope.$apply(function() {
+            function uploadComplete(evt) {
                 let attachment;
                 file.status = "done";
 
@@ -111,53 +100,54 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
 
                 if ((status >= 200) && (status < 400)) {
                     attachment = Immutable.fromJS(attachment);
-                    return defered.resolve(attachment);
+                    return resolve(attachment);
                 } else {
                     response = {
                         status,
                         data: {_error_message: (data['attached_file'] != null ? data['attached_file'][0] : undefined)}
                     };
-                    return defered.reject(response);
+                    return reject(response);
                 }
-            });
-        };
+            };
 
-        let uploadFailed = evt => {
-            return $rootScope.$apply(function() {
+            function uploadFailed(evt) {
                 file.status = "error";
-                return defered.reject("fail");
-            });
-        };
+                return reject("fail");
+            };
 
-        var data = new FormData();
-        data.append("project", projectId);
-        data.append("object_id", objectId);
-        data.append("attached_file", file);
-        data.append("from_comment", from_comment);
+            if (file === undefined) {
+                return reject(null);
+            }
 
-        let xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener("progress", uploadProgress, false);
-        xhr.addEventListener("load", uploadComplete, false);
-        xhr.addEventListener("error", uploadFailed, false);
+            let maxFileSize = this.config.get("maxUploadFileSize", null);
 
-        let token = storage.get('token');
+            if (maxFileSize && (file.size > maxFileSize)) {
+                response = {
+                    status: 413,
+                    data: { _error_message: `'${file.name}' (${sizeFormat(file.size)}) is too heavy for our oompa \
+    loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
+                }
+                };
+                return reject(response);
+            }
 
-        xhr.open("POST", url);
-        xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-        xhr.setRequestHeader('Accept', 'application/json');
-        xhr.send(data);
+            var data = new FormData();
+            data.append("project", projectId);
+            data.append("object_id", objectId);
+            data.append("attached_file", file);
+            data.append("from_comment", from_comment);
 
-        return defered.promise;
+            let xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener("progress", uploadProgress, false);
+            xhr.addEventListener("load", uploadComplete, false);
+            xhr.addEventListener("error", uploadFailed, false);
+
+            let token = this.storage.get('token');
+
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.send(data);
+        });
     };
-
-    return () => ({"attachments": service});
 };
-
-AttachmentsResource.$inject = [
-    "$tgUrls",
-    "$tgHttp",
-    "$tgConfig",
-    "$rootScope",
-    "$q",
-    "$tgStorage"
-];

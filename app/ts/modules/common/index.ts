@@ -56,7 +56,7 @@ module.directive("tgBindScope", ["$tgConfig", BindScope]);
 module.directive("tgCompileHtml", CompileHtmlDirective);
 
 // Common Components
-module.directive("tgDateRange", ["$translate", commonComponents.DateRangeDirective]);
+module.directive("tgDateRange", downgradeComponent({component: commonComponents.DateRange}));
 module.directive("tgDateSelector", ["$rootScope", "tgDatePickerConfigService", commonComponents.DateSelectorDirective]);
 module.directive("tgSprintProgressbar", commonComponents.SprintProgressBarDirective);
 module.directive("tgCreatedByDisplay", ["$tgTemplate", "$compile", "$translate", "$tgNavUrls", "tgAvatarService",

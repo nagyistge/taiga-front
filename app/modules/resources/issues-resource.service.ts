@@ -19,11 +19,17 @@
 
 import * as Immutable from "immutable"
 
-export let IssuesResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.listInAllProjects = function(params) {
-        let url = urlsService.resolve("issues");
+@Injectable()
+export class IssuesResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    listInAllProjects(params) {
+        let url = this.urls.resolve("issues");
 
         let httpOptions = {
             headers: {
@@ -31,10 +37,7 @@ export let IssuesResource = function(urlsService, http) {
             }
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
-
-    return () => ({"issues": service});
 };
-IssuesResource.$inject = ["$tgUrls", "$tgHttp"];

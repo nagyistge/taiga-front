@@ -27,7 +27,12 @@ import {Component} from "@angular/core"
 
 @Component({
     selector: "tg-terms-of-service-and-privacy-policy-notice",
-    templateUrl: "components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.html"
+    template: `
+        <p class="register-text" *ngIf="privacyPolicyUrl && termsOfServiceUrl"
+           translate
+           [translateParams]="{termsOfServiceUrl: termsOfServiceUrl, privacyPolicyUrl: privacyPolicyUrl}">
+           LEGAL.TERMS_OF_SERVICE_AND_PRIVACY_POLICY_AD
+        </p>`
 })
 export class TermsOfServiceAndPrivacyPolicyNotice {
     privacyPolicyUrl: string;

@@ -22,10 +22,14 @@
  * File: modules/resources/locales.coffee
  */
 
-export function LocalesResourcesProvider($repo) {
-    let service = {
-        list() { return $repo.queryMany("locales"); }
-    };
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-    return instance => instance.locales = service;
+@Injectable()
+export class LocalesResource {
+    constructor(private repo: RepositoryService) {}
+
+    list() {
+        return this.repo.queryMany("locales");
+    }
 };

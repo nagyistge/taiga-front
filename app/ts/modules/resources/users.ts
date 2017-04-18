@@ -22,21 +22,25 @@
  * File: modules/resources/user.coffee
  */
 
-export function UsersResourcesProvider($http, $urls) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../base/urls"
+import {HttpService} from "../base/http"
+import * as Promise from "bluebird"
 
-    service.contacts = function(userId, options) {
-        if (options == null) { options = {}; }
-        let url = $urls.resolve("user-contacts", userId);
+@Injectable()
+export class UsersResource {
+    constructor(private http: HttpService,
+                private urls: UrlsService) {}
+
+    contacts(userId:number, options:any={}):Promise<any[]> {
+        let url = this.urls.resolve("user-contacts", userId);
         let httpOptions = {headers: {}};
 
         if (!options.enablePagination) {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return $http.get(url, {}, httpOptions)
-            .then(result => result.data);
+        return this.http.get(url, {}, httpOptions)
+            .then((result:any) => result.data);
     };
-
-    return instance => instance.users = service;
 };

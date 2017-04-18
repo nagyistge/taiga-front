@@ -24,31 +24,37 @@
 
 import * as Immutable from "immutable"
 
-export let TrelloResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.getAuthUrl = function(url) {
-        url = urlsService.resolve("importers-trello-auth-url");
-        return http.get(url);
+@Injectable()
+export class TrelloResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    getAuthUrl(url) {
+        url = this.urls.resolve("importers-trello-auth-url");
+        return this.http.get(url);
     };
 
-    service.authorize = function(verifyCode) {
-        let url = urlsService.resolve("importers-trello-authorize");
-        return http.post(url, {code: verifyCode});
+    authorize(verifyCode) {
+        let url = this.urls.resolve("importers-trello-authorize");
+        return this.http.post(url, {code: verifyCode});
     };
 
-    service.listProjects = function(token) {
-        let url = urlsService.resolve("importers-trello-list-projects");
-        return http.post(url, {token}).then(response => Immutable.fromJS(response.data));
+    listProjects(token) {
+        let url = this.urls.resolve("importers-trello-list-projects");
+        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.listUsers = function(token, projectId) {
-        let url = urlsService.resolve("importers-trello-list-users");
-        return http.post(url, {token, project: projectId}).then(response => Immutable.fromJS(response.data));
+    listUsers(token, projectId) {
+        let url = this.urls.resolve("importers-trello-list-users");
+        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.importProject = function(token, name, description, projectId, userBindings, keepExternalReference, isPrivate) {
-        let url = urlsService.resolve("importers-trello-import-project");
+    importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate) {
+        let url = this.urls.resolve("importers-trello-import-project");
         let data = {
             token,
             name,
@@ -59,39 +65,37 @@ export let TrelloResource = function(urlsService, http) {
             is_private: isPrivate,
             template: "kanban",
         };
-        return http.post(url, data);
+        return this.http.post(url, data);
     };
-
-    return () => ({"trelloImporter": service});
 };
 
-TrelloResource.$inject = ["$tgUrls", "$tgHttp"];
+@Injectable()
+export class JiraResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
 
-export let JiraResource = function(urlsService, http) {
-    let service:any = {};
-
-    service.getAuthUrl = function(jira_url) {
-        let url = urlsService.resolve("importers-jira-auth-url") + "?url=" + jira_url;
-        return http.get(url);
+    getAuthUrl(jira_url) {
+        let url = this.urls.resolve("importers-jira-auth-url") + "?url=" + jira_url;
+        return this.http.get(url);
     };
 
-    service.authorize = function(oauth_verifier) {
-        let url = urlsService.resolve("importers-jira-authorize");
-        return http.post(url, {oauth_verifier});
+    authorize(oauth_verifier) {
+        let url = this.urls.resolve("importers-jira-authorize");
+        return this.http.post(url, {oauth_verifier});
     };
 
-    service.listProjects = function(jira_url, token) {
-        let url = urlsService.resolve("importers-jira-list-projects");
-        return http.post(url, {url: jira_url, token}).then(response => Immutable.fromJS(response.data));
+    listProjects(jira_url, token) {
+        let url = this.urls.resolve("importers-jira-list-projects");
+        return this.http.post(url, {url: jira_url, token}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.listUsers = function(jira_url, token, projectId) {
-        let url = urlsService.resolve("importers-jira-list-users");
-        return http.post(url, {url: jira_url, token, project: projectId}).then(response => Immutable.fromJS(response.data));
+    listUsers(jira_url, token, projectId) {
+        let url = this.urls.resolve("importers-jira-list-users");
+        return this.http.post(url, {url: jira_url, token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.importProject = function(jira_url, token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType, importerType) {
-        let url = urlsService.resolve("importers-jira-import-project");
+    importProject(jira_url, token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType, importerType) {
+        let url = this.urls.resolve("importers-jira-import-project");
         let projectTemplate = "kanban";
         if (projectType !== "kanban") {
             projectTemplate = "scrum";
@@ -110,39 +114,37 @@ export let JiraResource = function(urlsService, http) {
             importer_type: importerType,
             template: projectTemplate,
         };
-        return http.post(url, data);
+        return this.http.post(url, data);
     };
-
-    return () => ({"jiraImporter": service});
 };
 
-JiraResource.$inject = ["$tgUrls", "$tgHttp"];
+@Injectable()
+export class GithubResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
 
-export let GithubResource = function(urlsService, http) {
-    let service:any = {};
-
-    service.getAuthUrl = function(callbackUri) {
-        let url = urlsService.resolve("importers-github-auth-url") + "?uri=" + callbackUri;
-        return http.get(url);
+    getAuthUrl(callbackUri) {
+        let url = this.urls.resolve("importers-github-auth-url") + "?uri=" + callbackUri;
+        return this.http.get(url);
     };
 
-    service.authorize = function(code) {
-        let url = urlsService.resolve("importers-github-authorize");
-        return http.post(url, {code});
+    authorize(code) {
+        let url = this.urls.resolve("importers-github-authorize");
+        return this.http.post(url, {code});
     };
 
-    service.listProjects = function(token) {
-        let url = urlsService.resolve("importers-github-list-projects");
-        return http.post(url, {token}).then(response => Immutable.fromJS(response.data));
+    listProjects(token) {
+        let url = this.urls.resolve("importers-github-list-projects");
+        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.listUsers = function(token, projectId) {
-        let url = urlsService.resolve("importers-github-list-users");
-        return http.post(url, {token, project: projectId}).then(response => Immutable.fromJS(response.data));
+    listUsers(token, projectId) {
+        let url = this.urls.resolve("importers-github-list-users");
+        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.importProject = function(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {
-        let url = urlsService.resolve("importers-github-import-project");
+    importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {
+        let url = this.urls.resolve("importers-github-import-project");
 
         let data = {
             token,
@@ -154,39 +156,37 @@ export let GithubResource = function(urlsService, http) {
             is_private: isPrivate,
             template: projectType,
         };
-        return http.post(url, data);
+        return this.http.post(url, data);
     };
-
-    return () => ({"githubImporter": service});
 };
 
-GithubResource.$inject = ["$tgUrls", "$tgHttp"];
+@Injectable()
+export class AsanaResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
 
-export let AsanaResource = function(urlsService, http) {
-    let service:any = {};
-
-    service.getAuthUrl = function() {
-        let url = urlsService.resolve("importers-asana-auth-url");
-        return http.get(url);
+    getAuthUrl() {
+        let url = this.urls.resolve("importers-asana-auth-url");
+        return this.http.get(url);
     };
 
-    service.authorize = function(code) {
-        let url = urlsService.resolve("importers-asana-authorize");
-        return http.post(url, {code});
+    authorize(code) {
+        let url = this.urls.resolve("importers-asana-authorize");
+        return this.http.post(url, {code});
     };
 
-    service.listProjects = function(token) {
-        let url = urlsService.resolve("importers-asana-list-projects");
-        return http.post(url, {token}).then(response => Immutable.fromJS(response.data));
+    listProjects(token) {
+        let url = this.urls.resolve("importers-asana-list-projects");
+        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.listUsers = function(token, projectId) {
-        let url = urlsService.resolve("importers-asana-list-users");
-        return http.post(url, {token, project: projectId}).then(response => Immutable.fromJS(response.data));
+    listUsers(token, projectId) {
+        let url = this.urls.resolve("importers-asana-list-users");
+        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
     };
 
-    service.importProject = function(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {
-        let url = urlsService.resolve("importers-asana-import-project");
+    importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {
+        let url = this.urls.resolve("importers-asana-import-project");
 
         let data = {
             token,
@@ -198,9 +198,6 @@ export let AsanaResource = function(urlsService, http) {
             is_private: isPrivate,
             template: projectType,
         };
-        return http.post(url, data);
+        return this.http.post(url, data);
     };
-
-    return () => ({"asanaImporter": service});
 };
-AsanaResource.$inject = ["$tgUrls", "$tgHttp"];

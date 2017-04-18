@@ -39,6 +39,7 @@ var gulp = require("gulp"),
     source = require('vinyl-source-stream'),
     watchify = require("watchify"),
     tsify = require("tsify"),
+    jadeify = require("jadeify"),
     gutil = require("gulp-util");
 
 var argv = require('minimist')(process.argv.slice(2));
@@ -195,6 +196,7 @@ watchedBrowserifyApp.on("log", gutil.log);
 
 function bundleApp() {
     return BrowserifyApp
+        .transform('jadeify')
         .bundle().on('error', gutil.log)
         .pipe(source('js/app.js'))
         .pipe(gulp.dest(paths.distVersion));
@@ -202,6 +204,7 @@ function bundleApp() {
 
 function watchBundleApp() {
     return watchedBrowserifyApp
+        .transform('jadeify')
         .bundle().on('error', gutil.log)
         .pipe(source('js/app.js'))
         .pipe(gulp.dest(paths.distVersion));
@@ -209,6 +212,7 @@ function watchBundleApp() {
 
 function deployBundleApp() {
     return DeployBrowserifyApp
+        .transform('jadeify')
         .transform({global: true }, 'uglifyify')
         .bundle().on('error', gutil.log)
         .pipe(source('js/app.js'))

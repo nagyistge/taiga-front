@@ -22,16 +22,26 @@
  * File: modules/resources/wikis.coffee
  */
 
-export function WikiResourcesProvider($repo, $http, $urls) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-    service.get = wikiId => $repo.queryOne("wiki", wikiId);
+@Injectable()
+export class WikiResource {
+    constructor(private repo: RepositoryService) {}
 
-    service.getBySlug = (projectId, slug) => $repo.queryOne("wiki", `by_slug?project=${projectId}&slug=${slug}`);
+    get(wikiId) {
+        return this.repo.queryOne("wiki", wikiId);
+    }
 
-    service.list = projectId => $repo.queryMany("wiki", {project: projectId});
+    getBySlug(projectId, slug) {
+        return this.repo.queryOne("wiki", `by_slug?project=${projectId}&slug=${slug}`);
+    }
 
-    service.listLinks = projectId => $repo.queryMany("wiki-links", {project: projectId});
+    list(projectId) {
+        return this.repo.queryMany("wiki", {project: projectId});
+    }
 
-    return instance => instance.wiki = service;
+    listLinks(projectId) {
+        return this.repo.queryMany("wiki-links", {project: projectId});
+    }
 };

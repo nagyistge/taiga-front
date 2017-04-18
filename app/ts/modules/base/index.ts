@@ -49,12 +49,12 @@ module.directive("tgBindHtml", bind.BindHtmlDirective);
 module.service("$tgConfig", downgradeInjectable(ConfigurationService));
 module.controller("ContribUserSettingsController", ContribUserSettingsController);
 module.controller("ContribController", ContribController);
-module.service("$tgHttp", HttpService);
+module.service("$tgHttp", downgradeInjectable(HttpService));
 module.factory("$tgLocation", ["$location", "$route", "$rootScope", locationFactory]);
 module.service("$tgModel", downgradeInjectable(ModelService));
 module.service("$tgNavUrls", downgradeInjectable(NavigationUrlsService));
 module.directive("tgNav", ["$tgNavUrls", "$tgAuth", "$q", "$tgLocation", "lightboxService", NavigationUrlsDirective]);
-module.service("$tgRepo", RepositoryService);
+module.service("$tgRepo", downgradeInjectable(RepositoryService));
 module.service("$tgStorage", downgradeInjectable(StorageService));
 module.service('$tgUrls', downgradeInjectable(UrlsService));
 

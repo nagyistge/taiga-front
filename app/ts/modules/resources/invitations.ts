@@ -22,11 +22,14 @@
  * File: modules/resources/projects.coffee
  */
 
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-export function InvitationsResourcesProvider($repo) {
-    let service:any = {};
+@Injectable()
+export class InvitationsResource {
+    constructor(private repo: RepositoryService) {}
 
-    service.get = token => $repo.queryOne("invitations", token);
-
-    return instance => instance.invitations = service;
+    get(token) {
+        return this.repo.queryOne("invitations", token);
+    }
 };

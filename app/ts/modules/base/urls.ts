@@ -44,9 +44,7 @@ export class UrlsService {
         return this.urls = _.merge(this.urls, urls);
     }
 
-    resolve() {
-        let args = _.toArray(arguments);
-
+    resolve(...args) {
         if (args.length === 0) {
             throw Error("wrong arguments to setUrls");
         }

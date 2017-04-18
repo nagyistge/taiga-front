@@ -24,25 +24,20 @@
 
 
 import {sizeFormat} from "../../utils"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-export function CustomAttributesResourcesProvider($repo) {
-    let _list = (projectId, resource) => $repo.queryMany(resource, {project: projectId});
+@Injectable()
+export class CustomAttributesResource {
+    constructor(private repo: RepositoryService) {}
 
-    let service = {
-        epic:{
-            list(projectId) { return _list(projectId, "custom-attributes/epic"); }
-        },
-        userstory:{
-            list(projectId) { return _list(projectId, "custom-attributes/userstory"); }
-        },
-        task:{
-            list(projectId) { return _list(projectId, "custom-attributes/task"); }
-        },
-        issue: {
-            list(projectId) { return _list(projectId, "custom-attributes/issue"); }
-        }
-    };
+    private _list(projectId:number, resource:string) {
+        return this.repo.queryMany(resource, {project: projectId});
+    }
 
-    return instance => instance.customAttributes = service;
+    epic = { list(projectId) { return this._list(projectId, "custom-attributes/epic"); } };
+    userstory = { list(projectId) { return this._list(projectId, "custom-attributes/userstory"); } };
+    task = { list(projectId) { return this._list(projectId, "custom-attributes/task"); } };
+    issue = { list(projectId) { return this._list(projectId, "custom-attributes/issue"); } };
 };
 

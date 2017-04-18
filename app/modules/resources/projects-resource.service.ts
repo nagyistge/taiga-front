@@ -19,21 +19,27 @@
 
 import * as Immutable from "immutable"
 
-let pagination = function() {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
+import {PaginateResponseService} from "../services/paginate-response.service"
 
-export let ProjectsResource = function(urlsService, http, paginateResponseService) {
-    let service:any = {};
+@Injectable()
+export class ProjectsResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService,
+                private paginateResponse: PaginateResponseService) {}
 
-    service.create = function(data) {
-        let url = urlsService.resolve('projects');
+    create(data) {
+        let url = this.urls.resolve('projects');
 
-        return http.post(url, JSON.stringify(data))
-            .then(result => { return Immutable.fromJS(result.data); });
+        return this.http.post(url, JSON.stringify(data))
+            .then((result:any) => { return Immutable.fromJS(result.data); });
     };
 
-    service.duplicate = function(projectId, data) {
+    duplicate(projectId, data) {
 
-        let url = urlsService.resolve("projects");
+        let url = this.urls.resolve("projects");
         url = `${url}/${projectId}/duplicate`;
 
         let members = data.users.map(member => ({"id": member}));
@@ -45,13 +51,13 @@ export let ProjectsResource = function(urlsService, http, paginateResponseServic
             "users": members
         };
 
-        return http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.getProjects = function(params, pagination) {
+    getProjects(params, pagination) {
         if (params == null) { params = {}; }
         if (pagination == null) { pagination = true; }
-        let url = urlsService.resolve("projects");
+        let url = this.urls.resolve("projects");
 
         let httpOptions = {};
 
@@ -63,21 +69,21 @@ export let ProjectsResource = function(urlsService, http, paginateResponseServic
             };
         }
 
-        return http.get(url, params, httpOptions);
+        return this.http.get(url, params, httpOptions);
     };
 
-    service.getProjectBySlug = function(projectSlug) {
-        let url = urlsService.resolve("projects");
+    getProjectBySlug(projectSlug) {
+        let url = this.urls.resolve("projects");
 
         url = `${url}/by_slug?slug=${projectSlug}`;
 
-        return http.get(url)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.getProjectsByUserId = function(userId, paginate) {
+    getProjectsByUserId(userId, paginate) {
         if (paginate == null) { paginate = false; }
-        let url = urlsService.resolve("projects");
+        let url = this.urls.resolve("projects");
         let httpOptions:any = {};
 
         if (!paginate) {
@@ -88,116 +94,113 @@ export let ProjectsResource = function(urlsService, http, paginateResponseServic
 
         let params = {"member": userId, "order_by": "user_order"};
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.getProjectStats = function(projectId) {
-        let url = urlsService.resolve("projects");
+    getProjectStats(projectId) {
+        let url = this.urls.resolve("projects");
         url = `${url}/${projectId}`;
 
-        return http.get(url)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.bulkUpdateOrder = function(bulkData) {
-        let url = urlsService.resolve("bulk-update-projects-order");
-        return http.post(url, bulkData);
+    bulkUpdateOrder(bulkData) {
+        let url = this.urls.resolve("bulk-update-projects-order");
+        return this.http.post(url, bulkData);
     };
 
-    service.getTimeline = function(projectId, page) {
+    getTimeline(projectId, page) {
         let params = {
             page,
             only_relevant: true
         };
 
-        let url = urlsService.resolve("timeline-project");
+        let url = this.urls.resolve("timeline-project");
         url = `${url}/${projectId}`;
 
-        return http.get(url, params, {
+        return this.http.get(url, params, {
             headers: {
                 'x-lazy-pagination': true
             }
         }).then(function(result) {
             result = Immutable.fromJS(result);
-            return paginateResponseService(result);
+            return paginateResponse.paginate(result);
         });
     };
 
-    service.likeProject = function(projectId) {
-        let url = urlsService.resolve("project-like", projectId);
-        return http.post(url);
+    likeProject(projectId) {
+        let url = this.urls.resolve("project-like", projectId);
+        return this.http.post(url);
     };
 
-    service.unlikeProject = function(projectId) {
-        let url = urlsService.resolve("project-unlike", projectId);
-        return http.post(url);
+    unlikeProject(projectId) {
+        let url = this.urls.resolve("project-unlike", projectId);
+        return this.http.post(url);
     };
 
-    service.watchProject = function(projectId, notifyLevel) {
+    watchProject(projectId, notifyLevel) {
         let data = {
             notify_level: notifyLevel
         };
-        let url = urlsService.resolve("project-watch", projectId);
-        return http.post(url, data);
+        let url = this.urls.resolve("project-watch", projectId);
+        return this.http.post(url, data);
     };
 
-    service.unwatchProject = function(projectId) {
-        let url = urlsService.resolve("project-unwatch", projectId);
-        return http.post(url);
+    unwatchProject(projectId) {
+        let url = this.urls.resolve("project-unwatch", projectId);
+        return this.http.post(url);
     };
 
-    service.contactProject = function(projectId, message) {
+    contactProject(projectId, message) {
         let params = {
             project: projectId,
             comment: message
         };
 
-        let url = urlsService.resolve("project-contact");
-        return http.post(url, params);
+        let url = this.urls.resolve("project-contact");
+        return this.http.post(url, params);
     };
 
-    service.transferValidateToken = function(projectId, token) {
+    transferValidateToken(projectId, token) {
         let data = {
             token
         };
-        let url = urlsService.resolve("project-transfer-validate-token", projectId);
-        return http.post(url, data);
+        let url = this.urls.resolve("project-transfer-validate-token", projectId);
+        return this.http.post(url, data);
     };
 
-    service.transferAccept = function(projectId, token, reason) {
+    transferAccept(projectId, token, reason) {
         let data = {
             token,
             reason
         };
-        let url = urlsService.resolve("project-transfer-accept", projectId);
-        return http.post(url, data);
+        let url = this.urls.resolve("project-transfer-accept", projectId);
+        return this.http.post(url, data);
     };
 
-    service.transferReject = function(projectId, token, reason) {
+    transferReject(projectId, token, reason) {
         let data = {
             token,
             reason
         };
-        let url = urlsService.resolve("project-transfer-reject", projectId);
-        return http.post(url, data);
+        let url = this.urls.resolve("project-transfer-reject", projectId);
+        return this.http.post(url, data);
     };
 
-    service.transferRequest = function(projectId) {
-        let url = urlsService.resolve("project-transfer-request", projectId);
-        return http.post(url);
+    transferRequest(projectId) {
+        let url = this.urls.resolve("project-transfer-request", projectId);
+        return this.http.post(url);
     };
 
-    service.transferStart = function(projectId, userId, reason) {
+    transferStart(projectId, userId, reason) {
         let data = {
             user: userId,
             reason
         };
 
-        let url = urlsService.resolve("project-transfer-start", projectId);
-        return http.post(url, data);
+        let url = this.urls.resolve("project-transfer-start", projectId);
+        return this.http.post(url, data);
     };
-
-    return () => ({"projects": service});
 };
-ProjectsResource.$inject = ["$tgUrls", "$tgHttp", "tgPaginateResponseService"];

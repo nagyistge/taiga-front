@@ -19,14 +19,17 @@
 
 import * as Immutable from "immutable"
 
-export let StatsResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.discover = function(applicationId, state) {
-        let url = urlsService.resolve("stats-discover");
-        return http.get(url).then(result => Immutable.fromJS(result.data));
+@Injectable()
+export class StatsResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    discover(applicationId, state) {
+        let url = this.urls.resolve("stats-discover");
+        return this.http.get(url).then((result:any) => Immutable.fromJS(result.data));
     };
-
-    return () => ({"stats": service});
 };
-StatsResource.$inject = ["$tgUrls", "$tgHttp"];

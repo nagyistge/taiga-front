@@ -25,12 +25,22 @@
 
 import {sizeFormat} from "../../utils"
 import * as angular from "angular"
+import * as Promise from "bluebird"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {UrlsService} from "../base/urls"
+import {HttpService} from "../base/http"
+import {ConfigurationService} from "../base/conf"
 
-export function UserSettingsResourcesProvider($config, $repo, $http, $urls, $q) {
-    let service:any = {};
+@Injectable()
+export class UserSettingsResource {
+    constructor(private config: ConfigurationService,
+                private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService) {}
 
-    service.changeAvatar = function(file) {
-        let maxFileSize = $config.get("maxUploadFileSize", null);
+    changeAvatar(file) {
+        let maxFileSize = this.config.get("maxUploadFileSize", null);
         if (maxFileSize && (file.size > maxFileSize)) {
             let response = {
                 status: 413,
@@ -38,9 +48,7 @@ export function UserSettingsResourcesProvider($config, $repo, $http, $urls, $q) 
 loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
             }
             };
-            let defered = $q.defer();
-            defered.reject(response);
-            return defered.promise;
+            return Promise.reject(response)
         }
 
         let data = new FormData();
@@ -49,23 +57,21 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         };
-        let url = `${$urls.resolve("users")}/change_avatar`;
-        return $http.post(url, data, {}, options);
+        let url = `${this.urls.resolve("users")}/change_avatar`;
+        return this.http.post(url, data, {}, options);
     };
 
-    service.removeAvatar = function() {
-        let url = `${$urls.resolve("users")}/remove_avatar`;
-        return $http.post(url);
+    removeAvatar() {
+        let url = `${this.urls.resolve("users")}/remove_avatar`;
+        return this.http.post(url);
     };
 
-    service.changePassword = function(currentPassword, newPassword) {
-        let url = `${$urls.resolve("users")}/change_password`;
+    changePassword(currentPassword, newPassword) {
+        let url = `${this.urls.resolve("users")}/change_password`;
         let data = {
             current_password: currentPassword,
             password: newPassword
         };
-        return $http.post(url, data);
+        return this.http.post(url, data);
     };
-
-    return instance => instance.userSettings = service;
 };

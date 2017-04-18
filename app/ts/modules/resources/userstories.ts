@@ -25,130 +25,142 @@
 import {generateHash} from "../../app"
 import * as _ from "lodash"
 
-export function UserstoriesResourcesProvider($repo, $http, $urls, $storage, $q) {
-    let service:any = {};
-    let hashSuffix = "userstories-queryparams";
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {UrlsService} from "../base/urls"
+import {HttpService} from "../base/http"
+import {StorageService} from "../base/storage"
 
-    service.get = function(projectId, usId, extraParams) {
-        let params = service.getQueryParams(projectId);
+@Injectable()
+export class UserstoriesResource {
+    hashSuffix = "userstories-queryparams";
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private storage: StorageService) {}
+
+    get(projectId, usId, extraParams) {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
 
         params = _.extend({}, params, extraParams);
 
-        return $repo.queryOne("userstories", usId, params);
+        return this.repo.queryOne("userstories", usId, params);
     };
 
-    service.getByRef = function(projectId, ref, extraParams) {
+    getByRef(projectId, ref, extraParams) {
         if (extraParams == null) { extraParams = {}; }
-        let params = service.getQueryParams(projectId);
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
         params.ref = ref;
         params = _.extend({}, params, extraParams);
 
-        return $repo.queryOne("userstories", "by_ref", params);
+        return this.repo.queryOne("userstories", "by_ref", params);
     };
 
-    service.listInAllProjects = filters => $repo.queryMany("userstories", filters);
+    listInAllProjects(filters) {
+        return this.repo.queryMany("userstories", filters);
+    }
 
-    service.filtersData = params => $repo.queryOneRaw("userstories-filters", null, params);
+    filtersData(params) {
+        return this.repo.queryOneRaw("userstories-filters", null, params);
+    }
 
-    service.listUnassigned = function(projectId, filters, pageSize) {
+    listUnassigned(projectId, filters, pageSize) {
         let params = {"project": projectId, "milestone": "null"};
         params = _.extend({}, params, filters || {});
-        service.storeQueryParams(projectId, params);
+        this.storeQueryParams(projectId, params);
 
-        return $repo.queryMany("userstories", _.extend(params, {
+        return this.repo.queryMany("userstories", _.extend(params, {
             page_size: pageSize
         }), {
             enablePagination: true
         }, true);
     };
 
-    service.listAll = function(projectId, filters) {
+    listAll(projectId, filters) {
         let params = {"project": projectId};
         params = _.extend({}, params, filters || {});
-        service.storeQueryParams(projectId, params);
+        this.storeQueryParams(projectId, params);
 
-        return $repo.queryMany("userstories", params);
+        return this.repo.queryMany("userstories", params);
     };
 
-    service.bulkCreate = function(projectId, status, bulk) {
+    bulkCreate(projectId, status, bulk) {
         let data = {
             project_id: projectId,
             status_id: status,
             bulk_stories: bulk
         };
 
-        let url = $urls.resolve("bulk-create-us");
+        let url = this.urls.resolve("bulk-create-us");
 
-        return $http.post(url, data);
+        return this.http.post(url, data);
     };
 
-    service.upvote = function(userStoryId) {
-        let url = $urls.resolve("userstory-upvote", userStoryId);
-        return $http.post(url);
+    upvote(userStoryId) {
+        let url = this.urls.resolve("userstory-upvote", userStoryId);
+        return this.http.post(url);
     };
 
-    service.downvote = function(userStoryId) {
-        let url = $urls.resolve("userstory-downvote", userStoryId);
-        return $http.post(url);
+    downvote(userStoryId) {
+        let url = this.urls.resolve("userstory-downvote", userStoryId);
+        return this.http.post(url);
     };
 
-    service.watch = function(userStoryId) {
-        let url = $urls.resolve("userstory-watch", userStoryId);
-        return $http.post(url);
+    watch(userStoryId) {
+        let url = this.urls.resolve("userstory-watch", userStoryId);
+        return this.http.post(url);
     };
 
-    service.unwatch = function(userStoryId) {
-        let url = $urls.resolve("userstory-unwatch", userStoryId);
-        return $http.post(url);
+    unwatch(userStoryId) {
+        let url = this.urls.resolve("userstory-unwatch", userStoryId);
+        return this.http.post(url);
     };
 
-    service.bulkUpdateBacklogOrder = function(projectId, data) {
-        let url = $urls.resolve("bulk-update-us-backlog-order");
+    bulkUpdateBacklogOrder(projectId, data) {
+        let url = this.urls.resolve("bulk-update-us-backlog-order");
         let params = {project_id: projectId, bulk_stories: data};
-        return $http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.bulkUpdateMilestone = function(projectId, milestoneId, data) {
-        let url = $urls.resolve("bulk-update-us-milestone");
+    bulkUpdateMilestone(projectId, milestoneId, data) {
+        let url = this.urls.resolve("bulk-update-us-milestone");
         let params = {project_id: projectId, milestone_id: milestoneId, bulk_stories: data};
-        return $http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.bulkUpdateKanbanOrder = function(projectId, data) {
-        let url = $urls.resolve("bulk-update-us-kanban-order");
+    bulkUpdateKanbanOrder(projectId, data) {
+        let url = this.urls.resolve("bulk-update-us-kanban-order");
         let params = {project_id: projectId, bulk_stories: data};
-        return $http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.listValues = function(projectId, type) {
+    listValues(projectId, type) {
         let params = {"project": projectId};
-        service.storeQueryParams(projectId, params);
-        return $repo.queryMany(type, params);
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryMany(type, params);
     };
 
-    service.storeQueryParams = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffix}`;
+    storeQueryParams(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
+        return this.storage.set(hash, params);
     };
 
-    service.getQueryParams = function(projectId) {
-        let ns = `${projectId}:${hashSuffix}`;
+    getQueryParams(projectId) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
 
-    service.storeShowTags = function(projectId, showTags) {
+    storeShowTags(projectId, showTags) {
         let hash = generateHash([projectId, 'showTags']);
-        return $storage.set(hash, showTags);
+        return this.storage.set(hash, showTags);
     };
 
-    service.getShowTags = function(projectId) {
+    getShowTags(projectId) {
         let hash = generateHash([projectId, 'showTags']);
-        return $storage.get(hash) || null;
+        return this.storage.get(hash) || null;
     };
-
-    return instance => instance.userstories = service;
 };

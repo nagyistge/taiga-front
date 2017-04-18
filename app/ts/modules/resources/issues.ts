@@ -24,80 +24,94 @@
 
 import {generateHash} from "../../app"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
+import {StorageService} from "../base/storage"
 
-export function IssuesResourcesProvider($repo, $http, $urls, $storage, $q) {
-    let service:any = {};
-    let hashSuffix = "issues-queryparams";
+@Injectable()
+export class IssuesResource {
+    hashSuffix = "issues-queryparams";
 
-    service.get = function(projectId, issueId) {
-        let params = service.getQueryParams(projectId);
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private storage: StorageService) {}
+
+    get(projectId, issueId) {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
-        return $repo.queryOne("issues", issueId, params);
-    };
+        return this.repo.queryOne("issues", issueId, params);
+    }
 
-    service.getByRef = function(projectId, ref) {
-        let params = service.getQueryParams(projectId);
+    getByRef(projectId, ref) {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
         params.ref = ref;
-        return $repo.queryOne("issues", "by_ref", params);
-    };
+        return this.repo.queryOne("issues", "by_ref", params);
+    }
 
-    service.listInAllProjects = filters => $repo.queryMany("issues", filters);
+    listInAllProjects(filters) {
+        return this.repo.queryMany("issues", filters);
+    }
 
-    service.list = function(projectId, filters, options) {
+    list(projectId, filters, options) {
         let params = {project: projectId};
         params = _.extend({}, params, filters || {});
-        service.storeQueryParams(projectId, params);
-        return $repo.queryPaginated("issues", params, options);
-    };
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryPaginated("issues", params, options);
+    }
 
-    service.bulkCreate = function(projectId, data) {
-        let url = $urls.resolve("bulk-create-issues");
+    bulkCreate(projectId, data) {
+        let url = this.urls.resolve("bulk-create-issues");
         let params = {project_id: projectId, bulk_issues: data};
-        return $http.post(url, params);
-    };
+        return this.http.post(url, params);
+    }
 
-    service.upvote = function(issueId) {
-        let url = $urls.resolve("issue-upvote", issueId);
-        return $http.post(url);
-    };
+    upvote(issueId) {
+        let url = this.urls.resolve("issue-upvote", issueId);
+        return this.http.post(url);
+    }
 
-    service.downvote = function(issueId) {
-        let url = $urls.resolve("issue-downvote", issueId);
-        return $http.post(url);
-    };
+    downvote(issueId) {
+        let url = this.urls.resolve("issue-downvote", issueId);
+        return this.http.post(url);
+    }
 
-    service.watch = function(issueId) {
-        let url = $urls.resolve("issue-watch", issueId);
-        return $http.post(url);
-    };
+    watch(issueId) {
+        let url = this.urls.resolve("issue-watch", issueId);
+        return this.http.post(url);
+    }
 
-    service.unwatch = function(issueId) {
-        let url = $urls.resolve("issue-unwatch", issueId);
-        return $http.post(url);
-    };
+    unwatch(issueId) {
+        let url = this.urls.resolve("issue-unwatch", issueId);
+        return this.http.post(url);
+    }
 
-    service.stats = projectId => $repo.queryOneRaw("projects", `${projectId}/issues_stats`);
+    stats(projectId) {
+        return this.repo.queryOneRaw("projects", `${projectId}/issues_stats`);
+    }
 
-    service.filtersData = params => $repo.queryOneRaw("issues-filters", null, params);
+    filtersData(params) {
+        return this.repo.queryOneRaw("issues-filters", null, params);
+    }
 
-    service.listValues = function(projectId, type) {
+    listValues(projectId, type) {
         let params = {"project": projectId};
-        service.storeQueryParams(projectId, params);
-        return $repo.queryMany(type, params);
-    };
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryMany(type, params);
+    }
 
-    service.storeQueryParams = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffix}`;
+    storeQueryParams(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
-    };
+        return this.storage.set(hash, params);
+    }
 
-    service.getQueryParams = function(projectId) {
-        let ns = `${projectId}:${hashSuffix}`;
+    getQueryParams(projectId) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
-    };
-
-    return instance => instance.issues = service;
+        return this.storage.get(hash) || {};
+    }
 };

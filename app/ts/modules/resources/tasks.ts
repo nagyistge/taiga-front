@@ -25,120 +25,132 @@
 
 import {generateHash} from "../../app"
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {UrlsService} from "../base/urls"
+import {HttpService} from "../base/http"
+import {StorageService} from "../base/storage"
 
-export function TasksResourcesProvider($repo, $http, $urls, $storage) {
-    let service:any = {};
-    let hashSuffix = "tasks-queryparams";
-    let hashSuffixStatusColumnModes = "tasks-statuscolumnmodels";
-    let hashSuffixUsRowModes = "tasks-usrowmodels";
+@Injectable()
+export class TasksResource {
+    hashSuffix = "tasks-queryparams";
+    hashSuffixStatusColumnModes = "tasks-statuscolumnmodels";
+    hashSuffixUsRowModes = "tasks-usrowmodels";
 
-    service.get = function(projectId, taskId, extraParams) {
-        let params = service.getQueryParams(projectId);
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private storage: StorageService) {}
+
+    get(projectId, taskId, extraParams) {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
 
         params = _.extend({}, params, extraParams);
 
-        return $repo.queryOne("tasks", taskId, params);
+        return this.repo.queryOne("tasks", taskId, params);
     };
 
-    service.getByRef = function(projectId, ref, extraParams) {
-        let params = service.getQueryParams(projectId);
+    getByRef(projectId, ref, extraParams) {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
         params.ref = ref;
 
         params = _.extend({}, params, extraParams);
 
-        return $repo.queryOne("tasks", "by_ref", params);
+        return this.repo.queryOne("tasks", "by_ref", params);
     };
 
-    service.listInAllProjects = filters => $repo.queryMany("tasks", filters);
+    listInAllProjects(filters) {
+        return this.repo.queryMany("tasks", filters);
+    }
 
-    service.filtersData = params => $repo.queryOneRaw("task-filters", null, params);
+    filtersData(params) {
+        return this.repo.queryOneRaw("task-filters", null, params);
+    }
 
-    service.list = function(projectId, sprintId, userStoryId, params) {
+    list(projectId, sprintId, userStoryId, params) {
         if (sprintId == null) { sprintId = null; }
         if (userStoryId == null) { userStoryId = null; }
         params = _.merge(params, {project: projectId});
         if (sprintId) { params.milestone = sprintId; }
         if (userStoryId) { params.user_story = userStoryId; }
-        service.storeQueryParams(projectId, params);
-        return $repo.queryMany("tasks", params);
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryMany("tasks", params);
     };
 
-    service.bulkCreate = function(projectId, sprintId, usId, data) {
-        let url = $urls.resolve("bulk-create-tasks");
+    bulkCreate(projectId, sprintId, usId, data) {
+        let url = this.urls.resolve("bulk-create-tasks");
         let params = {project_id: projectId, milestone_id: sprintId, us_id: usId, bulk_tasks: data};
-        return $http.post(url, params).then(result => result.data);
+        return this.http.post(url, params).then((result:any) => result.data);
     };
 
-    service.upvote = function(taskId) {
-        let url = $urls.resolve("task-upvote", taskId);
-        return $http.post(url);
+    upvote(taskId) {
+        let url = this.urls.resolve("task-upvote", taskId);
+        return this.http.post(url);
     };
 
-    service.downvote = function(taskId) {
-        let url = $urls.resolve("task-downvote", taskId);
-        return $http.post(url);
+    downvote(taskId) {
+        let url = this.urls.resolve("task-downvote", taskId);
+        return this.http.post(url);
     };
 
-    service.watch = function(taskId) {
-        let url = $urls.resolve("task-watch", taskId);
-        return $http.post(url);
+    watch(taskId) {
+        let url = this.urls.resolve("task-watch", taskId);
+        return this.http.post(url);
     };
 
-    service.unwatch = function(taskId) {
-        let url = $urls.resolve("task-unwatch", taskId);
-        return $http.post(url);
+    unwatch(taskId) {
+        let url = this.urls.resolve("task-unwatch", taskId);
+        return this.http.post(url);
     };
 
-    service.bulkUpdateTaskTaskboardOrder = function(projectId, data) {
-        let url = $urls.resolve("bulk-update-task-taskboard-order");
+    bulkUpdateTaskTaskboardOrder(projectId, data) {
+        let url = this.urls.resolve("bulk-update-task-taskboard-order");
         let params = {project_id: projectId, bulk_tasks: data};
-        return $http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.listValues = function(projectId, type) {
+    listValues(projectId, type) {
         let params = {"project": projectId};
-        return $repo.queryMany(type, params);
+        return this.repo.queryMany(type, params);
     };
 
-    service.storeQueryParams = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffix}`;
+    storeQueryParams(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
+        return this.storage.set(hash, params);
     };
 
-    service.getQueryParams = function(projectId) {
-        let ns = `${projectId}:${hashSuffix}`;
+    getQueryParams(projectId) {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
 
-    service.storeStatusColumnModes = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffixStatusColumnModes}`;
+    storeStatusColumnModes(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffixStatusColumnModes}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
+        return this.storage.set(hash, params);
     };
 
-    service.getStatusColumnModes = function(projectId) {
-        let ns = `${projectId}:${hashSuffixStatusColumnModes}`;
+    getStatusColumnModes(projectId) {
+        let ns = `${projectId}:${this.hashSuffixStatusColumnModes}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
 
-    service.storeUsRowModes = function(projectId, sprintId, params) {
-        let ns = `${projectId}:${hashSuffixUsRowModes}`;
+    storeUsRowModes(projectId, sprintId, params) {
+        let ns = `${projectId}:${this.hashSuffixUsRowModes}`;
         let hash = generateHash([projectId, sprintId, ns]);
 
-        return $storage.set(hash, params);
+        return this.storage.set(hash, params);
     };
 
-    service.getUsRowModes = function(projectId, sprintId) {
-        let ns = `${projectId}:${hashSuffixUsRowModes}`;
+    getUsRowModes(projectId, sprintId) {
+        let ns = `${projectId}:${this.hashSuffixUsRowModes}`;
         let hash = generateHash([projectId, sprintId, ns]);
 
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
-
-    return instance => instance.tasks = service;
 };

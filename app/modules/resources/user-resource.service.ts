@@ -19,11 +19,17 @@
 
 import * as Immutable from "immutable"
 
-export let UserResource = function(urlsService, http, paginateResponseService) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.getUserStorage = function(key) {
-        let url = urlsService.resolve("user-storage");
+@Injectable()
+export class UserResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    getUserStorage(key) {
+        let url = this.urls.resolve("user-storage");
 
         if (key) {
             url += `/${key}`;
@@ -31,31 +37,28 @@ export let UserResource = function(urlsService, http, paginateResponseService) {
 
         let httpOptions = {};
 
-        return http.get(url, {}).then(response => response.data.value);
+        return this.http.get(url, {}).then((response:any) => response.data.value);
     };
 
-    service.setUserStorage = function(key, value) {
-        let url = urlsService.resolve("user-storage") + '/' + key;
+    setUserStorage(key, value) {
+        let url = this.urls.resolve("user-storage") + '/' + key;
 
         let params = {
             key,
             value
         };
 
-        return http.put(url, params);
+        return this.http.put(url, params);
     };
 
-    service.createUserStorage = function(key, value) {
-        let url = urlsService.resolve("user-storage");
+    createUserStorage(key, value) {
+        let url = this.urls.resolve("user-storage");
 
         let params = {
             key,
             value
         };
 
-        return http.post(url, params);
+        return this.http.post(url, params);
     };
-
-    return () => ({"user": service});
 };
-UserResource.$inject = ["$tgUrls", "$tgHttp"];

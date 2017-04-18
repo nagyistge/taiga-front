@@ -25,54 +25,64 @@
 
 import {generateHash} from "../../app"
 
-export function EpicsResourcesProvider($repo, $http, $urls, $storage) {
-    let service:any = {};
-    let hashSuffix = "epics-queryparams";
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
+import {StorageService} from "../base/storage"
+import * as Promise from "bluebird"
 
-    service.getByRef = function(projectId, ref) {
-        let params = service.getQueryParams(projectId);
+@Injectable()
+export class EpicsResource {
+    hashSuffix:string = "epics-queryparams";
+
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private storage: StorageService) {}
+
+    getByRef(projectId:number, ref:number):Promise<any> {
+        let params = this.getQueryParams(projectId);
         params.project = projectId;
         params.ref = ref;
-        return $repo.queryOne("epics", "by_ref", params);
+        return this.repo.queryOne("epics", "by_ref", params);
     };
 
-    service.listValues = function(projectId, type) {
+    listValues(projectId:number, type:string):Promise<any[]> {
         let params = {"project": projectId};
-        service.storeQueryParams(projectId, params);
-        return $repo.queryMany(type, params);
+        this.storeQueryParams(projectId, params);
+        return this.repo.queryMany(type, params);
     };
 
-    service.storeQueryParams = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffix}`;
+    storeQueryParams(projectId:number, params:any):void {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
+        this.storage.set(hash, params);
     };
 
-    service.getQueryParams = function(projectId) {
-        let ns = `${projectId}:${hashSuffix}`;
+    getQueryParams(projectId:number):any {
+        let ns = `${projectId}:${this.hashSuffix}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
 
-    service.upvote = function(epicId) {
-        let url = $urls.resolve("epic-upvote", epicId);
-        return $http.post(url);
+    upvote(epicId:number):Promise<any> {
+        let url = this.urls.resolve("epic-upvote", epicId);
+        return this.http.post(url);
     };
 
-    service.downvote = function(epicId) {
-        let url = $urls.resolve("epic-downvote", epicId);
-        return $http.post(url);
+    downvote(epicId:number):Promise<any> {
+        let url = this.urls.resolve("epic-downvote", epicId);
+        return this.http.post(url);
     };
 
-    service.watch = function(epicId) {
-        let url = $urls.resolve("epic-watch", epicId);
-        return $http.post(url);
+    watch(epicId:number):Promise<any> {
+        let url = this.urls.resolve("epic-watch", epicId);
+        return this.http.post(url);
     };
 
-    service.unwatch = function(epicId) {
-        let url = $urls.resolve("epic-unwatch", epicId);
-        return $http.post(url);
+    unwatch(epicId:number):Promise<any> {
+        let url = this.urls.resolve("epic-unwatch", epicId);
+        return this.http.post(url);
     };
-
-    return instance => instance.epics = service;
 };

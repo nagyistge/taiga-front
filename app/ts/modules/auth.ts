@@ -31,6 +31,20 @@ import * as angular from "angular"
 import * as _ from "lodash"
 import * as Immutable from "immutable"
 
+import {Injectable} from "@angular/core"
+import {downgradeInjectable} from "@angular/upgrade/static"
+import {StorageService} from "./base/storage"
+import {ModelService} from "./base/model"
+import {HttpService} from "./base/http"
+import {UrlsService} from "./base/urls"
+import {ConfigurationService} from "./base/conf"
+import {ResourcesService} from "./resources/resources.service"
+import {TranslateService} from "@ngx-translate/core"
+import {CurrentUserService} from "../../modules/services/current-user.service"
+import {ThemeService} from "../../modules/services/theme.service"
+import {GlobalDataService} from "../../modules/services/global-data.service"
+
+
 let module = angular.module("taigaAuth", ["taigaResources"]);
 
 class LoginPage {
@@ -72,48 +86,21 @@ module.controller('LoginPage', LoginPage);
 //# Authentication Service
 //############################################################################
 
-class AuthService extends Service {
-    rootscope: angular.IScope
-    storage:any
-    model:any
-    rs:any
-    http:any
-    urls:any
-    config:any
-    translate:any
-    currentUserService:any
-    themeService:any
+@Injectable()
+export class AuthService {
     _currentTheme:any
     userData:any
 
-    static initClass() {
-        this.$inject = ["$rootScope",
-                     "$tgStorage",
-                     "$tgModel",
-                     "$tgResources",
-                     "$tgHttp",
-                     "$tgUrls",
-                     "$tgConfig",
-                     "$translate",
-                     "tgCurrentUserService",
-                     "tgThemeService"];
-    }
-
-    constructor(rootscope, storage, model, rs, http, urls, config, translate, currentUserService,
-                  themeService) {
-        super()
-        this.rootscope = rootscope;
-        this.storage = storage;
-        this.model = model;
-        this.rs = rs;
-        this.http = http;
-        this.urls = urls;
-        this.config = config;
-        this.translate = translate;
-        this.currentUserService = currentUserService;
-        this.themeService = themeService;
-        super();
-
+    constructor(private globalData: GlobalDataService,
+                private storage: StorageService,
+                private model: ModelService,
+                private rs: ResourcesService,
+                private http: HttpService,
+                private urls: UrlsService,
+                private config: ConfigurationService,
+                private translate: TranslateService,
+                private currentUser: CurrentUserService,
+                private theme: ThemeService) {
         let userModel = this.getUser();
         this._currentTheme = this._getUserTheme();
 
@@ -123,14 +110,14 @@ class AuthService extends Service {
     setUserdata(userModel) {
         if (userModel) {
             this.userData = Immutable.fromJS(userModel.getAttrs());
-            return this.currentUserService.setUser(this.userData);
+            return this.currentUser.setUser(this.userData);
         } else {
             return this.userData = null;
         }
     }
 
     _getUserTheme() {
-        return (this.rootscope.user != null ? this.rootscope.user.theme : undefined) || this.config.get("defaultTheme") || "taiga"; // load on index.jade
+        return (this.globalData.get('user') != null && this.globalData.get('user').theme) || this.config.get("defaultTheme") || "taiga"; // load on index.jade
     }
 
     _setTheme() {
@@ -138,30 +125,28 @@ class AuthService extends Service {
 
         if (this._currentTheme !== newTheme) {
             this._currentTheme = newTheme;
-            return this.themeService.use(this._currentTheme);
+            return this.theme.use(this._currentTheme);
         }
     }
 
     _setLocales() {
-        let lang = (this.rootscope.user != null ? this.rootscope.user.lang : undefined) || this.config.get("defaultLanguage") || "en";
-        this.translate.preferredLanguage(lang);  // Needed for calls to the api in the correct language
+        let lang = (this.globalData.get('user') != null && this.globalData.get('user').lang) || this.config.get("defaultLanguage") || "en";
+        this.translate.setDefaultLang(lang);  // Needed for calls to the api in the correct language
         return this.translate.use(lang);                // Needed for change the interface in runtime
     }
 
     getUser() {
-        if (this.rootscope.user) {
-            return this.rootscope.user;
+        if (this.globalData.get('user')) {
+            return this.globalData.get('user');
         }
 
         let userData = this.storage.get("userInfo");
 
         if (userData) {
             let user = this.model.make_model("users", userData);
-            this.rootscope.user = user;
+            this.globalData.set('user', user);
             this._setLocales();
-
             this._setTheme();
-
             return user;
         } else {
             this._setTheme();
@@ -171,9 +156,9 @@ class AuthService extends Service {
     }
 
     setUser(user) {
-        this.rootscope.auth = user;
+        this.globalData.set('auth', user);
         this.storage.set("userInfo", user.getAttrs());
-        this.rootscope.user = user;
+        this.globalData.set('user', user);
 
         this.setUserdata(user);
 
@@ -182,8 +167,8 @@ class AuthService extends Service {
     }
 
     clear() {
-        this.rootscope.auth = null;
-        this.rootscope.user = null;
+        this.globalData.unset('auth');
+        this.globalData.unset('user');
         return this.storage.remove("userInfo");
     }
 
@@ -210,7 +195,7 @@ class AuthService extends Service {
     refresh() {
         let url = this.urls.resolve("user-me");
 
-        return this.http.get(url).then((data, status) => {
+        return this.http.get(url).then((data:any) => {
             let user = data.data;
             user.token = this.getUser().auth_token;
 
@@ -229,9 +214,9 @@ class AuthService extends Service {
 
         this.removeToken();
 
-        return this.http.post(url, data).then((data, status) => {
+        return this.http.post(url, data).then((data:any) => {
             let user = this.model.make_model("users", data.data);
-            this.setToken(user.auth_token);
+            this.setToken((<any>user).auth_token);
             this.setUser(user);
             return user;
         });
@@ -240,7 +225,7 @@ class AuthService extends Service {
     logout() {
         this.removeToken();
         this.clear();
-        this.currentUserService.removeUser();
+        this.currentUser.removeUser();
 
         this._setTheme();
         return this._setLocales();
@@ -258,9 +243,9 @@ class AuthService extends Service {
 
         this.removeToken();
 
-        return this.http.post(url, data).then(response => {
+        return this.http.post(url, data).then((response:any) => {
             let user = this.model.make_model("users", response.data);
-            this.setToken(user.auth_token);
+            this.setToken((<any>user).auth_token);
             this.setUser(user);
             return user;
         });
@@ -300,9 +285,8 @@ class AuthService extends Service {
         return this.http.post(url, data);
     }
 }
-AuthService.initClass();
 
-module.service("$tgAuth", AuthService);
+module.service("$tgAuth", downgradeInjectable(AuthService));
 
 
 //############################################################################

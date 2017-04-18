@@ -17,10 +17,14 @@
  * File: modules.coffee
  */
 
-export function ModulesResourcesProvider($repo) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
 
-    service.list = (projectId, module) => $repo.queryOneAttribute("project-modules", projectId, module);
+@Injectable()
+export class ModulesResource {
+    constructor(private repo: RepositoryService) {}
 
-    return instance => instance.modules = service;
+    list(projectId, module) {
+        this.repo.queryOneAttribute("project-modules", projectId, module);
+    }
 };

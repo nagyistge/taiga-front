@@ -19,26 +19,29 @@
 
 import * as Immutable from "immutable"
 
-export let ExternalAppsResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.getApplicationToken = function(applicationId, state) {
-        let url = urlsService.resolve("applications");
+@Injectable()
+export class ExternalAppsResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    getApplicationToken(applicationId, state) {
+        let url = this.urls.resolve("applications");
         url = `${url}/${applicationId}/token?state=${state}`;
-        return http.get(url).then(result => Immutable.fromJS(result.data));
+        return this.http.get(url).then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.authorizeApplicationToken = function(applicationId, state) {
-        let url = urlsService.resolve("application-tokens");
+    authorizeApplicationToken(applicationId, state) {
+        let url = this.urls.resolve("application-tokens");
         url = `${url}/authorize`;
         let data = {
             "state": state,
             "application": applicationId
         };
 
-        return http.post(url, data).then(result => Immutable.fromJS(result.data));
+        return this.http.post(url, data).then((result:any) => Immutable.fromJS(result.data));
     };
-
-    return () => ({"externalapps": service});
 };
-ExternalAppsResource.$inject = ["$tgUrls", "$tgHttp"];

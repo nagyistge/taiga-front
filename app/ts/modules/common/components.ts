@@ -27,29 +27,31 @@ import * as Pikaday from "pikaday"
 import * as angular from "angular"
 import * as moment from "moment"
 import * as _ from "lodash"
+import {Component, OnChanges, Input} from "@angular/core"
+import {TranslateService} from "@ngx-translate/core"
 
 //############################################################################
 //# Date Range Directive (used mainly for sprint date range)
 //############################################################################
 
-export let DateRangeDirective = function($translate) {
-    let renderRange = function($el, first, second) {
-        let prettyDate = $translate.instant("BACKLOG.SPRINTS.DATE");
-        let initDate = moment(first).format(prettyDate);
-        let endDate = moment(second).format(prettyDate);
-        return $el.html(`${initDate}-${endDate}`);
-    };
+@Component({
+    selector: "tg-date-range",
+    template: "<span>{{formatedRange}}</span>",
+})
+export class DateRange implements OnChanges {
+    @Input() first:string;
+    @Input() second:string;
+    formatedRange:string;
 
-    let link = function($scope, $el, $attrs) {
-        let [first, second] = $attrs.tgDateRange.split(",");
+    constructor(private translate: TranslateService) {}
 
-        return bindOnce($scope, first, valFirst =>
-            bindOnce($scope, second, valSecond => renderRange($el, valFirst, valSecond))
-        );
-    };
-
-    return {link};
-};
+    ngOnChanges() {
+        let prettyDate = this.translate.instant("BACKLOG.SPRINTS.DATE");
+        let initDate = moment(this.first).format(prettyDate);
+        let endDate = moment(this.second).format(prettyDate);
+        this.formatedRange = `${initDate}-${endDate}`;
+    }
+}
 
 
 //############################################################################

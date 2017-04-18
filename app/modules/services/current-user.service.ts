@@ -22,28 +22,21 @@ import * as angular from "angular"
 import * as Immutable from "immutable"
 import * as Promise from "bluebird"
 
+import {ProjectsService} from "../projects/projects.service"
+import {StorageService} from "../../ts/modules/base/storage"
+import {ResourcesService} from "../../ts/modules/resources/resources.service"
+
+@Injectable()
 export class CurrentUserService {
-    projectsService:any
-    storageService:any
-    rs:any
     _user:any
     _projects: Immutable.Map<any, any>;
     _projectsById: Immutable.Map<any, any>;
     _joyride:any
     projects:any
 
-    static initClass() {
-        this.$inject = [
-            "tgProjectsService",
-            "$tgStorage",
-            "tgResources"
-        ];
-    }
-
-    constructor(projectsService, storageService, rs) {
-        this.projectsService = projectsService;
-        this.storageService = storageService;
-        this.rs = rs;
+    constructor(private projectsService: ProjectsService,
+                private storage: StorageService,
+                private rs: ResourcesService) {
         this._user = null;
         this._projects = Immutable.Map();
         this._projectsById = Immutable.Map();
@@ -62,7 +55,7 @@ export class CurrentUserService {
 
     getUser() {
         if (!this._user) {
-            let userData = this.storageService.get("userInfo");
+            let userData = this.storage.get("userInfo");
 
             if (userData) {
                 userData = Immutable.fromJS(userData);
@@ -239,4 +232,3 @@ export class CurrentUserService {
         return {valid: true};
     }
 }
-CurrentUserService.initClass();

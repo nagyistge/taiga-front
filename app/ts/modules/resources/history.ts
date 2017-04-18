@@ -22,13 +22,23 @@
  * File: modules/resources/history.coffee
  */
 
-export function HistoryResourcesProvider($repo, $http, $urls) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
 
-    service.get = (type, objectId) => $repo.queryOneRaw(`history/${type}`, objectId);
+@Injectable()
+export class HistoryResource {
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService) {}
 
-    service.editComment = function(type, objectId, activityId, comment) {
-        let url = $urls.resolve(`history/${type}`);
+    get(type:string, objectId:number):any {
+        return this.repo.queryOneRaw(`history/${type}`, objectId);
+    }
+
+    editComment(type:string, objectId:number, activityId:number, comment:string):any {
+        let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/edit_comment`;
         let params = {
             id: activityId
@@ -36,37 +46,35 @@ export function HistoryResourcesProvider($repo, $http, $urls) {
         let commentData = {
             comment
         };
-        return $http.post(url, commentData, params).then(data => {
+        return this.http.post(url, commentData, params).then((data:any) => {
             return data.data;
         });
     };
 
-    service.getCommentHistory = function(type, objectId, activityId) {
-        let url = $urls.resolve(`history/${type}`);
+    getCommentHistory(type:string, objectId:number, activityId:number):any {
+        let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/comment_versions`;
         let params = {id: activityId};
-        return $http.get(url, params).then(data => {
+        return this.http.get(url, params).then((data:any) => {
             return data.data;
         });
     };
 
-    service.deleteComment = function(type, objectId, activityId) {
-        let url = $urls.resolve(`history/${type}`);
+    deleteComment(type:string, objectId:number, activityId:number):any {
+        let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/delete_comment`;
         let params = {id: activityId};
-        return $http.post(url, null, params).then(data => {
+        return this.http.post(url, null, params).then((data:any) => {
             return data.data;
         });
     };
 
-    service.undeleteComment = function(type, objectId, activityId) {
-        let url = $urls.resolve(`history/${type}`);
+    undeleteComment(type:string, objectId:number, activityId:number):any {
+        let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/undelete_comment`;
         let params = {id: activityId};
-        return $http.post(url, null, params).then(data => {
+        return this.http.post(url, null, params).then((data:any) => {
             return data.data;
         });
     };
-
-    return instance => instance.history = service;
 };

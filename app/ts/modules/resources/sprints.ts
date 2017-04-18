@@ -23,31 +23,40 @@
  */
 
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {ModelService} from "../base/model"
+import {StorageService} from "../base/storage"
 
-export function SprintsResourcesProvider($repo, $model, $storage) {
-    let service:any = {};
+@Injectable()
+export class SprintsResource {
+    constructor(private repo: RepositoryService,
+                private model: ModelService,
+                private storage: StorageService) {}
 
-    service.get = (projectId, sprintId) =>
-        $repo.queryOne("milestones", sprintId).then(function(sprint) {
+    get(projectId, sprintId) {
+        return this.repo.queryOne("milestones", sprintId).then(function(sprint:any) {
             let uses = sprint.user_stories;
-            uses = _.map(uses, u => $model.make_model("userstories", u));
+            uses = _.map(uses, u => this.model.make_model("userstories", u));
             sprint._attrs.user_stories = uses;
             return sprint;
         })
-    ;
+    }
 
-    service.stats = (projectId, sprintId) => $repo.queryOneRaw("milestones", `${sprintId}/stats`);
+    stats(projectId, sprintId) {
+        this.repo.queryOneRaw("milestones", `${sprintId}/stats`);
+    }
 
-    service.list = function(projectId, filters) {
+    list(projectId, filters) {
         let params = {"project": projectId};
         params = _.extend({}, params, filters || {});
-        return $repo.queryMany("milestones", params, {}, true).then(result => {
+        return this.repo.queryMany("milestones", params, {}, true).then(result => {
             let milestones = result[0];
             let headers = result[1];
 
             for (let m of milestones) {
                 let uses = m.user_stories;
-                uses = _.map(uses, u => $model.make_model("userstories", u));
+                uses = _.map(uses, u => this.model.make_model("userstories", u));
                 m._attrs.user_stories = uses;
             }
 
@@ -56,9 +65,6 @@ export function SprintsResourcesProvider($repo, $model, $storage) {
                 closed: parseInt(headers("Taiga-Info-Total-Closed-Milestones"), 10),
                 open: parseInt(headers("Taiga-Info-Total-Opened-Milestones"), 10)
             };
-    });
+        });
     };
-
-
-    return instance => instance.sprints = service;
 };

@@ -17,18 +17,24 @@
  * File: webhooks.coffee
  */
 
-export function WebhooksResourcesProvider($repo, $urls, $http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {UrlsService} from "../base/urls"
+import {HttpService} from "../base/http"
 
-    service.list = function(projectId) {
+@Injectable()
+export class WebhooksResource {
+    constructor(private repo: RepositoryService,
+                private urls: UrlsService,
+                private http: HttpService) {}
+
+    list(projectId) {
         let params = {project: projectId};
-        return $repo.queryMany("webhooks", params);
+        return this.repo.queryMany("webhooks", params);
     };
 
-    service.test = function(webhookId) {
-        let url = $urls.resolve("webhooks-test", webhookId);
-        return $http.post(url);
+    test(webhookId) {
+        let url = this.urls.resolve("webhooks-test", webhookId);
+        return this.http.post(url);
     };
-
-    return instance => instance.webhooks = service;
 };

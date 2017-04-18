@@ -19,11 +19,17 @@
 
 import * as Immutable from "immutable"
 
-export let WikiHistoryResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.getWikiHistory = function(wikiId) {
-        let url = urlsService.resolve("history/wiki", wikiId);
+@Injectable()
+export class WikiHistoryResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    getWikiHistory(wikiId) {
+        let url = this.urls.resolve("history/wiki", wikiId);
 
         let httpOptions = {
             headers: {
@@ -31,10 +37,7 @@ export let WikiHistoryResource = function(urlsService, http) {
             }
         };
 
-        return http.get(url, null, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, null, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
-
-    return () => ({"wikiHistory": service});
 };
-WikiHistoryResource.$inject = ["$tgUrls", "$tgHttp"];

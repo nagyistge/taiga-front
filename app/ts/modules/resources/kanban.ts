@@ -24,22 +24,25 @@
 
 import {generateHash} from "../../app"
 
-export function KanbanResourcesProvider($storage) {
-    let service:any = {};
-    let hashSuffixStatusViewModes = "kanban-statusviewmodels";
-    let hashSuffixStatusColumnModes = "kanban-statuscolumnmodels";
+import {Injectable} from "@angular/core"
+import {StorageService} from "../base/storage"
 
-    service.storeStatusColumnModes = function(projectId, params) {
-        let ns = `${projectId}:${hashSuffixStatusColumnModes}`;
+@Injectable()
+export class KanbanResource {
+    hashSuffixStatusViewModes = "kanban-statusviewmodels";
+    hashSuffixStatusColumnModes = "kanban-statuscolumnmodels";
+
+    constructor(private storage: StorageService) {}
+
+    storeStatusColumnModes(projectId, params) {
+        let ns = `${projectId}:${this.hashSuffixStatusColumnModes}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.set(hash, params);
+        return this.storage.set(hash, params);
     };
 
-    service.getStatusColumnModes = function(projectId) {
-        let ns = `${projectId}:${hashSuffixStatusColumnModes}`;
+    getStatusColumnModes(projectId) {
+        let ns = `${projectId}:${this.hashSuffixStatusColumnModes}`;
         let hash = generateHash([projectId, ns]);
-        return $storage.get(hash) || {};
+        return this.storage.get(hash) || {};
     };
-
-    return instance => instance.kanban = service;
 };

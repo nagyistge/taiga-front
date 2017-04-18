@@ -14,27 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * File: webhooklogs.coffee
+ * File: global-data.service.ts
  */
 
 import {Injectable} from "@angular/core"
-import {RepositoryService} from "../base/repository"
-import {UrlsService} from "../base/urls"
-import {HttpService} from "../base/http"
 
 @Injectable()
-export class WebhookLogsResource {
-    constructor(private repo: RepositoryService,
-                private urls: UrlsService,
-                private http: HttpService) {}
+export class ThemeService {
+    private data;
 
-    list(webhookId) {
-        let params = {webhook: webhookId};
-        return this.repo.queryMany("webhooklogs", params);
-    };
+    get(key:string):any {
+        return this.data[key]
+    }
 
-    resend(webhooklogId) {
-        let url = this.urls.resolve("webhooklogs-resend", webhooklogId);
-        return this.http.post(url);
-    };
-};
+    set(key:string, value:any):void {
+        this.data[key] = value;
+    }
+}

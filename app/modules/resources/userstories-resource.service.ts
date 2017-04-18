@@ -19,11 +19,16 @@
 
 import * as Immutable from "immutable"
 
-export let UserstoriesResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.listInAllProjects = function(params) {
-        let url = urlsService.resolve("userstories");
+@Injectable()
+export class UserstoriesResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+    listInAllProjects(params) {
+        let url = this.urls.resolve("userstories");
 
         let httpOptions = {
             headers: {
@@ -31,12 +36,12 @@ export let UserstoriesResource = function(urlsService, http) {
             }
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.listAllInProject = function(projectId) {
-        let url = urlsService.resolve("userstories");
+    listAllInProject(projectId) {
+        let url = this.urls.resolve("userstories");
 
         let httpOptions = {
             headers: {
@@ -48,12 +53,12 @@ export let UserstoriesResource = function(urlsService, http) {
             project: projectId
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.listInEpic = function(epicIid) {
-        let url = urlsService.resolve("userstories");
+    listInEpic(epicIid) {
+        let url = this.urls.resolve("userstories");
 
         let httpOptions = {
             headers: {
@@ -67,10 +72,7 @@ export let UserstoriesResource = function(urlsService, http) {
             include_tasks: true
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
-
-    return () => ({"userstories": service});
 };
-UserstoriesResource.$inject = ["$tgUrls", "$tgHttp"];

@@ -24,16 +24,22 @@
 
 
 import * as _ from "lodash"
+import {Injectable} from "@angular/core"
+import {RepositoryService} from "../base/repository"
+import {HttpService} from "../base/http"
+import {UrlsService} from "../base/urls"
 
-export function NotifyPoliciesResourcesProvider($repo, $http, $urls) {
-    let service:any = {};
+@Injectable()
+export class NotifyPoliciesResource {
+    constructor(private repo: RepositoryService,
+                private http: HttpService,
+                private urls: UrlsService) {}
+    get(id) {
+        return this.repo.queryOne("notify-policies", id);
+    }
 
-    service.get = id => $repo.queryOne("notify-policies", id);
-
-    service.list = function(filters) {
+    list(filters) {
         var params = _.extend({}, params, filters || {});
-        return $repo.queryMany("notify-policies", params);
+        return this.repo.queryMany("notify-policies", params);
     };
-
-    return instance => instance.notifyPolicies = service;
 };

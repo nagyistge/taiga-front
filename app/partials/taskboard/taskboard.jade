@@ -25,7 +25,7 @@ div.wrapper(
             h1
                 span(tg-bo-bind="project.name", class="project-name-short")
                 span.green(tg-bo-bind="sprint.name")
-                span.date(tg-date-range="sprint.estimated_start,sprint.estimated_finish")
+                tg-date-range.date([first]="sprint.estimated_start", [second]="sprint.estimated_finish")
             .taskboard-actions
                 .zoom-loading(tg-loading="ctrl.zoomLoading")
                 tg-taskboard-zoom(

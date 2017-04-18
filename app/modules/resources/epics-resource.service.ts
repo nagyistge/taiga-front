@@ -20,11 +20,17 @@
 import * as angular from "angular"
 import * as Immutable from "immutable"
 
-export let EpicsResource = function(urlsService, http) {
-    let service:any = {};
+import {Injectable} from "@angular/core"
+import {UrlsService} from "../../ts/modules/base/urls"
+import {HttpService} from "../../ts/modules/base/http"
 
-    service.listInAllProjects = function(params) {
-        let url = urlsService.resolve("epics");
+@Injectable()
+export class EpicsResource {
+    constructor(private urls: UrlsService,
+                private http: HttpService) {}
+
+    listInAllProjects(params) {
+        let url = this.urls.resolve("epics");
 
         let httpOptions = {
             headers: {
@@ -32,83 +38,80 @@ export let EpicsResource = function(urlsService, http) {
             }
         };
 
-        return http.get(url, params, httpOptions)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.get(url, params, httpOptions)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.list = function(projectId, page) {
+    list(projectId, page) {
         if (page == null) { page = 0; }
-        let url = urlsService.resolve("epics");
+        let url = this.urls.resolve("epics");
 
         let params = {project: projectId, page};
 
-        return http.get(url, params)
-            .then(result =>
+        return this.http.get(url, params)
+            .then((result:any) =>
                 ({
                     list: Immutable.fromJS(result.data),
                     headers: result.headers
                 }));
     };
 
-    service.patch = function(id, patch) {
-        let url = urlsService.resolve("epics") + `/${id}`;
+    patch(id, patch) {
+        let url = this.urls.resolve("epics") + `/${id}`;
 
-        return http.patch(url, patch)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.patch(url, patch)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.post = function(params) {
-        let url = urlsService.resolve("epics");
+    post(params) {
+        let url = this.urls.resolve("epics");
 
-        return http.post(url, params)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.post(url, params)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.reorder = function(id, data, setOrders) {
-        let url = urlsService.resolve("epics") + `/${id}`;
+    reorder(id, data, setOrders) {
+        let url = this.urls.resolve("epics") + `/${id}`;
 
         let options = {"headers": {"set-orders": JSON.stringify(setOrders)}};
 
-        return http.patch(url, data, null, options)
-            .then(result => Immutable.fromJS(result.data));
+        return this.http.patch(url, data, null, options)
+            .then((result:any) => Immutable.fromJS(result.data));
     };
 
-    service.addRelatedUserstory = function(epicId, userstoryId) {
-        let url = urlsService.resolve("epic-related-userstories", epicId);
+    addRelatedUserstory(epicId, userstoryId) {
+        let url = this.urls.resolve("epic-related-userstories", epicId);
 
         let params = {
             user_story: userstoryId,
             epic: epicId
         };
 
-        return http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.reorderRelatedUserstory = function(epicId, userstoryId, data, setOrders) {
-        let url = urlsService.resolve("epic-related-userstories", epicId) + `/${userstoryId}`;
+    reorderRelatedUserstory(epicId, userstoryId, data, setOrders) {
+        let url = this.urls.resolve("epic-related-userstories", epicId) + `/${userstoryId}`;
 
         let options = {"headers": {"set-orders": JSON.stringify(setOrders)}};
 
-        return http.patch(url, data, null, options);
+        return this.http.patch(url, data, null, options);
     };
 
-    service.bulkCreateRelatedUserStories = function(epicId, projectId, bulk_userstories) {
-        let url = urlsService.resolve("epic-related-userstories-bulk-create", epicId);
+    bulkCreateRelatedUserStories(epicId, projectId, bulk_userstories) {
+        let url = this.urls.resolve("epic-related-userstories-bulk-create", epicId);
 
         let params = {
             bulk_userstories,
             project_id: projectId
         };
 
-        return http.post(url, params);
+        return this.http.post(url, params);
     };
 
-    service.deleteRelatedUserstory = function(epicId, userstoryId) {
-        let url = urlsService.resolve("epic-related-userstories", epicId) + `/${userstoryId}`;
+    deleteRelatedUserstory(epicId, userstoryId) {
+        let url = this.urls.resolve("epic-related-userstories", epicId) + `/${userstoryId}`;
 
-        return http.delete(url);
+        return this.http.delete(url);
     };
-
-    return () => ({"epics": service});
 };
-EpicsResource.$inject = ["$tgUrls", "$tgHttp"];

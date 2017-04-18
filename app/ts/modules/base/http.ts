@@ -22,29 +22,20 @@
  * File: modules/base/http.coffee
  */
 
-import {Service} from "../../../ts/classes"
+import {Injectable} from "@angular/core"
+import {Http} from "@angular/http"
+import {StorageService} from "./storage"
+import {TranslateService} from "@ngx-translate/core"
+import 'rxjs/add/operator/toPromise';
 import * as _ from "lodash"
-import * as angular from "angular"
+import * as Promise from "bluebird"
 
-export class HttpService extends Service {
-    http:any
-    storage:any
-    cacheFactory:any
-    translate:any
-    cache:any
+@Injectable()
+export class HttpService {
+    constructor(private http: Http,
+                private storage: StorageService,
+                private translate: TranslateService) {}
 
-    static initClass() {
-        this.$inject = ["$http", "$tgStorage", "$cacheFactory", "$translate"];
-    }
-
-    constructor(http, storage, cacheFactory, translate) {
-        super();
-        this.http = http;
-        this.storage = storage;
-        this.cacheFactory = cacheFactory;
-        this.translate = translate;
-        this.cache = this.cacheFactory("httpget");
-    }
     headers() {
         let headers = {};
 
@@ -55,7 +46,7 @@ export class HttpService extends Service {
         }
 
         // Accept-Language
-        let lang = this.translate.preferredLanguage();
+        let lang = this.translate.currentLang;
         if (lang) {
             headers["Accept-Language"] = lang;
         }
@@ -66,22 +57,19 @@ export class HttpService extends Service {
     request(options) {
         options.headers = _.assign({}, options.headers || {}, this.headers());
 
-        return this.http(options);
+        return this.http.request(options).toPromise(Promise);
     }
 
-    get(url, params, options) {
+    get(url, params=null, options:any={}) {
         options = _.assign({method: "GET", url}, options);
         if (params) { options.params = params; }
 
-        // prevent duplicated http request
-        options.cache = this.cache;
+        // TODO: prevent duplicated http request
 
-        return this.request(options).finally(data => {
-            return this.cache.removeAll();
-        });
+        return this.request(options);
     }
 
-    post(url, data, params, options) {
+    post(url, data=null, params=null, options:any={}) {
         options = _.assign({method: "POST", url}, options);
 
         if (data) { options.data = data; }
@@ -90,25 +78,24 @@ export class HttpService extends Service {
         return this.request(options);
     }
 
-    put(url, data, params, options) {
+    put(url, data=null, params=null, options:any={}) {
         options = _.assign({method: "PUT", url}, options);
         if (data) { options.data = data; }
         if (params) { options.params = params; }
         return this.request(options);
     }
 
-    patch(url, data, params, options) {
+    patch(url, data=null, params=null, options:any={}) {
         options = _.assign({method: "PATCH", url}, options);
         if (data) { options.data = data; }
         if (params) { options.params = params; }
         return this.request(options);
     }
 
-    delete(url, data, params, options) {
+    delete(url, data=null, params=null, options:any={}) {
         options = _.assign({method: "DELETE", url}, options);
         if (data) { options.data = data; }
         if (params) { options.params = params; }
         return this.request(options);
     }
 }
-HttpService.initClass();
