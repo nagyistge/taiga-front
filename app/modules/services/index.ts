@@ -34,7 +34,7 @@ import {UserActivityService} from "./user-activity.service"
 import {UserService} from "./user.service"
 import {xhrError} from "./xhrError.service"
 
-module.service("tgAppMetaService", AppMetaService);
+module.service("tgAppMetaService", downgradeInjectable(AppMetaService));
 module.service("tgAttachmentsService", AttachmentsService);
 module.service("tgCheckPermissionsService", CheckPermissionsService);
 module.service("tgCurrentUserService", downgradeInjectable(CurrentUserService));

@@ -22,7 +22,7 @@ import {groupBy} from "../../ts/utils"
 
 import {Injectable} from "@angular/core"
 import {ResourcesService} from "../resources/resources.service"
-import {ProjectUrlService} from "../../ts/modules/common"
+import {ProjectUrlService} from "../../ts/modules/common/project-url.service"
 
 @Injectable()
 export class ProjectsService {

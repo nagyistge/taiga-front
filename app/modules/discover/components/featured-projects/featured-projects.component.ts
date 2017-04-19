@@ -14,18 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * File: highlighted.directive.coffee
+ * File: featured-projects.controller.coffee
  */
 
-export let HighlightedDirective = () =>
-    ({
-        templateUrl: "discover/components/highlighted/highlighted.html",
-        scope: {
-            loading: "=",
-            highlighted: "=",
-            orderBy: "="
-        }
-    })
-;
+import {defineImmutableProperty} from "../../../../ts/utils"
+import {Component, OnInit} from "@angular/core"
+import {DiscoverProjectsService} from "../../services/discover-projects.service"
 
-HighlightedDirective.$inject = [];
+@Component({
+    selector: 'tg-featured-projects',
+    templateUrl: 'discover/components/featured/featured.html'
+})
+export class FeaturedProjects implements OnInit {
+    featured:any
+
+    constructor(private discoverProjects: DiscoverProjectsService) {}
+
+    ngOnInit() {
+        defineImmutableProperty(this, "featured", () => { return this.discoverProjects.featured; });
+
+        this.discoverProjects.fetchFeatured();
+    }
+}

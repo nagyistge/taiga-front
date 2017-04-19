@@ -271,9 +271,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         return this.http.post(url, params);
     };
 
-    getProjects(params, pagination) {
-        if (params == null) { params = {}; }
-        if (pagination == null) { pagination = true; }
+    getProjects(params={}, pagination=true) {
         let url = this.urls.resolve("projects");
 
         let httpOptions = {};

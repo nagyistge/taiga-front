@@ -14,22 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * File: stats-resource.service.coffee
+ * File: highlighted.directive.coffee
  */
 
-import * as Immutable from "immutable"
+import {Component} from "@angular/core"
 
-import {Injectable} from "@angular/core"
-import {UrlsService} from "../../ts/modules/base/urls"
-import {HttpService} from "../../ts/modules/base/http"
-
-@Injectable()
-export class StatsResource {
-    constructor(private urls: UrlsService,
-                private http: HttpService) {}
-
-    discover() {
-        let url = this.urls.resolve("stats-discover");
-        return this.http.get(url).then((result:any) => Immutable.fromJS(result.data));
-    };
-};
+@Component({
+    selector: 'tg-discover-highlighted',
+    templateUrl: "discover/components/highlighted/highlighted.html"
+})
+export class Highlighted {}

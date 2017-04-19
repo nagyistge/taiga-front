@@ -76,7 +76,6 @@ import "../modules/components"
 import "../modules/profile"
 import "../modules/user-timeline"
 import "../modules/external-apps"
-import "../modules/discover"
 import "../modules/history"
 import "../modules/wiki/history"
 import "../modules/epics"
@@ -163,26 +162,26 @@ function configure($routeProvider, $locationProvider, $httpProvider, $provide, $
     );
 
     // Discover
-    $routeProvider.when("/discover",
-        {
-            templateUrl: "discover/discover-home/discover-home.html",
-            controller: "DiscoverHome",
-            controllerAs: "vm",
-            title: "PROJECT.NAVIGATION.DISCOVER",
-            loader: true
-        }
-    );
-
-    $routeProvider.when("/discover/search",
-        {
-            templateUrl: "discover/discover-search/discover-search.html",
-            title: "PROJECT.NAVIGATION.DISCOVER",
-            loader: true,
-            controller: "DiscoverSearch",
-            controllerAs: "vm",
-            reloadOnSearch: false
-        }
-    );
+    // $routeProvider.when("/discover",
+    //     {
+    //         templateUrl: "discover/discover-home/discover-home.html",
+    //         controller: "DiscoverHome",
+    //         controllerAs: "vm",
+    //         title: "PROJECT.NAVIGATION.DISCOVER",
+    //         loader: true
+    //     }
+    // );
+    //
+    // $routeProvider.when("/discover/search",
+    //     {
+    //         templateUrl: "discover/discover-search/discover-search.html",
+    //         title: "PROJECT.NAVIGATION.DISCOVER",
+    //         loader: true,
+    //         controller: "DiscoverSearch",
+    //         controllerAs: "vm",
+    //         reloadOnSearch: false
+    //     }
+    // );
 
     // My Projects
     $routeProvider.when("/projects/",
@@ -979,7 +978,6 @@ let modules = [
     "taigaHome",
     "taigaUserTimeline",
     "taigaExternalApps",
-    "taigaDiscover",
     "taigaHistory",
     "taigaWikiHistory",
     "taigaEpics",

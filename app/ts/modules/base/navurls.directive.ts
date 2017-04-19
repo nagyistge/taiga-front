@@ -22,48 +22,83 @@
  * File: modules/base/navurl.coffee
  */
 
-import {trim, bindOnce} from "../../../ts/utils"
+import {trim, bindOnce} from "../../utils"
 import * as _ from "lodash"
-import {Injectable} from "@angular/core"
-
-//############################################################################
-//# Navigation Urls Service
-//############################################################################
-
-@Injectable()
-export class NavigationUrlsService {
-    urls:any
-
-    constructor() {
-        this.urls = {};
-    }
-
-    update(urls) {
-        return this.urls = _.merge({}, this.urls, urls || {});
-    }
-
-    formatUrl(url, ctx) {
-        if (ctx == null) { ctx = {}; }
-        let replacer = function(match) {
-            match = trim(match, ":");
-            return ctx[match] || "undefined";
-        };
-        return url.replace(/(:\w+)/g, replacer);
-    }
-
-    resolve(name, ctx) {
-        let url = this.urls[name];
-        if (!url) { return ""; }
-        if (ctx) { return this.formatUrl(url, ctx); }
-        return url;
-    }
-}
+import {Directive, ElementRef, Input, HostListener} from "@angular/core"
+import {Router} from "@angular/router"
+import {AuthService} from "../auth"
+import {LightboxService} from "../common/lightboxes"
+import {NavigationUrlsService} from "./navurls.service"
 
 //############################################################################
 //# Navigation Urls Directive
 //############################################################################
 
-export let NavigationUrlsDirective = function($navurls, $auth, $q, $location, lightboxService) {
+@Directive({
+    selector: "[tg-nav]",
+})
+export class NavigationUrlsDirective {
+    @Input() name: string;
+    @Input() params: any;
+    @Input("query-params") queryParams: any;
+    fullUrl: string;
+
+    constructor(private el: ElementRef,
+                private navurls: NavigationUrlsService,
+                private auth: AuthService,
+                private router: Router,
+                private lightboxs: LightboxService) {
+        this.fullUrl = null;
+        if (this.el.nativeElement.nodeName === "A") {
+            this.el.nativeElement.setAttribute("href", "#");
+        }
+    }
+
+    @HostListener('mouseenter') onMouseEnter() {
+        if (this.fullUrl) {
+            return
+        }
+        let user = this.auth.getUser();
+        if (user) { this.params.user = user.username; }
+
+        let url = this.navurls.resolve(this.name);
+        this.fullUrl = this.navurls.formatUrl(url, this.params);
+
+        if (this.queryParams) {
+            let queryParamsStr = $.param(this.queryParams);
+            this.fullUrl = `${this.fullUrl}?${queryParamsStr}`;
+        }
+
+        if (this.el.nativeElement.nodeName === "A") {
+            this.el.nativeElement.setAttribute("href", this.fullUrl);
+        }
+        return true;
+    }
+
+    @HostListener('click') onClickEnter(event) {
+        if (event.metaKey || event.ctrlKey) {
+            return;
+        }
+
+        if (this.el.nativeElement.classList.contains('noclick')) {
+            return;
+        }
+
+        switch (event.which) {
+            case 1:
+                this.router.navigateByUrl(this.fullUrl);
+                break;
+            case 2:
+                window.open(this.fullUrl);
+                break;
+        }
+
+        this.lightboxs.closeAll();
+        return false;
+    }
+}
+
+export let NavigationUrlsDirectiveNg1 = function($navurls, $auth, $q, $location, lightboxService) {
     // Example:
     // link(tg-nav="project-backlog:project='sss',")
 

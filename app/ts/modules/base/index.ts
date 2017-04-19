@@ -24,14 +24,15 @@
 
 import * as angular from "angular"
 import * as bind from "./bind"
-import {downgradeInjectable} from "@angular/upgrade/static"
+import {downgradeInjectable, downgradeComponent} from "@angular/upgrade/static"
 
 import {ConfigurationService} from "./conf"
 import {ContribUserSettingsController, ContribController} from "./contrib"
 import {HttpService} from "./http"
 import {locationFactory} from "./location"
 import {ModelService} from "./model"
-import {NavigationUrlsService, NavigationUrlsDirective} from "./navurls"
+import {NavigationUrlsDirectiveNg1} from "./navurls.directive"
+import {NavigationUrlsService} from "./navurls.service"
 import {RepositoryService} from "./repository"
 import {StorageService} from "./storage"
 import {UrlsService} from "./urls"
@@ -53,7 +54,7 @@ module.service("$tgHttp", downgradeInjectable(HttpService));
 module.factory("$tgLocation", ["$location", "$route", "$rootScope", locationFactory]);
 module.service("$tgModel", downgradeInjectable(ModelService));
 module.service("$tgNavUrls", downgradeInjectable(NavigationUrlsService));
-module.directive("tgNav", ["$tgNavUrls", "$tgAuth", "$q", "$tgLocation", "lightboxService", NavigationUrlsDirective]);
+module.directive("tgNav", NavigationUrlsDirectiveNg1);
 module.service("$tgRepo", downgradeInjectable(RepositoryService));
 module.service("$tgStorage", downgradeInjectable(StorageService));
 module.service('$tgUrls', downgradeInjectable(UrlsService));

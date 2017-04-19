@@ -23,20 +23,13 @@ declare var _version:string;
 import {truncate} from "../../ts/utils"
 import * as angular from "angular"
 
+import {Injectable} from "@angular/core"
+
+@Injectable()
 export class AppMetaService {
-    rootScope: angular.IScope
-    listener:any
-    _listener:any
-
-    static initClass() {
-        this.$inject = [
-            "$rootScope"
-        ];
-    }
-
-    constructor(rootScope) {
-        this.rootScope = rootScope;
-    }
+    // TODO: Needed when implemented the last function
+    // listener:any
+    // _listener:any
 
     _set(key, value) {
         let meta;
@@ -115,15 +108,15 @@ content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalabl
         return $("head meta[name=\"viewport\"]").remove();
     }
 
-    setfn(fn) {
-        if (this.listener) { this._listener(); }
-
-        return this._listener = this.rootScope.$watchCollection(fn, (metas:any) => {
-            if (metas) {
-                this.setAll(metas.title, metas.description);
-                return this._listener();
-            }
-        });
-    }
+    // TODO: Implement in the future when needed
+    // setfn(fn) {
+    //     if (this.listener) { this._listener(); }
+    //
+    //     return this._listener = this.rootScope.$watchCollection(fn, (metas:any) => {
+    //         if (metas) {
+    //             this.setAll(metas.title, metas.description);
+    //             return this._listener();
+    //         }
+    //     });
+    // }
 }
-AppMetaService.initClass();

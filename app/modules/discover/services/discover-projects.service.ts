@@ -23,116 +23,109 @@ import * as angular from "angular"
 import * as _ from "lodash"
 import * as Immutable from "immutable"
 
-export var DiscoverProjectsService = (function() {
-    let _discoverParams = undefined;
-    DiscoverProjectsService = class DiscoverProjectsService extends Service {
-        rs:any
-        projectsService:any
-        _mostLiked:any
-        _mostActive:any
-        _featured:any
-        _searchResult:any
-        _projectsCount:any
-        _nextSearchPage:any
-        decorate:any
+import {Injectable} from "@angular/core"
+import {ResourcesService} from "../../resources/resources.service"
+import {ProjectsService} from "../../projects/projects.service"
 
-        static initClass() {
-            this.$inject = [
-                "tgResources",
-                "tgProjectsService"
-            ];
+@Injectable()
+export class DiscoverProjectsService {
+    static _discoverParams:any = undefined;
+    _mostLiked:any
+    _mostActive:any
+    _featured:any
+    _searchResult:any
+    _projectsCount:any
+    _nextSearchPage:any
+    mostLiked:any
+    mostActive:any
+    featured:any
+    projectsCount:any
+    nextSearchPage:any
+    searchResult:any
+    decorate:any
 
-            _discoverParams = {
-                discover_mode: true
-            };
-        }
+    constructor(private rs: ResourcesService, private projectsService: ProjectsService) {
+        DiscoverProjectsService._discoverParams = {
+            discover_mode: true
+        };
 
-        constructor(rs, projectsService) {
-            super()
+        this._mostLiked = Immutable.List();
+        this._mostActive = Immutable.List();
+        this._featured = Immutable.List();
+        this._searchResult = Immutable.List();
+        this._projectsCount = 0;
 
-            this.rs = rs;
-            this.projectsService = projectsService;
-            this._mostLiked = Immutable.List();
-            this._mostActive = Immutable.List();
-            this._featured = Immutable.List();
-            this._searchResult = Immutable.List();
-            this._projectsCount = 0;
+        this.decorate = this.projectsService._decorate.bind(this.projectsService);
 
-            this.decorate = this.projectsService._decorate.bind(this.projectsService);
+        defineImmutableProperty(this, "mostLiked", () => { return this._mostLiked; });
+        defineImmutableProperty(this, "mostActive", () => { return this._mostActive; });
+        defineImmutableProperty(this, "featured", () => { return this._featured; });
+        defineImmutableProperty(this, "searchResult", () => { return this._searchResult; });
+        defineImmutableProperty(this, "nextSearchPage", () => { return this._nextSearchPage; });
+        defineImmutableProperty(this, "projectsCount", () => { return this._projectsCount; });
+    }
 
-            defineImmutableProperty(this, "mostLiked", () => { return this._mostLiked; });
-            defineImmutableProperty(this, "mostActive", () => { return this._mostActive; });
-            defineImmutableProperty(this, "featured", () => { return this._featured; });
-            defineImmutableProperty(this, "searchResult", () => { return this._searchResult; });
-            defineImmutableProperty(this, "nextSearchPage", () => { return this._nextSearchPage; });
-            defineImmutableProperty(this, "projectsCount", () => { return this._projectsCount; });
-        }
+    fetchMostLiked(params) {
+        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        return this.rs.projects.getProjects(_params, false)
+            .then((result:any) => {
+                let data = result.data.slice(0, 5);
 
-        fetchMostLiked(params) {
-            let _params = _.extend({}, _discoverParams, params);
-            return this.rs.projects.getProjects(_params, false)
-                .then(result => {
-                    console.log(result);
-                    let data = result.data.slice(0, 5);
+                let projects = Immutable.fromJS(data);
+                projects = projects.map(this.decorate);
 
-                    let projects = Immutable.fromJS(data);
-                    projects = projects.map(this.decorate);
+                return this._mostLiked = projects;
+        });
+    }
 
-                    return this._mostLiked = projects;
-            });
-        }
+    fetchMostActive(params) {
+        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        return this.rs.projects.getProjects(_params, false)
+            .then((result:any) => {
+                let data = result.data.slice(0, 5);
 
-        fetchMostActive(params) {
-            let _params = _.extend({}, _discoverParams, params);
-            return this.rs.projects.getProjects(_params, false)
-                .then(result => {
-                    let data = result.data.slice(0, 5);
+                let projects = Immutable.fromJS(data);
+                projects = projects.map(this.decorate);
 
-                    let projects = Immutable.fromJS(data);
-                    projects = projects.map(this.decorate);
+                return this._mostActive = projects;
+        });
+    }
 
-                    return this._mostActive = projects;
-            });
-        }
+    fetchFeatured() {
+        let _params = _.extend({}, DiscoverProjectsService._discoverParams);
+        _params.is_featured = true;
 
-        fetchFeatured() {
-            let _params = _.extend({}, _discoverParams);
-            _params.is_featured = true;
+        return this.rs.projects.getProjects(_params, false)
+            .then((result:any) => {
+                let data = result.data.slice(0, 4);
 
-            return this.rs.projects.getProjects(_params, false)
-                .then(result => {
-                    let data = result.data.slice(0, 4);
+                let projects = Immutable.fromJS(data);
+                projects = projects.map(this.decorate);
 
-                    let projects = Immutable.fromJS(data);
-                    projects = projects.map(this.decorate);
+                return this._featured = projects;
+        });
+    }
 
-                    return this._featured = projects;
-            });
-        }
+    resetSearchList() {
+        return this._searchResult = Immutable.List();
+    }
 
-        resetSearchList() {
-            return this._searchResult = Immutable.List();
-        }
+    fetchStats() {
+        return this.rs.stats.discover().then(discover => {
+            return this._projectsCount = discover.getIn(['projects', 'total']);
+        });
+    }
 
-        fetchStats() {
-            return this.rs.stats.discover().then(discover => {
-                return this._projectsCount = discover.getIn(['projects', 'total']);
-            });
-        }
+    fetchSearch(params) {
+        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        return this.rs.projects.getProjects(_params)
+            .then((result:any) => {
+                this._nextSearchPage = !!result.headers['X-Pagination-Next'];
 
-        fetchSearch(params) {
-            let _params = _.extend({}, _discoverParams, params);
-            return this.rs.projects.getProjects(_params)
-                .then(result => {
-                    this._nextSearchPage = !!result.headers['X-Pagination-Next'];
+                let projects = Immutable.fromJS(result.data);
+                projects = projects.map(this.decorate);
 
-                    let projects = Immutable.fromJS(result.data);
-                    projects = projects.map(this.decorate);
-
-                    return this._searchResult = this._searchResult.concat(projects);
-            });
-        }
-    };
-    DiscoverProjectsService.initClass();
-    return DiscoverProjectsService;
-})();
+                return this._searchResult = this._searchResult.concat(projects);
+        });
+    }
+}
