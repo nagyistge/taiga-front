@@ -61,8 +61,7 @@ export class NavigationUrlsDirective {
         let user = this.auth.getUser();
         if (user) { this.params.user = user.username; }
 
-        let url = this.navurls.resolve(this.name);
-        this.fullUrl = this.navurls.formatUrl(url, this.params);
+        this.fullUrl = this.navurls.resolve(this.name, this.params);
 
         if (this.queryParams) {
             let queryParamsStr = $.param(this.queryParams);
@@ -167,8 +166,7 @@ export let NavigationUrlsDirectiveNg1 = function($navurls, $auth, $q, $location,
                     let user = $auth.getUser();
                     if (user) { options.user = user.username; }
 
-                    let url = $navurls.resolve(name);
-                    let fullUrl = $navurls.formatUrl(url, options);
+                    let fullUrl = $navurls.resolve(name, options);
 
                     if ($attrs.tgNavGetParams) {
                         let getURLParams = JSON.parse($attrs.tgNavGetParams);

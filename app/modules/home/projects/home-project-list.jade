@@ -7,7 +7,7 @@ section.home-project-list(ng-if="vm.projects.size")
     )
         .project-card-inner(
             href="#"
-            tg-nav [name]="project" [params]="{project: project.get('slug')}"
+            tg-nav="project:project=project.get('slug')"
         )
             .project-card-header
                 a.project-card-logo(
