@@ -17,19 +17,16 @@
  * File: discover-projects.service.coffee
  */
 
-import {Service} from "../../../ts/classes"
 import {defineImmutableProperty} from "../../../ts/utils"
-import * as angular from "angular"
 import * as _ from "lodash"
 import * as Immutable from "immutable"
-
-import {Injectable} from "@angular/core"
-import {ResourcesService} from "../../resources/resources.service"
-import {ProjectsService} from "../../projects/projects.service"
+import { ResourcesService } from "../../resources/resources.service";
+import { ProjectsService } from "../../projects/projects.service";
+import {Injectable} from "@angular/core";
 
 @Injectable()
 export class DiscoverProjectsService {
-    static _discoverParams:any = undefined;
+    _discoverParams:any = undefined;
     _mostLiked:any
     _mostActive:any
     _featured:any
@@ -39,16 +36,13 @@ export class DiscoverProjectsService {
     mostLiked:any
     mostActive:any
     featured:any
+    searchResult:any
     projectsCount:any
     nextSearchPage:any
-    searchResult:any
     decorate:any
 
     constructor(private rs: ResourcesService, private projectsService: ProjectsService) {
-        DiscoverProjectsService._discoverParams = {
-            discover_mode: true
-        };
-
+        this._discoverParams = { discover_mode: true };
         this._mostLiked = Immutable.List();
         this._mostActive = Immutable.List();
         this._featured = Immutable.List();
@@ -66,9 +60,9 @@ export class DiscoverProjectsService {
     }
 
     fetchMostLiked(params) {
-        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params, false)
-            .then((result:any) => {
+            .then(result => {
                 let data = result.data.slice(0, 5);
 
                 let projects = Immutable.fromJS(data);
@@ -79,9 +73,9 @@ export class DiscoverProjectsService {
     }
 
     fetchMostActive(params) {
-        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params, false)
-            .then((result:any) => {
+            .then(result => {
                 let data = result.data.slice(0, 5);
 
                 let projects = Immutable.fromJS(data);
@@ -92,11 +86,11 @@ export class DiscoverProjectsService {
     }
 
     fetchFeatured() {
-        let _params = _.extend({}, DiscoverProjectsService._discoverParams);
+        let _params = _.extend({}, this._discoverParams);
         _params.is_featured = true;
 
         return this.rs.projects.getProjects(_params, false)
-            .then((result:any) => {
+            .then(result => {
                 let data = result.data.slice(0, 4);
 
                 let projects = Immutable.fromJS(data);
@@ -117,10 +111,10 @@ export class DiscoverProjectsService {
     }
 
     fetchSearch(params) {
-        let _params = _.extend({}, DiscoverProjectsService._discoverParams, params);
+        let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params)
-            .then((result:any) => {
-                this._nextSearchPage = !!result.headers['X-Pagination-Next'];
+            .then(result => {
+                this._nextSearchPage = !!result.headers('X-Pagination-Next');
 
                 let projects = Immutable.fromJS(result.data);
                 projects = projects.map(this.decorate);

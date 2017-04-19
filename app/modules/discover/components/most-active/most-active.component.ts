@@ -23,7 +23,7 @@ import {DiscoverProjectsService} from "../../services/discover-projects.service"
 
 @Component({
     selector: 'tg-most-active',
-    templateUrl: 'modules/discover/components/most-active/most-active.html'
+    template: require("./most-active.jade")()
 })
 export class MostActive implements OnInit {
     currentOrderBy:any

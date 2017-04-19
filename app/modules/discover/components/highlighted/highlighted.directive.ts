@@ -14,29 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * File: discover-search.directive.coffee
+ * File: highlighted.directive.coffee
  */
 
-export let DiscoverSearchBarDirective = function() {
-    let link = function(scope, el, attrs, ctrl) {};
-
-    return {
-        controller: "DiscoverSearchBar",
-        controllerAs: "vm",
-        templateUrl: 'discover/components/discover-search-bar/discover-search-bar.html',
-        bindToController: true,
+export let HighlightedDirective = () =>
+    ({
+        templateUrl: "discover/components/highlighted/highlighted.html",
         scope: {
-            q: "=",
-            filter: "=",
-            onChange: "&"
-        },
-        compile(element, attrs) {
-            if (!attrs.q) {
-                return attrs.q = '';
-            }
-        },
-        link
-    };
-};
+            loading: "=",
+            highlighted: "=",
+            orderBy: "="
+        }
+    })
+;
 
-DiscoverSearchBarDirective.$inject = [];
+HighlightedDirective.$inject = [];

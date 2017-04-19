@@ -18,17 +18,17 @@
  */
 
 import {TranslateService} from "@ngx-translate/core"
-import {Component, OnInit} from "@angular/core"
+import {Component, OnInit, Output, Input, EventEmitter} from "@angular/core"
 
 @Component({
     selector: 'tg-discover-home-order-by',
-    templateUrl: 'discover/components/discover-home-order-by/discover-home-order-by.html'
+    template: require('./discover-home-order-by.jade')()
 })
 export class DiscoverHomeOrderBy implements OnInit{
-    is_open:boolean
+    @Output('on-change') onChange: EventEmitter<any>;
+    @Input('order-by') currentOrderBy: any;
+    is_open:boolean;
     texts:any
-    currentOrderBy:any
-    onChange:any
 
     constructor(private translate: TranslateService) {
         this.texts = {
@@ -58,6 +58,6 @@ export class DiscoverHomeOrderBy implements OnInit{
     orderBy(type) {
         this.currentOrderBy = type;
         this.is_open = false;
-        return this.onChange({orderBy: this.currentOrderBy});
+        this.onChange.emit({orderBy: this.currentOrderBy});
     }
 }

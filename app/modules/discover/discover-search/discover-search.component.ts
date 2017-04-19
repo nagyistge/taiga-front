@@ -28,8 +28,8 @@ import {DiscoverProjectsService} from "../services/discover-projects.service"
 import {TranslateService} from "@ngx-translate/core"
 
 @Component({
-    selector: "tg-discover-search-bar",
-    templateUrl: "discover/discover-search/discover-search.html"
+    selector: "tg-discover-search",
+    template: require("./discover-search.jade")(),
 })
 export class DiscoverSearch implements OnInit {
     page:number

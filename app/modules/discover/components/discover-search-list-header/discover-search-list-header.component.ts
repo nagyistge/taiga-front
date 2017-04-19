@@ -22,7 +22,8 @@ import {Component, OnInit} from "@angular/core"
 
 @Component({
     selector: 'tg-discover-search-list-header',
-    templateUrl: 'discover/components/discover-search-list-header/discover-search-list-header.html'
+    //templateUrl: 'discover/components/discover-search-list-header/discover-search-list-header.html'
+    template: '<p></p>'
 })
 export class DiscoverSearchListHeader implements OnInit {
     like_is_open:boolean

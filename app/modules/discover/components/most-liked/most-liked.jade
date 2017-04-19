@@ -2,7 +2,7 @@
     .header
         .title-wrapper
             tg-svg(svg-icon="icon-like")
-            h1.title {{ 'DISCOVER.MOST_LIKED' | translate }}
+            h1.title(translate="DISCOVER.MOST_LIKED")
         tg-discover-home-order-by(
             (on-change)="orderBy(orderBy)"
             [order-by]="currentOrderBy"
@@ -15,4 +15,4 @@
 
 .empty-highlighted-project(*ngIf="!highlighted.size")
     tg-svg(svg-icon="icon-like")
-    span {{ 'DISCOVER.MOST_LIKED_EMPTY' | translate }}
+    span(translate="DISCOVER.MOST_LIKED_EMPTY")

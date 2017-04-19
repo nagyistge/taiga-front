@@ -40,8 +40,10 @@ import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.c
 import { DateRange } from './modules/common/components';
 import { TgCommonModule } from './modules/common/common.module';
 
+import {AppComponent} from "./app.component"
+
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
-  shouldProcessUrl(url: UrlTree) { return false; }
+  shouldProcessUrl(url: UrlTree) { return url.toString() === '/discover'; }
   extract(url: UrlTree) { return url; }
   merge(url: UrlTree, whole: UrlTree) { return url; }
 }
@@ -74,6 +76,7 @@ export function HttpLoaderFactory(http: Http) {
     Avatar,
     BelongToEpics,
     TermsOfServiceAndPrivacyPolicyNotice,
+    AppComponent,
   ],
   providers: [
     ConfigurationService,
@@ -106,8 +109,7 @@ export function HttpLoaderFactory(http: Http) {
     LightboxClose,
     TermsOfServiceAndPrivacyPolicyNotice,
     DateRange,
-  ]
+  ],
+  bootstrap: [ AppComponent ]
 })
-export class AppModule {
-  ngDoBootstrap() {}
-}
+export class AppModule {}

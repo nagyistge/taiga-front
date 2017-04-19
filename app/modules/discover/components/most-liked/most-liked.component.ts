@@ -23,7 +23,7 @@ import {DiscoverProjectsService} from "../../services/discover-projects.service"
 
 @Component({
     selector: 'tg-most-liked',
-    templateUrl: 'discover/components/most-liked/most-liked.html'
+    template: require("./most-liked.jade")()
 })
 export class MostLiked implements OnInit {
     currentOrderBy:any

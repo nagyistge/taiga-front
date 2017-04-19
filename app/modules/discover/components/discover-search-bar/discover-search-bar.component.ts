@@ -19,15 +19,15 @@
 
 import {defineImmutableProperty} from "../../../../ts/utils"
 import * as angular from "angular"
-import {Component, OnInit} from "@angular/core"
+import {Component, OnInit, Output, EventEmitter} from "@angular/core"
 import {DiscoverProjectsService} from "../../services/discover-projects.service"
 
 @Component({
     selector: 'tg-discover-search-bar',
-    templateUrl: 'discover/components/discover-search-bar/discover-search-bar.html'
+    template: require("./discover-search-bar.jade")()
 })
 export class DiscoverSearchBar implements OnInit {
-    onChange:any
+    @Output("on-change") onChange: EventEmitter<any>
     q:any
     filter:any
 
@@ -40,10 +40,10 @@ export class DiscoverSearchBar implements OnInit {
     }
 
     selectFilter(filter) {
-        return this.onChange({filter, q: this.q});
+        return this.onChange.emit({filter, q: this.q});
     }
 
     submitFilter() {
-        return this.onChange({filter: this.filter, q: this.q});
+        return this.onChange.emit({filter: this.filter, q: this.q});
     }
 }

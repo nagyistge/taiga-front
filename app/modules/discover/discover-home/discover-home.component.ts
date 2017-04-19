@@ -26,7 +26,7 @@ import {Component} from "@angular/core"
 
 @Component({
     selector: "tg-discover-home",
-    templateUrl: "discover/discover-home/discover-home.html"
+    template: require("./discover-home.jade")(),
 })
 export class DiscoverHome {
     title: string;

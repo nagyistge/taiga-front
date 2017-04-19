@@ -23,10 +23,10 @@ import {DiscoverProjectsService} from "../../services/discover-projects.service"
 
 @Component({
     selector: 'tg-featured-projects',
-    templateUrl: 'discover/components/featured/featured.html'
+    template: require('./featured-projects.jade')(),
 })
 export class FeaturedProjects implements OnInit {
-    featured:any
+    featured:any = []
 
     constructor(private discoverProjects: DiscoverProjectsService) {}
 

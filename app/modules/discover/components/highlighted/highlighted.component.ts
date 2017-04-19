@@ -17,10 +17,14 @@
  * File: highlighted.directive.coffee
  */
 
-import {Component} from "@angular/core"
+import {Component, Input} from "@angular/core"
 
 @Component({
-    selector: 'tg-discover-highlighted',
-    templateUrl: "discover/components/highlighted/highlighted.html"
+    selector: 'tg-highlighted',
+    template: require("./highlighted.jade")()
 })
-export class Highlighted {}
+export class Highlighted {
+    @Input() loading:any;
+    @Input() highlighted:any;
+    @Input("order-by") orderBy:any;
+}

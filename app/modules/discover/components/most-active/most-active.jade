@@ -1,8 +1,8 @@
-.most-active(*ngIf="vm.highlighted.size")
+.most-active(*ngIf="highlighted.size")
     .header
         .title-wrapper
             tg-svg(svg-icon="icon-activity")
-            h1.title {{ 'DISCOVER.MOST_ACTIVE' | translate }}
+            h1.title(translate="DISCOVER.MOST_ACTIVE")
         tg-discover-home-order-by((on-change)="orderBy(orderBy)", [order-by]="currentOrderBy")
 
     tg-highlighted(
@@ -11,7 +11,6 @@
         [order-by]="order_by"
     )
 
-.empty-highlighted-project(*ngIf="!highlighted.size"
-)
+.empty-highlighted-project(*ngIf="!highlighted.size")
     tg-svg(svg-icon="icon-activity")
-    span {{ 'DISCOVER.MOST_ACTIVE_EMPTY' | translate }}
+    span(translate="DISCOVER.MOST_ACTIVE_EMPTY")

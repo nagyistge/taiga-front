@@ -620,6 +620,8 @@ function configure($routeProvider, $locationProvider, $httpProvider, $provide, $
     $routeProvider.when("/permission-denied",
         {templateUrl: "error/permission-denied.html"});
 
+    $routeProvider.when("/discover", {}); // MANAGED WITH ANGULAR 2
+    $routeProvider.when("/discover/search", {}); // MANAGED WITH ANGULAR 2
     $routeProvider.otherwise({templateUrl: "error/not-found.html"});
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 

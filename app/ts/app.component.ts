@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'body',
+  selector: 'tg-view',
   template: `
     <router-outlet></router-outlet>
-    <div ng-view></div>
+    <div class="master" ng-view></div>
   `,
 })
 export class AppComponent { }
-
