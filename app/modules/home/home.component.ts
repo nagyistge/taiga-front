@@ -17,28 +17,24 @@
  * File: home.controller.coffee
  */
 
-import * as angular from "angular"
+import { CurrentUserService } from "../services/current-user.service";
+import { Router } from "@angular/router";
+import { NavigationUrlsService } from "../../ts/modules/base/navurls.service";
 
-export class HomeController {
-    currentUserService:any
-    location:any
-    navUrls:any
+import {Component, OnInit} from "@angular/core"
 
-    static initClass() {
-        this.$inject = [
-            "tgCurrentUserService",
-            "$location",
-            "$tgNavUrls"
-        ];
-    }
+@Component({
+    selector: "tg-home",
+    template: require("./home.jade")(),
+})
+export class Home implements OnInit{
+    constructor(private currentUser: CurrentUserService,
+                private router: Router,
+                private navurls: NavigationUrlsService) {}
 
-    constructor(currentUserService, location, navUrls) {
-        this.currentUserService = currentUserService;
-        this.location = location;
-        this.navUrls = navUrls;
-        if (!this.currentUserService.getUser()) {
-            this.location.path(this.navUrls.resolve("discover"));
+    ngOnInit() {
+        if (!this.currentUser.getUser()) {
+            this.router.navigateByUrl(this.navurls.resolve("discover"));
         }
     }
 }
-HomeController.initClass();

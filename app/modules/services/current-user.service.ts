@@ -21,6 +21,7 @@ import {groupBy, defineImmutableProperty} from "../../ts/utils"
 import * as angular from "angular"
 import * as Immutable from "immutable"
 import * as Promise from "bluebird"
+import * as Rx from "rxjs"
 
 import {Injectable} from "@angular/core"
 import {ProjectsService} from "../projects/projects.service"
@@ -34,16 +35,18 @@ export class CurrentUserService {
     _projectsById: Immutable.Map<any, any>;
     _joyride:any
     projects:any
+    projectsById:any
+    projectsStream:any
 
     constructor(private projectsService: ProjectsService,
                 private storage: StorageService,
                 private rs: ResourcesService) {
         this._user = null;
-        this._projects = Immutable.Map();
+        this._projects = Immutable.fromJS({'all': [], 'recents': []});
         this._projectsById = Immutable.Map();
         this._joyride = null;
-
-        defineImmutableProperty(this, "projects", () => { return this._projects; });
+        this.projectsStream = new Rx.Subject();
+        defineImmutableProperty(this, "projects", () => { return this._projects});
         defineImmutableProperty(this, "projectsById", () => { return this._projectsById; });
     }
 
@@ -81,14 +84,14 @@ export class CurrentUserService {
     }
 
     bulkUpdateProjectsOrder(sortData) {
-        return this.projectsService.bulkUpdateProjectsOrder(sortData).then(() => {
+        return this.projectsService.bulkUpdateProjectsOrder(sortData).flatmap(() => {
             return this.loadProjects();
         });
     }
 
     loadProjects() {
         return this.projectsService.getProjectsByUserId(this._user.get("id"))
-            .then(projects => this.setProjects(projects));
+            .map(projects => this.setProjects(projects));
     }
 
     disableJoyRide(section) {
@@ -147,6 +150,7 @@ export class CurrentUserService {
 
         this._projectsById = Immutable.fromJS(groupBy(projects.toJS(), p => p.id));
 
+        this.projectsStream.next(this.projects);
         return this.projects;
     }
 

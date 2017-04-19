@@ -74,7 +74,7 @@ export class TasksResource {
     bulkCreate(projectId, sprintId, usId, data) {
         let url = this.urls.resolve("bulk-create-tasks");
         let params = {project_id: projectId, milestone_id: sprintId, us_id: usId, bulk_tasks: data};
-        return this.http.post(url, params).then((result:any) => result.data);
+        return this.http.post(url, params).map((result:any) => result.data);
     };
 
     upvote(taskId) {
@@ -156,6 +156,6 @@ export class TasksResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 };

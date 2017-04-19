@@ -35,7 +35,7 @@ export class SprintsResource {
                 private storage: StorageService) {}
 
     get(projectId, sprintId) {
-        return this.repo.queryOne("milestones", sprintId).then((sprint:any) => {
+        return this.repo.queryOne("milestones", sprintId).map((sprint:any) => {
             let uses = sprint.user_stories;
             uses = _.map(uses, u => this.model.make_model("userstories", u));
             sprint._attrs.user_stories = uses;
@@ -50,7 +50,7 @@ export class SprintsResource {
     list(projectId, filters) {
         let params = {"project": projectId};
         params = _.extend({}, params, filters || {});
-        return this.repo.queryMany("milestones", params, {}, true).then(result => {
+        return this.repo.queryMany("milestones", params, {}, true).map(result => {
             let milestones = result[0];
             let headers = result[1];
 

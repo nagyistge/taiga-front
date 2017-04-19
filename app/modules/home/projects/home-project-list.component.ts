@@ -17,24 +17,26 @@
  * File: home-project-list.directive.coffee
  */
 
+import * as Immutable from "immutable"
 import {defineImmutableProperty} from "../../../ts/utils"
+import { CurrentUserService  } from "../../services/current-user.service";
+import {Component, OnInit, Input} from "@angular/core"
+import { ProjectsService } from "../../projects/projects.service";
+import { ChangeDetectorRef } from "@angular/core";
+import { ApplicationRef } from "@angular/core";
 
-export let HomeProjectListDirective = function(currentUserService) {
-    let link = function(scope, el, attrs, ctrl) {
-        scope.vm = {};
+@Component({
+    selector: "tg-home-project-list",
+    template: require("./home-project-list.jade")(),
+})
+export class HomeProjectList{
+    projects:any;
 
-        return defineImmutableProperty(scope.vm, "projects", () => currentUserService.projects.get("recents"));
-    };
-
-    let directive = {
-        templateUrl: "home/projects/home-project-list.html",
-        scope: {},
-        link
-    };
-
-    return directive;
+    constructor(private currentUser: CurrentUserService) {
+        this.projects = Immutable.List();
+        this.currentUser.projectsStream.subscribe((projects) => {
+            console.log(projects);
+            this.projects = projects;
+        })
+    }
 };
-
-HomeProjectListDirective.$inject = [
-    "tgCurrentUserService"
-];

@@ -157,7 +157,7 @@ export class RepositoryService {
         })
     }
 
-    queryMany(name, params={}, options:any={}, headers=false):Promise<any> {
+    queryMany(name, params={}, options:any={}, headers=false):any {
         let url = this.urls.resolve(name);
         let httpOptions = {headers: {}};
 
@@ -165,7 +165,7 @@ export class RepositoryService {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             let result =  _.map(data.data, x => this.model.make_model(name, x));
 
             if (headers) {
@@ -176,7 +176,7 @@ export class RepositoryService {
         });
     }
 
-    queryOneAttribute(name, id, attribute, params={}, options:any={}):Promise<any> {
+    queryOneAttribute(name, id, attribute, params={}, options:any={}):any {
         let url = this.urls.resolve(name, id);
         let httpOptions = {headers: {}};
 
@@ -184,7 +184,7 @@ export class RepositoryService {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             let model = this.model.make_model(name, data.data[attribute]);
             (<any>model).parent = id;
 
@@ -192,7 +192,7 @@ export class RepositoryService {
         });
     }
 
-    queryOne(name, id, params={}, options:any={}):Promise<any> {
+    queryOne(name, id, params={}, options:any={}):any {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = {headers: {}};
@@ -200,27 +200,27 @@ export class RepositoryService {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
 
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             return this.model.make_model(name, data.data);
         });
     }
 
-    queryOneRaw(name, id, params={}, options:any={}):Promise<any> {
+    queryOneRaw(name, id, params={}, options:any={}):any {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
         if (!options.enablePagination) {
             httpOptions.headers["x-disable-pagination"] =  "1";
         }
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             return data.data;
         });
     }
 
-    queryPaginated(name, params={}, options={}):Promise<any> {
+    queryPaginated(name, params={}, options={}):any {
         let url = this.urls.resolve(name);
         let httpOptions = _.merge({headers: {}}, options);
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             let headers = data.headers();
             let result:any = {};
             result.models = _.map(data.data, x => this.model.make_model(name, x));
@@ -231,12 +231,12 @@ export class RepositoryService {
         });
     }
 
-    queryOnePaginatedRaw(name, id, params={}, options={}):Promise<any> {
+    queryOnePaginatedRaw(name, id, params={}, options={}):any {
         let url = this.urls.resolve(name);
         if (id) { url = `${url}/${id}`; }
         let httpOptions = _.merge({headers: {}}, options);
 
-        return this.http.get(url, params, httpOptions).then((data:any) => {
+        return this.http.get(url, params, httpOptions).map((data:any) => {
             let headers = data.headers();
             let result:any = {};
             result.data = data.data;

@@ -42,8 +42,9 @@ export class MostLiked implements OnInit {
         this.loading = true;
         this.order_by = this.getOrderBy();
 
-        return this.discoverProjects.fetchMostLiked({order_by: this.order_by}).then(() => {
-            return this.loading = false;
+        return this.discoverProjects.fetchMostLiked({order_by: this.order_by}).map((data) => {
+            this.loading = false;
+            return data;
         });
     }
 

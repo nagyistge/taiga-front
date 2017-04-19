@@ -8,6 +8,8 @@ import { HttpModule, Http } from '@angular/http';
 import { DiscoverModule } from "../modules/discover/discover.module"
 import { DiscoverHome } from "../modules/discover/discover-home/discover-home.component"
 import { DiscoverSearch } from "../modules/discover/discover-search/discover-search.component"
+import { HomeModule } from "../modules/home/home.module"
+import { Home } from "../modules/home/home.component"
 
 import { TranslateModule, TranslateLoader, TranslateService} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -43,7 +45,9 @@ import { TgCommonModule } from './modules/common/common.module';
 import {AppComponent} from "./app.component"
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
-  shouldProcessUrl(url: UrlTree) { return url.toString() === '/discover'; }
+  shouldProcessUrl(url: UrlTree) {
+      return url.toString() === '/discover' || url.toString() === '/';
+  }
   extract(url: UrlTree) { return url; }
   merge(url: UrlTree, whole: UrlTree) { return url; }
 }
@@ -57,7 +61,9 @@ export function HttpLoaderFactory(http: Http) {
     BrowserModule,
     UpgradeModule,
     HttpModule,
+    HomeModule,
     RouterModule.forRoot([
+        {path: "", component: Home},
         {path: "discover", component: DiscoverHome},
         {path: "discover/search", component: DiscoverSearch}
     ]),

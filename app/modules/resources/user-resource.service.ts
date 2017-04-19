@@ -37,7 +37,7 @@ export class UserResource {
 
         let httpOptions = {};
 
-        return this.http.get(url, {}).then((response:any) => response.data.value);
+        return this.http.get(url, {}).map((response:any) => response.data.value);
     };
 
     setUserStorage(key, value) {

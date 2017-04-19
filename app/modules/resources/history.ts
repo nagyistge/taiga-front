@@ -46,7 +46,7 @@ export class HistoryResource {
         let commentData = {
             comment
         };
-        return this.http.post(url, commentData, params).then((data:any) => {
+        return this.http.post(url, commentData, params).map((data:any) => {
             return data.data;
         });
     };
@@ -55,7 +55,7 @@ export class HistoryResource {
         let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/comment_versions`;
         let params = {id: activityId};
-        return this.http.get(url, params).then((data:any) => {
+        return this.http.get(url, params).map((data:any) => {
             return data.data;
         });
     };
@@ -64,7 +64,7 @@ export class HistoryResource {
         let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/delete_comment`;
         let params = {id: activityId};
-        return this.http.post(url, null, params).then((data:any) => {
+        return this.http.post(url, null, params).map((data:any) => {
             return data.data;
         });
     };
@@ -73,7 +73,7 @@ export class HistoryResource {
         let url = this.urls.resolve(`history/${type}`);
         url = `${url}/${objectId}/undelete_comment`;
         let params = {id: activityId};
-        return this.http.post(url, null, params).then((data:any) => {
+        return this.http.post(url, null, params).map((data:any) => {
             return data.data;
         });
     };

@@ -31,7 +31,7 @@ export class UsersResource {
                 private http: HttpService,
                 private paginateResponse: PaginateResponseService) {}
 
-    contacts(userId:number, options:any={}):Promise<any[]> {
+    contacts(userId:number, options:any={}):any {
         let url = this.urls.resolve("user-contacts", userId);
         let httpOptions = {headers: {}};
 
@@ -40,7 +40,7 @@ export class UsersResource {
         }
 
         return this.http.get(url, {}, httpOptions)
-            .then((result:any) => result.data);
+            .map((result:any) => result.data);
     };
 
     getUserByUsername(username) {
@@ -57,7 +57,7 @@ export class UsersResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getStats(userId) {
@@ -70,7 +70,7 @@ export class UsersResource {
         };
 
         return this.http.get(url, {}, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getContacts(userId, excludeProjectId) {
@@ -86,7 +86,7 @@ export class UsersResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getLiked(userId, page, type, q) {
@@ -103,7 +103,7 @@ export class UsersResource {
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
         }.bind(this));
@@ -121,7 +121,7 @@ export class UsersResource {
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
         }.bind(this));
@@ -139,7 +139,7 @@ export class UsersResource {
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
         }.bind(this));
@@ -157,7 +157,7 @@ export class UsersResource {
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
         }.bind(this));
@@ -177,7 +177,7 @@ export class UsersResource {
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             result = Immutable.fromJS(result);
             return this.paginateResponse.paginate(result);
         }.bind(this));

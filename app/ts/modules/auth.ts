@@ -193,7 +193,7 @@ export class AuthService {
     refresh() {
         let url = this.urls.resolve("user-me");
 
-        return this.http.get(url).then((data:any) => {
+        return this.http.get(url).subscribe((data:any) => {
             let user = data.data;
             user.token = this.getUser().auth_token;
 
@@ -212,7 +212,7 @@ export class AuthService {
 
         this.removeToken();
 
-        return this.http.post(url, data).then((data:any) => {
+        return this.http.post(url, data).subscribe((data:any) => {
             let user = this.model.make_model("users", data.data);
             this.setToken((<any>user).auth_token);
             this.setUser(user);
@@ -241,7 +241,7 @@ export class AuthService {
 
         this.removeToken();
 
-        return this.http.post(url, data).then((response:any) => {
+        return this.http.post(url, data).subscribe((response:any) => {
             let user = this.model.make_model("users", response.data);
             this.setToken((<any>user).auth_token);
             this.setUser(user);
@@ -369,8 +369,8 @@ let LoginDirective = function($auth, $confirm, $location, $config, $routeParams,
 
             let loginFormType = $config.get("loginFormType", "normal");
 
-            let promise = $auth.login(data, loginFormType);
-            return promise.then(onSuccess, onError);
+            let stream = $auth.login(data, loginFormType);
+            return stream.subscrie(onSuccess, onError);
         });
 
         $el.on("submit", "form", submit);

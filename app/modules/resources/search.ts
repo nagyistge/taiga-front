@@ -47,6 +47,6 @@ export class SearchResource {
             }
         };
 
-        return this.http.request(params).then((data:any) => data.data);
+        return this.http.request(params).map((data:any) => data.data);
     };
 };

@@ -49,7 +49,7 @@ export class EpicsResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     list(projectId, page) {
@@ -59,7 +59,7 @@ export class EpicsResource {
         let params = {project: projectId, page};
 
         return this.http.get(url, params)
-            .then((result:any) =>
+            .map((result:any) =>
                 ({
                     list: Immutable.fromJS(result.data),
                     headers: result.headers
@@ -70,14 +70,14 @@ export class EpicsResource {
         let url = this.urls.resolve("epics") + `/${id}`;
 
         return this.http.patch(url, patch)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     post(params) {
         let url = this.urls.resolve("epics");
 
         return this.http.post(url, params)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     reorder(id, data, setOrders) {
@@ -86,7 +86,7 @@ export class EpicsResource {
         let options = {"headers": {"set-orders": JSON.stringify(setOrders)}};
 
         return this.http.patch(url, data, null, options)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     addRelatedUserstory(epicId, userstoryId) {
@@ -125,14 +125,14 @@ export class EpicsResource {
         return this.http.delete(url);
     };
 
-    getByRef(projectId:number, ref:number):Promise<any> {
+    getByRef(projectId:number, ref:number):any {
         let params = this.getQueryParams(projectId);
         params.project = projectId;
         params.ref = ref;
         return this.repo.queryOne("epics", "by_ref", params);
     };
 
-    listValues(projectId:number, type:string):Promise<any[]> {
+    listValues(projectId:number, type:string):any {
         let params = {"project": projectId};
         this.storeQueryParams(projectId, params);
         return this.repo.queryMany(type, params);
@@ -150,22 +150,22 @@ export class EpicsResource {
         return this.storage.get(hash) || {};
     };
 
-    upvote(epicId:number):Promise<any> {
+    upvote(epicId:number):any {
         let url = this.urls.resolve("epic-upvote", epicId);
         return this.http.post(url);
     };
 
-    downvote(epicId:number):Promise<any> {
+    downvote(epicId:number):any {
         let url = this.urls.resolve("epic-downvote", epicId);
         return this.http.post(url);
     };
 
-    watch(epicId:number):Promise<any> {
+    watch(epicId:number):any {
         let url = this.urls.resolve("epic-watch", epicId);
         return this.http.post(url);
     };
 
-    unwatch(epicId:number):Promise<any> {
+    unwatch(epicId:number):any {
         let url = this.urls.resolve("epic-unwatch", epicId);
         return this.http.post(url);
     };

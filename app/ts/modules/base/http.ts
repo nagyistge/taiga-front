@@ -67,7 +67,6 @@ export class HttpService {
                             (<any>res).data = res.json();
                             return res;
                         })
-                        .toPromise(Promise);
     }
 
     get(url, params=null, options:any={}) {

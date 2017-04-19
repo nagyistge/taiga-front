@@ -119,6 +119,6 @@ export class IssuesResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 };

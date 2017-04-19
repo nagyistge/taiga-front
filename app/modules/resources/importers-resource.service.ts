@@ -45,12 +45,12 @@ export class TrelloResource {
 
     listProjects(token) {
         let url = this.urls.resolve("importers-trello-list-projects");
-        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     listUsers(token, projectId) {
         let url = this.urls.resolve("importers-trello-list-users");
-        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token, project: projectId}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate) {
@@ -86,12 +86,12 @@ export class JiraResource {
 
     listProjects(jira_url, token) {
         let url = this.urls.resolve("importers-jira-list-projects");
-        return this.http.post(url, {url: jira_url, token}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {url: jira_url, token}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     listUsers(jira_url, token, projectId) {
         let url = this.urls.resolve("importers-jira-list-users");
-        return this.http.post(url, {url: jira_url, token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {url: jira_url, token, project: projectId}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     importProject(jira_url, token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType, importerType) {
@@ -135,12 +135,12 @@ export class GithubResource {
 
     listProjects(token) {
         let url = this.urls.resolve("importers-github-list-projects");
-        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     listUsers(token, projectId) {
         let url = this.urls.resolve("importers-github-list-users");
-        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token, project: projectId}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {
@@ -177,12 +177,12 @@ export class AsanaResource {
 
     listProjects(token) {
         let url = this.urls.resolve("importers-asana-list-projects");
-        return this.http.post(url, {token}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     listUsers(token, projectId) {
         let url = this.urls.resolve("importers-asana-list-users");
-        return this.http.post(url, {token, project: projectId}).then((response:any) => Immutable.fromJS(response.data));
+        return this.http.post(url, {token, project: projectId}).map((response:any) => Immutable.fromJS(response.data));
     };
 
     importProject(token, name, description, projectId, userBindings, keepExternalReference, isPrivate, projectType) {

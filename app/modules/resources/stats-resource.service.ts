@@ -30,6 +30,6 @@ export class StatsResource {
 
     discover() {
         let url = this.urls.resolve("stats-discover");
-        return this.http.get(url).then((result:any) => Immutable.fromJS(result.data));
+        return this.http.get(url).map((result:any) => Immutable.fromJS(result.data));
     };
 };

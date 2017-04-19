@@ -31,7 +31,7 @@ export class ExternalAppsResource {
     getApplicationToken(applicationId, state) {
         let url = this.urls.resolve("applications");
         url = `${url}/${applicationId}/token?state=${state}`;
-        return this.http.get(url).then((result:any) => Immutable.fromJS(result.data));
+        return this.http.get(url).map((result:any) => Immutable.fromJS(result.data));
     };
 
     authorizeApplicationToken(applicationId, state) {
@@ -42,6 +42,6 @@ export class ExternalAppsResource {
             "application": applicationId
         };
 
-        return this.http.post(url, data).then((result:any) => Immutable.fromJS(result.data));
+        return this.http.post(url, data).map((result:any) => Immutable.fromJS(result.data));
     };
 };

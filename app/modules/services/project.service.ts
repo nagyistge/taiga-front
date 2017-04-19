@@ -100,12 +100,12 @@ export class ProjectService {
             if (!this.project || (this.project.get('slug') !== pslug)) {
                 return this.projectsService
                     .getProjectBySlug(pslug)
-                    .then(project => {
+                    .subscribe(project => {
                         this.setProject(project);
                         return resolve();
-                }).catch(xhr => {
+                    }).catch(xhr => {
                         return this.xhrError.response(xhr);
-                });
+                    });
 
             } else { return resolve(); }
         }.bind(this)));
@@ -116,7 +116,7 @@ export class ProjectService {
 
         let pslug = this.project.get('slug');
 
-        return this.projectsService.getProjectBySlug(pslug).then(project => this.setProject(project));
+        return this.projectsService.getProjectBySlug(pslug).subscribe(project => this.setProject(project));
     }
 
     hasPermission(permission) {

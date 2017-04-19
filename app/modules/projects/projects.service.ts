@@ -39,7 +39,7 @@ export class ProjectsService {
 
     getProjectBySlug(projectSlug) {
         return this.rs.projects.getProjectBySlug(projectSlug)
-            .then(project => {
+            .map(project => {
                 return this._decorate(project);
         });
     }
@@ -50,7 +50,7 @@ export class ProjectsService {
 
     getProjectsByUserId(userId, paginate=false) {
         return this.rs.projects.getProjectsByUserId(userId, paginate)
-            .then(projects => {
+            .map(projects => {
                 return projects.map(this._decorate.bind(this));
         });
     }

@@ -38,6 +38,6 @@ export class WikiHistoryResource {
         };
 
         return this.http.get(url, null, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 };

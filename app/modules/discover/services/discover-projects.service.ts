@@ -62,20 +62,20 @@ export class DiscoverProjectsService {
     fetchMostLiked(params) {
         let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params, false)
-            .then(result => {
+            .map(result => {
                 let data = result.data.slice(0, 5);
 
                 let projects = Immutable.fromJS(data);
                 projects = projects.map(this.decorate);
 
                 return this._mostLiked = projects;
-        });
+            });
     }
 
     fetchMostActive(params) {
         let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params, false)
-            .then(result => {
+            .map(result => {
                 let data = result.data.slice(0, 5);
 
                 let projects = Immutable.fromJS(data);
@@ -90,7 +90,7 @@ export class DiscoverProjectsService {
         _params.is_featured = true;
 
         return this.rs.projects.getProjects(_params, false)
-            .then(result => {
+            .map(result => {
                 let data = result.data.slice(0, 4);
 
                 let projects = Immutable.fromJS(data);
@@ -105,7 +105,7 @@ export class DiscoverProjectsService {
     }
 
     fetchStats() {
-        return this.rs.stats.discover().then(discover => {
+        return this.rs.stats.discover().map(discover => {
             return this._projectsCount = discover.getIn(['projects', 'total']);
         });
     }
@@ -113,8 +113,8 @@ export class DiscoverProjectsService {
     fetchSearch(params) {
         let _params = _.extend({}, this._discoverParams, params);
         return this.rs.projects.getProjects(_params)
-            .then(result => {
-                this._nextSearchPage = !!result.headers('X-Pagination-Next');
+            .map(result => {
+                this._nextSearchPage = !!result.headers['X-Pagination-Next'];
 
                 let projects = Immutable.fromJS(result.data);
                 projects = projects.map(this.decorate);

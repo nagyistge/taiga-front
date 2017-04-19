@@ -166,7 +166,7 @@ export class UserstoriesResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     listAllInProject(projectId) {
@@ -183,7 +183,7 @@ export class UserstoriesResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     listInEpic(epicIid) {
@@ -202,6 +202,6 @@ export class UserstoriesResource {
         };
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 };

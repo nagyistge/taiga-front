@@ -43,8 +43,9 @@ export class MostActive implements OnInit {
         this.loading = true;
         this.order_by = this.getOrderBy();
 
-        return this.discoverProjects.fetchMostActive({order_by: this.order_by}).then(() => {
-            return this.loading = false;
+        return this.discoverProjects.fetchMostActive({order_by: this.order_by}).map((data) => {
+            this.loading = false;
+            return data;
         });
     }
 

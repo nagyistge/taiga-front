@@ -80,7 +80,7 @@ export class DiscoverSearch implements OnInit {
 
         this.loadingGlobal = true;
 
-        return this.fetch().then(() => this.loadingGlobal = false);
+        return this.fetch().subscribe(() => this.loadingGlobal = false);
     }
 
     fetchByOrderBy() {
@@ -88,7 +88,7 @@ export class DiscoverSearch implements OnInit {
 
         this.loadingList = true;
 
-        return this.fetch().then(() => this.loadingList = false);
+        return this.fetch().subscribe(() => this.loadingList = false);
     }
 
     showMore() {
@@ -98,7 +98,7 @@ export class DiscoverSearch implements OnInit {
 
         this.page++;
 
-        return this.search().then(() => this.loadingPagination = false);
+        return this.search().subscribe(() => this.loadingPagination = false);
     }
 
     search() {

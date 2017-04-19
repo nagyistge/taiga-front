@@ -47,7 +47,6 @@ import "angular-translate"
 import "angular-translate-interpolation-messageformat"
 import "angular-translate-loader-partial"
 import "angular-translate-loader-static-files"
-import "../modules/home"
 import "./modules/base"
 import "./modules/base"
 import "./modules/common"
@@ -149,17 +148,17 @@ function configure($routeProvider, $locationProvider, $httpProvider, $provide, $
     };
 
     // Home
-    $routeProvider.when("/",
-        {
-            templateUrl: "home/home.html",
-            controller: "Home",
-            controllerAs: "vm",
-            loader: true,
-            title: "HOME.PAGE_TITLE",
-            description: "HOME.PAGE_DESCRIPTION",
-            joyride: "dashboard"
-        }
-    );
+    // $routeProvider.when("/",
+    //     {
+    //         templateUrl: "home/home.html",
+    //         controller: "Home",
+    //         controllerAs: "vm",
+    //         loader: true,
+    //         title: "HOME.PAGE_TITLE",
+    //         description: "HOME.PAGE_DESCRIPTION",
+    //         joyride: "dashboard"
+    //     }
+    // );
 
     // Discover
     // $routeProvider.when("/discover",
@@ -622,6 +621,7 @@ function configure($routeProvider, $locationProvider, $httpProvider, $provide, $
 
     $routeProvider.when("/discover", {}); // MANAGED WITH ANGULAR 2
     $routeProvider.when("/discover/search", {}); // MANAGED WITH ANGULAR 2
+    $routeProvider.when("/", {}); // MANAGED WITH ANGULAR 2
     $routeProvider.otherwise({templateUrl: "error/not-found.html"});
     $locationProvider.html5Mode({enabled: true, requireBase: false});
 
@@ -954,7 +954,6 @@ let modules = [
     "taigaEvents",
 
     // Specific Modules
-    "taigaHome",
     "taigaNavigationBar",
     "taigaProjects",
     "taigaRelatedTasks",
@@ -977,7 +976,6 @@ let modules = [
 
     // new modules
     "taigaProfile",
-    "taigaHome",
     "taigaUserTimeline",
     "taigaExternalApps",
     "taigaHistory",

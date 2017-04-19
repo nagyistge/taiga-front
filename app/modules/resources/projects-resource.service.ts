@@ -41,67 +41,67 @@ export class ProjectsResource {
                 private config: ConfigurationService,
                 private paginateResponse: PaginateResponseService) {}
 
-    get(projectId:number):Promise<any> {
+    get(projectId:number):any {
         return this.repo.queryOne("projects", projectId)
     }
 
-    getBySlug(projectSlug:string):Promise<any> {
+    getBySlug(projectSlug:string):any {
         return this.repo.queryOne("projects", `by_slug?slug=${projectSlug}`);
     }
 
-    list():Promise<any[]> {
+    list():any {
         return this.repo.queryMany("projects");
     }
 
-    listByMember(memberId:number):Promise<any[]> {
+    listByMember(memberId:number):any {
         let params = {"member": memberId, "order_by": "user_order"};
         return this.repo.queryMany("projects", params);
     }
 
-    templates():Promise<any[]> {
+    templates():any {
         return this.repo.queryMany("project-templates");
     }
 
-    usersList(projectId:number):Promise<any[]> {
+    usersList(projectId:number):any {
         let params = {"project": projectId};
         return this.repo.queryMany("users", params);
     };
 
-    rolesList(projectId:number):Promise<any[]> {
+    rolesList(projectId:number):any {
         let params = {"project": projectId};
         return this.repo.queryMany("roles", params);
     }
 
-    stats(projectId:number):Promise<any>{
+    stats(projectId:number):any {
         return this.repo.queryOneRaw("projects", `${projectId}/stats`);
     }
 
-    bulkUpdateOrder(bulkData:any):Promise<any> {
+    bulkUpdateOrder(bulkData:any):any {
         let url = this.urls.resolve("bulk-update-projects-order");
         return this.http.post(url, bulkData);
     }
 
-    regenerate_epics_csv_uuid(projectId:number):Promise<any> {
+    regenerate_epics_csv_uuid(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/regenerate_epics_csv_uuid`;
         return this.http.post(url);
     }
 
-    regenerate_userstories_csv_uuid(projectId:number):Promise<any> {
+    regenerate_userstories_csv_uuid(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/regenerate_userstories_csv_uuid`;
         return this.http.post(url);
     }
 
-    regenerate_tasks_csv_uuid(projectId:number):Promise<any> {
+    regenerate_tasks_csv_uuid(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/regenerate_tasks_csv_uuid`;
         return this.http.post(url);
     }
 
-    regenerate_issues_csv_uuid(projectId:number):Promise<any> {
+    regenerate_issues_csv_uuid(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/regenerate_issues_csv_uuid`;
         return this.http.post(url);
     }
 
-    leave(projectId:number):Promise<any> {
+    leave(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/leave`;
         return this.http.post(url);
     }
@@ -110,22 +110,22 @@ export class ProjectsResource {
         return this.repo.queryOneRaw("projects", `${projectId}/member_stats`);
     }
 
-    tagsColors(projectId:number):Promise<any> {
+    tagsColors(projectId:number):any {
         return this.repo.queryOne("projects", `${projectId}/tags_colors`);
     }
 
-    deleteTag(projectId:number, tag:string):Promise<any> {
+    deleteTag(projectId:number, tag:string):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/delete_tag`;
         return this.http.post(url, {tag});
     }
 
-    createTag(projectId:number, tag:string, color:string=null):Promise<any> {
+    createTag(projectId:number, tag:string, color:string=null):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/create_tag`;
         let data = {tag, color}
         return this.http.post(url, data);
     };
 
-    editTag(projectId:number, from_tag:string, to_tag:string, color:string=null):Promise<any> {
+    editTag(projectId:number, from_tag:string, to_tag:string, color:string=null):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/edit_tag`;
         let data:any = {from_tag, color};
         if (to_tag) {
@@ -134,17 +134,17 @@ export class ProjectsResource {
         return this.http.post(url, data);
     };
 
-    mixTags(projectId:number, to_tag:string, from_tags:string[]):Promise<any> {
+    mixTags(projectId:number, to_tag:string, from_tags:string[]):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/mix_tags`;
         return this.http.post(url, {to_tag, from_tags});
     };
 
-    export(projectId:number):Promise<any> {
+    export(projectId:number):any {
         let url = `${this.urls.resolve("exporter")}/${projectId}`;
         return this.http.get(url);
     };
 
-    import(file:any, statusUpdater:any):Promise<any> {
+    import(file:any, statusUpdater:any):any {
         return new Promise(function(accept, reject) {
             let maxFileSize = this.config.get("maxUploadFileSize", null);
             if (maxFileSize && (file.size > maxFileSize)) {
@@ -220,7 +220,7 @@ export class ProjectsResource {
         });
     };
 
-    changeLogo(projectId:number, file:any):Promise<any> {
+    changeLogo(projectId:number, file:any):any {
         let maxFileSize = this.config.get("maxUploadFileSize", null);
         if (maxFileSize && (file.size > maxFileSize)) {
             let response = {
@@ -242,7 +242,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         return this.http.post(url, data, {}, options);
     };
 
-    removeLogo(projectId:number):Promise<any> {
+    removeLogo(projectId:number):any {
         let url = `${this.urls.resolve("projects")}/${projectId}/remove_logo`;
         return this.http.post(url);
     };
@@ -251,7 +251,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         let url = this.urls.resolve('projects');
 
         return this.http.post(url, JSON.stringify(data))
-            .then((result:any) => { return Immutable.fromJS(result.data); });
+            .map((result:any) => { return Immutable.fromJS(result.data); });
     };
 
     duplicate(projectId, data) {
@@ -271,7 +271,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         return this.http.post(url, params);
     };
 
-    getProjects(params={}, pagination=true) {
+    getProjects(params={}, pagination=true):any {
         let url = this.urls.resolve("projects");
 
         let httpOptions = {};
@@ -293,7 +293,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         url = `${url}/by_slug?slug=${projectSlug}`;
 
         return this.http.get(url)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getProjectsByUserId(userId, paginate) {
@@ -310,7 +310,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         let params = {"member": userId, "order_by": "user_order"};
 
         return this.http.get(url, params, httpOptions)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getProjectStats(projectId) {
@@ -318,7 +318,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
         url = `${url}/${projectId}`;
 
         return this.http.get(url)
-            .then((result:any) => Immutable.fromJS(result.data));
+            .map((result:any) => Immutable.fromJS(result.data));
     };
 
     getTimeline(projectId, page) {
@@ -334,7 +334,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
             headers: {
                 'x-lazy-pagination': true
             }
-        }).then(function(result) {
+        }).map(function(result) {
             return this.paginateResponse.paginate(Immutable.fromJS({
                 "data": result.data,
                 "headers": result.headers
