@@ -1,11 +1,10 @@
 .filter-highlighted((mouseleave)="close()")
     a.current-filter(
         (click)="open()"
-        href="#"
     ) {{currentText()}}
         tg-svg(svg-icon="icon-arrow-down")
 
-    ul.filter-list(*ngIf="is_open")
+    ul.filter-list(*ngIf="isOpen")
         li((click)="orderBy('week')" translate="DISCOVER.FILTERS.WEEK")
         li((click)="orderBy('month')" translate="DISCOVER.FILTERS.MONTH")
         li((click)="orderBy('year')" translate="DISCOVER.FILTERS.YEAR")

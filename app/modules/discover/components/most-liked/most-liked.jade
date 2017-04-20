@@ -1,18 +1,25 @@
-.most-liked(*ngIf="highlighted.size")
+.most-liked(*ngIf="projects.size")
     .header
         .title-wrapper
             tg-svg(svg-icon="icon-like")
             h1.title(translate="DISCOVER.MOST_LIKED")
         tg-discover-home-order-by(
-            (on-change)="orderBy(orderBy)"
-            [order-by]="currentOrderBy"
+            (order)="orderBy($event)"
         )
+
     tg-highlighted(
-        [loading]="loading",
-        [highlighted]="highlighted"
-        [order-by]="order_by"
+        [loading]="false",
+        [highlighted]="projects"
     )
 
-.empty-highlighted-project(*ngIf="!highlighted.size")
+.empty-highlighted-project(*ngIf="!projects.size")
+    .header
+        .title-wrapper
+            tg-svg(svg-icon="icon-like")
+            h1.title(translate="DISCOVER.MOST_LIKED")
+        tg-discover-home-order-by(
+            (order)="orderBy($event)"
+        )
+
     tg-svg(svg-icon="icon-like")
     span(translate="DISCOVER.MOST_LIKED_EMPTY")

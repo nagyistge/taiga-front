@@ -4,25 +4,19 @@ section.home-project-list(*ngIf="projects.size")
         *ngFor="let project of projects.slice(0, 6)",
         "[class.blocked-project]"="project.get('blocked_code')"
     )
-        //TODO: tg-nav [name]="project" [params]="{project: project.get('slug')}"
         .project-card-inner(
-            href="#"
+            [routerLink]="['/project', project.get('slug')]"
         )
             .project-card-header
-                //TODO: tg-nav [name]="project" [params]="{project: project.get('slug')}"
                 a.project-card-logo(
-                    href="#",
-                    title="{{project.get('name')}}"
+                    title="{{project.get('name')}}",
+                    [routerLink]="['/project', project.get('slug')]"
                 )
-                    // img(
-                    //     tg-project-logo-small-src="project"
-                    //     alt="{{project.get('name')}}"
-                    // )
+                    tg-project-logo-small([project]="project")
                 h3.project-card-name
-                    //TODO: tg-nav [name]="project" [params]="{project: project.get('slug')}"
                     a.project-title(
-                        href="#",
-                        title="{{project.get('name')}}"
+                        title="{{project.get('name')}}",
+                        [routerLink]="['/project', project.get('slug')]"
                     ) {{project.get('name')}}
 
                     tg-svg.look-for-people(
@@ -71,10 +65,10 @@ section.home-project-list(*ngIf="projects.size")
                 )
                     tg-svg(svg-icon="icon-lock")
 
-    //TODO: tg-nav="projects",
     a.see-more-projects-btn.button-gray(
-        href="#",
         *ngIf="projects.size",
+        routerLink="/projects",
+        href="#",
         title="{{'PROJECT.NAVIGATION.MANAGE_PROJECTS' | translate}}",
         translate="PROJECT.NAVIGATION.MANAGE_PROJECTS"
     )
@@ -82,8 +76,7 @@ section.home-project-list(*ngIf="projects.size")
 section.projects-empty(*ngIf="!projects.size")
     tg-svg(svg-icon="icon-project")
     p(translate="HOME.EMPTY_PROJECT_LIST")
-    // TODO EN ESTE A: tg-nav [name]="create-project",
     a.create-project-button.button-green(
-        href="#",
+        routerLink="/create-project",
         title="{{'PROJECT.NAVIGATION.TITLE_CREATE_PROJECT' | translate}}",
         translate="PROJECT.NAVIGATION.ACTION_CREATE_PROJECT")

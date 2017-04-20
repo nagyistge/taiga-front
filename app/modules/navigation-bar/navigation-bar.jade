@@ -45,9 +45,9 @@ nav.navbar(*ngIf="isEnabledHeader")
         )
             tg-svg(svg-icon="icon-dashboard")
 
+        // tg-nav, name="discover",
         a(
-            tg-nav, name="discover",
-            href="#",
+            routerLink="/discover",
             title="{{'PROJECT.NAVIGATION.DISCOVER_TITLE' | translate}}",
         )
             tg-svg(svg-icon="icon-discover")

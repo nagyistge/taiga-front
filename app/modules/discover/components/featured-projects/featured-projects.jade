@@ -16,10 +16,7 @@
                         href="#"
                         title="{{project.get('name')}}"
                     )
-                        img(
-                            tg-project-logo-small-src="project"
-                            alt="{{project.get('name')}}"
-                        )
+                        tg-project-logo-small([project]="project")
                     h2.project-card-name
                         a(
                             href="#"

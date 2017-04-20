@@ -62,7 +62,7 @@ paths.extras = "extras/";
 paths.modules = "node_modules/";
 
 paths.jade = [
-    paths.app + "**/*.jade"
+    paths.app + "index.jade"
 ];
 
 paths.htmlPartials = [

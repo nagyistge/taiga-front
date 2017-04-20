@@ -18,47 +18,21 @@
  */
 
 import {defineImmutableProperty} from "../../../../ts/utils"
-import {Component, OnInit} from "@angular/core"
-import {DiscoverProjectsService} from "../../services/discover-projects.service"
+import {Component, Output, Input, EventEmitter} from "@angular/core"
 
 @Component({
     selector: 'tg-most-liked',
     template: require("./most-liked.jade")()
 })
-export class MostLiked implements OnInit {
-    currentOrderBy:any
-    order_by:any
-    loading:boolean
+export class MostLiked {
+    @Input() projects
+    @Output() order: EventEmitter<string>;
 
-    constructor(private discoverProjects: DiscoverProjectsService) {}
-
-    ngOnInit() {
-        defineImmutableProperty(this, "highlighted", () => { return this.discoverProjects.mostLiked; });
-        this.currentOrderBy = 'week';
-        this.order_by = this.getOrderBy();
-    }
-
-    fetch() {
-        this.loading = true;
-        this.order_by = this.getOrderBy();
-
-        return this.discoverProjects.fetchMostLiked({order_by: this.order_by}).map((data) => {
-            this.loading = false;
-            return data;
-        });
+    constructor() {
+        this.order = new EventEmitter()
     }
 
     orderBy(type) {
-        this.currentOrderBy = type;
-
-        return this.fetch();
-    }
-
-    getOrderBy() {
-        if (this.currentOrderBy === 'all') {
-            return '-total_fans';
-        } else {
-            return `-total_fans_last_${this.currentOrderBy}`;
-        }
+        this.order.emit(type)
     }
 }

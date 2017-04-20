@@ -1,5 +1,6 @@
 import * as Immutable from "immutable"
 import {homeInitialState, homeReducer} from "../modules/home/home.store"
+import {discoverInitialState, discoverReducer} from "../modules/discover/discover.store"
 
 export type IState = Immutable.Map<string, any>;
 
@@ -11,6 +12,7 @@ const globalInitialState = {
 const initialState = Immutable.fromJS({
     global: globalInitialState,
     home: homeInitialState,
+    discover: discoverInitialState,
 })
 
 export const globalReducer = (state, action) => {
@@ -26,5 +28,6 @@ export const globalReducer = (state, action) => {
 
 export const rootReducer = (state=initialState, action) => {
     return state.set('global', globalReducer(state.get('global'), action))
-                .set('home', homeReducer(state.get('home'), action));
+                .set('home', homeReducer(state.get('home'), action))
+                .set('discover', discoverReducer(state.get('discover'), action));
 };

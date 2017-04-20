@@ -25,12 +25,13 @@ import {Component, OnInit, Output, Input, EventEmitter} from "@angular/core"
     template: require('./discover-home-order-by.jade')()
 })
 export class DiscoverHomeOrderBy implements OnInit{
-    @Output('on-change') onChange: EventEmitter<any>;
-    @Input('order-by') currentOrderBy: any;
-    is_open:boolean;
+    @Output() order: EventEmitter<any>;
+    currentOrderBy: any;
+    isOpen:boolean;
     texts:any
 
     constructor(private translate: TranslateService) {
+        this.order = new EventEmitter();
         this.texts = {
             week: this.translate.instant('DISCOVER.FILTERS.WEEK'),
             month: this.translate.instant('DISCOVER.FILTERS.MONTH'),
@@ -40,7 +41,8 @@ export class DiscoverHomeOrderBy implements OnInit{
     }
 
     ngOnInit() {
-        this.is_open = false;
+        this.isOpen = false;
+        this.currentOrderBy = "week"
     }
 
     currentText() {
@@ -48,16 +50,16 @@ export class DiscoverHomeOrderBy implements OnInit{
     }
 
     open() {
-        return this.is_open = true;
+        return this.isOpen = true;
     }
 
     close() {
-        return this.is_open = false;
+        return this.isOpen = false;
     }
 
     orderBy(type) {
         this.currentOrderBy = type;
-        this.is_open = false;
-        this.onChange.emit({orderBy: this.currentOrderBy});
+        this.isOpen = false;
+        this.order.emit(type);
     }
 }

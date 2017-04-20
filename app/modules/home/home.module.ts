@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 
 import {Home} from './home.component';
 import { TgCommonModule } from "../../ts/modules/common/common.module";
+import { TgComponentsModule } from "../components/components.module";
 import { HomeProjectList } from "./projects/home-project-list.component"
 import { CurrentUserService } from "../services/current-user.service";
 import { WorkingOn } from "./working-on/working-on.component";
@@ -19,6 +20,7 @@ import {HomeEffects} from "./home.effects"
     imports: [
         CommonModule,
         TgCommonModule,
+        TgComponentsModule,
         TranslateModule.forChild({}),
         RouterModule.forChild([
             {path: "", component: Home},

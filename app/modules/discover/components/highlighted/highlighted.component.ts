@@ -26,5 +26,4 @@ import {Component, Input} from "@angular/core"
 export class Highlighted {
     @Input() loading:any;
     @Input() highlighted:any;
-    @Input("order-by") orderBy:any;
 }
