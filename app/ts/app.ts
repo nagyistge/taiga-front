@@ -32,8 +32,9 @@ import {checksley} from "./libs/checksley"
 declare var _version:string;
 declare var ljs:any;
 
-import 'reflect-metadata'
-import 'zone.js'
+import "zone.js"
+import "reflect-metadata"
+
 import { UpgradeModule } from '@angular/upgrade/static';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
@@ -1036,8 +1037,9 @@ export function run() {
         init
     ]);
 
-    platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
-      const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
-      upgrade.bootstrap(document.body, ['taiga'], {strictDi: true});
-    });
+    platformBrowserDynamic().bootstrapModule(AppModule);
+    // platformBrowserDynamic().bootstrapModule(AppModule).then(platformRef => {
+    //   const upgrade = platformRef.injector.get(UpgradeModule) as UpgradeModule;
+    //   upgrade.bootstrap(document.body, ['taiga'], {strictDi: true});
+    // });
 }

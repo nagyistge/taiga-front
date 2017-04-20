@@ -265,11 +265,11 @@ gulp.task("template-cache", function() {
 });
 
 gulp.task("jade-deploy", function(cb) {
-    return runSequence("jade", "copy-index", "template-cache", cb);
+    return runSequence("jade", "copy-index", cb);
 });
 
 gulp.task("jade-watch", function(cb) {
-    return runSequence("jade-inheritance", "copy-index", "template-cache", cb);
+    return runSequence("jade-inheritance", "copy-index", cb);
 });
 
 /*
@@ -719,6 +719,7 @@ gulp.task("default", function(cb) {
         "moment-locales",
         "copy-jquery",
         "jade-deploy",
+        "copy-index",
         "express",
         "watch"
     ], cb);

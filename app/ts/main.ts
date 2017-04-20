@@ -73,7 +73,7 @@ let promise = $.getJSON("/conf.json");
 promise.done(data => (<any>window).taigaConfig = _.assign({}, (<any>window).taigaConfig, data));
 promise.fail(() => console.error("Your conf.json file is not a valid json file, please review it."));
 promise.always(function() {
-    ljs.load(`/${_version}/js/templates.js`, function() {
+    // ljs.load(`/${_version}/js/templates.js`, function() {
         if ((<any>window).taigaConfig.contribPlugins.length > 0) {
             return loadPlugins((<any>window).taigaConfig.contribPlugins).then(() => {
                 run();
@@ -81,5 +81,5 @@ promise.always(function() {
         } else {
             run()
         }
-    });
+    // });
 });

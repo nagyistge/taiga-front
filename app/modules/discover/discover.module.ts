@@ -1,4 +1,5 @@
 import {NgModule} from "@angular/core"
+import {RouterModule} from "@angular/router"
 import {CommonModule} from "@angular/common"
 import {TranslateModule} from "@ngx-translate/core"
 
@@ -19,6 +20,13 @@ import {DiscoverSearch} from "./discover-search/discover-search.component"
         CommonModule,
         TgCommonModule,
         TranslateModule.forChild({}),
+        RouterModule.forChild([{
+            path: "discover",
+            component: DiscoverHome,
+            children: [
+                {path: "search", component: DiscoverSearch}
+            ]
+        }]),
     ],
     exports: [
         DiscoverHome,

@@ -19,22 +19,43 @@
 
 import { CurrentUserService } from "../services/current-user.service";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
+import { IState } from "../../ts/app.store";
+import { IHomeState } from "./home.store";
 import { NavigationUrlsService } from "../../ts/modules/base/navurls.service";
 
-import {Component, OnInit} from "@angular/core"
+import {Component, OnInit, ChangeDetectionStrategy} from "@angular/core"
 
 @Component({
     selector: "tg-home",
     template: require("./home.jade")(),
 })
-export class Home implements OnInit{
-    constructor(private currentUser: CurrentUserService,
-                private router: Router,
-                private navurls: NavigationUrlsService) {}
+export class Home implements OnInit {
+    user;
+    projects;
+    assignedTo;
+    watching;
+
+    constructor(private router: Router,
+                private store: Store<IState>,
+                private navurls: NavigationUrlsService) {
+      this.user = this.store.select((state) => state.getIn(['global', 'user']));
+      this.projects = this.store.select((state) => state.getIn(['global', 'projects']));
+      this.assignedTo = this.store.select((state) => state.getIn(['home', 'assigned-to']));
+      this.watching = this.store.select((state) => state.getIn(['home', 'watching']));
+    }
 
     ngOnInit() {
-        if (!this.currentUser.getUser()) {
-            this.router.navigateByUrl(this.navurls.resolve("discover"));
-        }
+        this.store.dispatch({
+            type: "FETCH_ASSIGNED_TO",
+            payload: null,
+        })
+        this.store.dispatch({
+            type: "FETCH_WATCHING",
+            payload: null,
+        })
+        // if (!this.user) {
+        //     // this.router.navigateByUrl(this.navurls.resolve("discover"));
+        // }
     }
 }

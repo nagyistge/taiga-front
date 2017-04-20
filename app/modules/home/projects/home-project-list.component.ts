@@ -18,25 +18,20 @@
  */
 
 import * as Immutable from "immutable"
+
+import {Component, OnInit, Input, ChangeDetectionStrategy, OnChanges} from "@angular/core"
+
 import {defineImmutableProperty} from "../../../ts/utils"
 import { CurrentUserService  } from "../../services/current-user.service";
-import {Component, OnInit, Input} from "@angular/core"
 import { ProjectsService } from "../../projects/projects.service";
-import { ChangeDetectorRef } from "@angular/core";
-import { ApplicationRef } from "@angular/core";
 
 @Component({
     selector: "tg-home-project-list",
     template: require("./home-project-list.jade")(),
 })
-export class HomeProjectList{
-    projects:any;
+export class HomeProjectList {
+    @Input() projects:any
+    changed:number = 0;
 
-    constructor(private currentUser: CurrentUserService) {
-        this.projects = Immutable.List();
-        this.currentUser.projectsStream.subscribe((projects) => {
-            console.log(projects);
-            this.projects = projects;
-        })
-    }
+    constructor() {}
 };

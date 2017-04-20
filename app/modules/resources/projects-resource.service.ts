@@ -296,8 +296,7 @@ loompas, try it with a smaller than (${sizeFormat(maxFileSize)})`
             .map((result:any) => Immutable.fromJS(result.data));
     };
 
-    getProjectsByUserId(userId, paginate) {
-        if (paginate == null) { paginate = false; }
+    getProjectsByUserId(userId, paginate=false) {
         let url = this.urls.resolve("projects");
         let httpOptions:any = {};
 

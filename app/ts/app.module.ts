@@ -5,36 +5,28 @@ import { UpgradeModule } from "@angular/upgrade/static"
 import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
 import { HttpModule, Http } from '@angular/http';
 
+// NGRX MODULES
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterStoreModule } from '@ngrx/router-store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+// TAIGA MODULES
 import { DiscoverModule } from "../modules/discover/discover.module"
-import { DiscoverHome } from "../modules/discover/discover-home/discover-home.component"
-import { DiscoverSearch } from "../modules/discover/discover-search/discover-search.component"
 import { HomeModule } from "../modules/home/home.module"
-import { Home } from "../modules/home/home.component"
+import { TgBaseModule } from './modules/base/base.module';
+import { TgServicesModule } from '../modules/services/services.module';
+import { ResourcesModule } from '../modules/resources/resources.module';
 
 import { TranslateModule, TranslateLoader, TranslateService} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AuthService } from './modules/auth';
-import { ConfigurationService } from './modules/base/conf';
-import { NavigationUrlsService } from './modules/base/navurls.service';
-import { StorageService } from './modules/base/storage';
-import { ModelService } from './modules/base/model';
-import { UrlsService } from './modules/base/urls';
-import { RepositoryService } from './modules/base/repository';
-import { HttpService } from './modules/base/http';
-import { ResourcesModule } from '../modules/resources/resources.module';
 import { Avatar } from '../modules/components/avatar/avatar.component';
 import { BelongToEpics } from '../modules/components/belong-to-epics/belong-to-epics.component';
 import { AvatarService } from '../modules/components/avatar/avatar.service';
 import { TermsOfServiceAndPrivacyPolicyNotice } from '../modules/components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.component'
-import { ErrorHandlingService } from '../modules/services/error-handling.service';
-import { xhrError } from '../modules/services/xhrError.service';
-import { ThemeService } from '../modules/services/theme.service';
-import { ProjectLogoService } from '../modules/services/project-logo.service';
-import { GlobalDataService } from '../modules/services/global-data.service';
-import { CurrentUserService } from '../modules/services/current-user.service';
-import { PaginateResponseService } from '../modules/services/paginate-response.service';
-import { AppMetaService } from '../modules/services/app-meta.service';
+
 import { ProjectsService } from '../modules/projects/projects.service';
 import { Svg, LightboxClose } from './modules/common';
 import { ProjectUrlService } from './modules/common/project-url.service';
@@ -43,6 +35,8 @@ import { DateRange } from './modules/common/components';
 import { TgCommonModule } from './modules/common/common.module';
 
 import {AppComponent} from "./app.component"
+import {GlobalEffects} from "./app.effects"
+import {rootReducer} from "./app.store"
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
   shouldProcessUrl(url: UrlTree) {
@@ -62,14 +56,12 @@ export function HttpLoaderFactory(http: Http) {
     UpgradeModule,
     HttpModule,
     HomeModule,
-    RouterModule.forRoot([
-        {path: "", component: Home},
-        {path: "discover", component: DiscoverHome},
-        {path: "discover/search", component: DiscoverSearch}
-    ]),
+    RouterModule.forRoot([]),
     ResourcesModule,
     DiscoverModule,
     TgCommonModule,
+    TgBaseModule,
+    TgServicesModule,
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,
@@ -77,6 +69,9 @@ export function HttpLoaderFactory(http: Http) {
             deps: [Http]
         }
     }),
+    StoreModule.provideStore(rootReducer),
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    EffectsModule.run(GlobalEffects),
   ],
   declarations: [
     Avatar,
@@ -85,26 +80,10 @@ export function HttpLoaderFactory(http: Http) {
     AppComponent,
   ],
   providers: [
-    ConfigurationService,
-    StorageService,
-    UrlsService,
     AvatarService,
-    ErrorHandlingService,
-    xhrError,
-    ThemeService,
-    ProjectLogoService,
-    ModelService,
-    NavigationUrlsService,
-    UrlsService,
-    RepositoryService,
-    HttpService,
     AuthService,
-    GlobalDataService,
-    CurrentUserService,
     ProjectsService,
-    PaginateResponseService,
     ProjectUrlService,
-    AppMetaService,
     { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [
@@ -116,6 +95,8 @@ export function HttpLoaderFactory(http: Http) {
     TermsOfServiceAndPrivacyPolicyNotice,
     DateRange,
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [
+    AppComponent,
+  ]
 })
 export class AppModule {}

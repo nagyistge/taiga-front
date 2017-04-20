@@ -45,7 +45,7 @@ export class CurrentUserService {
         this._projects = Immutable.fromJS({'all': [], 'recents': []});
         this._projectsById = Immutable.Map();
         this._joyride = null;
-        this.projectsStream = new Rx.Subject();
+        this.projectsStream = new Rx.BehaviorSubject(this._projects);
         defineImmutableProperty(this, "projects", () => { return this._projects});
         defineImmutableProperty(this, "projectsById", () => { return this._projectsById; });
     }
@@ -90,8 +90,8 @@ export class CurrentUserService {
     }
 
     loadProjects() {
-        return this.projectsService.getProjectsByUserId(this._user.get("id"))
-            .map(projects => this.setProjects(projects));
+        return this.projectsService.getProjectsByUserId(this.getUser().get("id"))
+            .subscribe(projects => this.setProjects(projects));
     }
 
     disableJoyRide(section) {
@@ -150,7 +150,7 @@ export class CurrentUserService {
 
         this._projectsById = Immutable.fromJS(groupBy(projects.toJS(), p => p.id));
 
-        this.projectsStream.next(this.projects);
+        this.projectsStream.next(this._projects);
         return this.projects;
     }
 
