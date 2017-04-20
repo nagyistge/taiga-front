@@ -1,16 +1,16 @@
-nav.navbar(ng-if="vm.isEnabledHeader")
+nav.navbar(*ngIf="isEnabledHeader")
     div.nav-left
         a.logo(
-            ng-if="!vm.isAuthenticated"
+            *ngIf="user.isEmpty()",
             href="https://taiga.io/",
             title="{{'PROJECT.NAVIGATION.HOMEPAGE' | translate}}"
         )
             include ../../svg/logo.svg
 
         a.logo(
-            ng-if="vm.isAuthenticated"
+            tg-nav, name="home",
+            *ngIf="!user.isEmpty()",
             href="#",
-            tg-nav="home",
             title="{{'PROJECT.NAVIGATION.HOMEPAGE' | translate}}"
         )
             include ../../svg/logo.svg
@@ -22,35 +22,35 @@ nav.navbar(ng-if="vm.isEnabledHeader")
             translate="PROJECT.NAVIGATION.HELP"
         )
 
-    div.nav-right(ng-if="!vm.isAuthenticated")
+    div.nav-right(*ngIf="user.isEmpty()")
         a.login(
-            ng-click="vm.login()"
+            (click)="login()",
             href="#",
-            title="{{ 'LOGIN_COMMON.ACTION_SIGN_IN' | translate }}"
+            title="{{ 'LOGIN_COMMON.ACTION_SIGN_IN' | translate }}",
             translate="LOGIN_COMMON.ACTION_SIGN_IN"
         )
         a.register(
-            href="#"
-            ng-if="vm.publicRegisterEnabled"
-            tg-nav="register"
-            title="{{ 'REGISTER_FORM.ACTION_SIGN_UP' | translate }}"
+            tg-nav, name="register",
+            *ngIf="publicRegisterEnabled",
+            href="#",
+            title="{{ 'REGISTER_FORM.ACTION_SIGN_UP' | translate }}",
             translate="REGISTER_FORM.ACTION_SIGN_UP"
         )
 
-    div.nav-right(ng-if="vm.isAuthenticated")
+    div.nav-right(*ngIf="!user.isEmpty()")
         a(
-            tg-nav="home"
-            ng-class="{active: vm.active}"
+            tg-nav, name="home",
+            "[class.active]"="active",
             title="{{'PROJECT.NAVIGATION.DASHBOARD_TITLE' | translate}}"
         )
             tg-svg(svg-icon="icon-dashboard")
 
         a(
+            tg-nav, name="discover",
             href="#",
-            tg-nav="discover",
             title="{{'PROJECT.NAVIGATION.DISCOVER_TITLE' | translate}}",
         )
             tg-svg(svg-icon="icon-discover")
 
-        div.topnav-dropdown-wrapper(ng-show="vm.projects.size", tg-dropdown-project-list)
-        div.topnav-dropdown-wrapper(tg-dropdown-user)
+        tg-dropdown-project-list.topnav-dropdown-wrapper(*ngIf="projects.size", [projects]="projects")
+        tg-dropdown-user.topnav-dropdown-wrapper([user]="user")

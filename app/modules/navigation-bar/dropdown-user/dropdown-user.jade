@@ -1,48 +1,48 @@
 a.user-avatar(
-    tg-nav="profile"
-    title="{{ vm.user.get('full_name_display') }}"
-    ) {{ vm.user.get('full_name_display') }}
-    tg-avatar([user]="vm.user")
+    tg-nav, name="profile",
+    title="{{ user.get('full_name_display') }}"
+    ) {{ user.get('full_name_display') }}
+    tg-avatar([user]="user")
 
 div.navbar-dropdown.dropdown-user
     ul
         li
             a(
-                tg-nav="profile",
+                tg-nav, name="profile",
                 title="{{'PROJECT.NAVIGATION.VIEW_PROFILE_TITLE' | translate}}",
                 translate="PROJECT.NAVIGATION.VIEW_PROFILE")
         li
             a(
+                tg-nav, name="user-settings-user-profile",
                 href="#",
-                tg-nav="user-settings-user-profile",
                 title="{{'PROJECT.NAVIGATION.EDIT_PROFILE_TITLE' | translate}}",
                 translate="PROJECT.NAVIGATION.EDIT_PROFILE")
 
-        li.plugin(ng-repeat="plugin in vm.userSettingsPlugins")
+        li.plugin(*ngFor="let plugin of userSettingsPlugins")
             a(
+                tg-nav, name="user-settings-contrib", [params]="{plugin: plugin.slug}",
                 href=""
-                tg-nav="user-settings-contrib:plugin=plugin.slug"
                 ng-class="{active: plugin.slug == currentPlugin.slug}"
             )
                 span.title {{ plugin.name }}
         li
             a(
+                tg-nav name="user-settings-user-change-password",
                 href="#",
-                tg-nav="user-settings-user-change-password",
                 title="{{'PROJECT.NAVIGATION.CHANGE_PASSWORD_TITLE' | translate}}",
                 translate="PROJECT.NAVIGATION.CHANGE_PASSWORD")
 
         li
             a(
+                tg-nav, name="user-settings-mail-notifications",
                 href="#",
-                tg-nav="user-settings-mail-notifications",
                 title="{{'PROJECT.NAVIGATION.NOTIFICATIONS_TITLE' | translate}}",
                 translate="PROJECT.NAVIGATION.NOTIFICATIONS")
 
-        li(ng-show="vm.isFeedbackEnabled")
+        li(*ngIf="isFeedbackEnabled")
             a(
                 href="#",
-                ng-click="vm.sendFeedback()",
+                (click)="sendFeedback()",
                 title="{{'PROJECT.NAVIGATION.FEEDBACK_TITLE' | translate}}",
                 translate="PROJECT.NAVIGATION.FEEDBACK")
         li
@@ -54,6 +54,6 @@ div.navbar-dropdown.dropdown-user
         li
             a(
                 href="#",
-                ng-click="vm.logout()",
+                (click)="logout()",
                 title="{{'COMMON.LOGOUT' | translate}}",
                 translate="COMMON.LOGOUT")

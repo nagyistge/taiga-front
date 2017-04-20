@@ -4,7 +4,7 @@ import {homeInitialState, homeReducer} from "../modules/home/home.store"
 export type IState = Immutable.Map<string, any>;
 
 const globalInitialState = {
-    user: null,
+    user: {},
     projects: [],
 };
 

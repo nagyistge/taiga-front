@@ -1,5 +1,7 @@
 import {NgModule} from "@angular/core";
 
+import {TgCommonModule} from "../common/common.module"
+
 import {ConfigurationService} from "./conf"
 import {HttpService} from "./http"
 import {ModelService} from "./model"

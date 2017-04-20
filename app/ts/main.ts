@@ -4,7 +4,7 @@ declare var _version:string;
 
 import {run} from "./app"
 import * as _ from "lodash"
-import * as Promise from "bluebird"
+// import * as Promise from "bluebird"
 import "l.js"
 import "Flot"
 import "Flot/jquery.flot.time"

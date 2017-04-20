@@ -46,8 +46,7 @@ export class NavigationUrlsDirective {
     constructor(private el: ElementRef,
                 private navurls: NavigationUrlsService,
                 private auth: AuthService,
-                private router: Router,
-                private lightboxs: LightboxService) {
+                private router: Router) {
         this.fullUrl = null;
         if (this.el.nativeElement.nodeName === "A") {
             this.el.nativeElement.setAttribute("href", "#");
@@ -58,9 +57,6 @@ export class NavigationUrlsDirective {
         if (this.fullUrl) {
             return
         }
-        let user = this.auth.getUser();
-        if (user) { this.params.user = user.username; }
-
         this.fullUrl = this.navurls.resolve(this.name, this.params);
 
         if (this.queryParams) {
@@ -92,7 +88,8 @@ export class NavigationUrlsDirective {
                 break;
         }
 
-        this.lightboxs.closeAll();
+        // TODO
+        //this.lightboxs.closeAll();
         return false;
     }
 }

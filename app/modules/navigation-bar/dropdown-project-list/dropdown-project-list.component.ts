@@ -14,21 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * File: belong-to-epics.directive.coffee
+ * File: dropdown-project-list.directive.coffee
  */
 
-import * as Immutable from "immutable"
-import {Component, Input} from "@angular/core"
+import {defineImmutableProperty} from "../../../ts/utils"
+import { CurrentUserService } from "../../services/current-user.service";
+import { ProjectsService } from "../../projects/projects.service";
+import { Component, Input} from "@angular/core";
 
 @Component({
-    selector: "tg-belong-to-epics",
-    template: require("./belong-to-epics.jade")(),
+    selector: "tg-dropdown-project-list",
+    template: require("./dropdown-project-list.jade")(),
 })
-export class BelongToEpics {
-    @Input() epics: Immutable.List<Immutable.Map<string, string>>;
-    @Input() format: string;
-
-    getTitle(epic) {
-        return `#${epic.get('id')} ${epic.get('subject')}`
-    }
-}
+export class DropdownProjectList {
+    @Input() projects: any
+};

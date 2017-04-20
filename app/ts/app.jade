@@ -1,0 +1,26 @@
+tg-navigation-bar(*ngIf="!errorHandling.showingError", [user]="user | async", [projects]="projects | async")
+div(*ngIf="!errorHandling.showingError")
+    <router-outlet></router-outlet>
+
+div(*ngIf="errorHandling.notfound", ng-include="'error/not-found.html'")
+div(*ngIf="errorHandling.error", ng-include="'error/error.html'")
+div(*ngIf="errorHandling.permissionDenied", ng-include="'error/permission-denied.html'")
+div(*ngIf="errorHandling.blocked", ng-include="'projects/project/blocked-project.html'")
+
+div.lightbox.lightbox-generic-ask
+    include ../partials/includes/modules/lightbox-generic-ask
+div.lightbox.lightbox-ask-choice
+    include ../partials/includes/modules/lightbox-ask-choice
+div.lightbox.lightbox-generic-success
+    include ../partials/includes/modules/lightbox-generic-success
+div.lightbox.lightbox-generic-error
+    include ../partials/includes/modules/lightbox-generic-error
+div.lightbox.lightbox-generic-loading
+    include ../partials/includes/modules/lightbox-generic-loading
+
+include ../partials/includes/modules/loader
+
+include ../partials/includes/components/notification-message
+
+// tg-joy-ride
+// tg-live-announcement

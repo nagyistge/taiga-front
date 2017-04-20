@@ -17,22 +17,18 @@ import { HomeModule } from "../modules/home/home.module"
 import { TgBaseModule } from './modules/base/base.module';
 import { TgServicesModule } from '../modules/services/services.module';
 import { ResourcesModule } from '../modules/resources/resources.module';
+import { TgComponentsModule } from '../modules/components/components.module';
 
 import { TranslateModule, TranslateLoader, TranslateService} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AuthService } from './modules/auth';
-import { Avatar } from '../modules/components/avatar/avatar.component';
-import { BelongToEpics } from '../modules/components/belong-to-epics/belong-to-epics.component';
-import { AvatarService } from '../modules/components/avatar/avatar.service';
-import { TermsOfServiceAndPrivacyPolicyNotice } from '../modules/components/terms-of-service-and-privacy-policy-notice/terms-of-service-and-privacy-policy-notice.component'
 
 import { ProjectsService } from '../modules/projects/projects.service';
-import { Svg, LightboxClose } from './modules/common';
 import { ProjectUrlService } from './modules/common/project-url.service';
-import { ColorizeBacklogTag, ColorizeBacklogTags } from './modules/common/tags.component';
 import { DateRange } from './modules/common/components';
 import { TgCommonModule } from './modules/common/common.module';
+import { NavigationBarModule } from '../modules/navigation-bar/navigation-bar.module';
 
 import {AppComponent} from "./app.component"
 import {GlobalEffects} from "./app.effects"
@@ -62,6 +58,8 @@ export function HttpLoaderFactory(http: Http) {
     TgCommonModule,
     TgBaseModule,
     TgServicesModule,
+    TgComponentsModule,
+    NavigationBarModule,
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,
@@ -74,25 +72,15 @@ export function HttpLoaderFactory(http: Http) {
     EffectsModule.run(GlobalEffects),
   ],
   declarations: [
-    Avatar,
-    BelongToEpics,
-    TermsOfServiceAndPrivacyPolicyNotice,
     AppComponent,
   ],
   providers: [
-    AvatarService,
     AuthService,
     ProjectsService,
     ProjectUrlService,
     { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [
-    ColorizeBacklogTags,
-    Svg,
-    Avatar,
-    BelongToEpics,
-    LightboxClose,
-    TermsOfServiceAndPrivacyPolicyNotice,
     DateRange,
   ],
   bootstrap: [
