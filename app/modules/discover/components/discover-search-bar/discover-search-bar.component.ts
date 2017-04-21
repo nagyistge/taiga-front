@@ -19,31 +19,38 @@
 
 import {defineImmutableProperty} from "../../../../ts/utils"
 import * as angular from "angular"
-import {Component, OnInit, Output, EventEmitter} from "@angular/core"
+import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core"
 import {DiscoverProjectsService} from "../../services/discover-projects.service"
+import {Store} from "@ngrx/store"
+import {IState} from "../../../../ts/app.store"
 
 @Component({
     selector: 'tg-discover-search-bar',
     template: require("./discover-search-bar.jade")()
 })
 export class DiscoverSearchBar implements OnInit {
-    @Output("on-change") onChange: EventEmitter<any>
+    @Output() change: EventEmitter<any>
+    @Input() projectsCount
     q:any
     filter:any
 
-    constructor(private discoverProjects: DiscoverProjectsService) {}
+    constructor(private discoverProjects: DiscoverProjectsService, private store: Store<IState>) {
+        this.change = new EventEmitter();
+    }
 
     ngOnInit() {
-        defineImmutableProperty(this, 'projects', () => { return this.discoverProjects.projectsCount; });
-
-        this.discoverProjects.fetchStats();
+        console.log(this.projectsCount);
     }
 
     selectFilter(filter) {
-        return this.onChange.emit({filter, q: this.q});
+        console.log({filter: this.filter, q: this.q});
+        //return this.change.emit({filter, q: this.q});
+        return false
     }
 
-    submitFilter() {
-        return this.onChange.emit({filter: this.filter, q: this.q});
+    submitFilter(test) {
+        console.log({filter: this.filter, q: this.q});
+        //return this.change.emit({filter: this.filter, q: this.q});
+        return false
     }
 }

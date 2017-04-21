@@ -794,27 +794,6 @@ export let TgProgressBarDirective = function($template) {
 };
 
 
-//############################################################################
-//# Main title directive
-//############################################################################
-
-export let TgMainTitleDirective = function($translate) {
-    let link = function($scope, $el, $attrs) {
-        $attrs.$observe("i18nSectionName", i18nSectionName => $scope.sectionName = i18nSectionName);
-
-        return $scope.$on("$destroy", () => $el.off());
-    };
-
-    return {
-        link,
-        templateUrl: "common/components/main-title.html",
-        scope: {
-            projectName : "=projectName"
-        }
-    };
-};
-
-
 function __guard__(value, transform) {
   return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
 }

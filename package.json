@@ -118,6 +118,7 @@
   "dependencies": {
     "@angular-redux/store": "^6.1.0",
     "@angular/compiler-cli": "^4.0.2",
+    "@angular/forms": "^4.0.3",
     "@angular/platform-server": "^4.0.2",
     "@ngrx/core": "^1.2.0",
     "@ngrx/effects": "^2.0.3",

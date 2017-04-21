@@ -6,9 +6,8 @@ import { Action } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
-import { SetMostActiveAction, SetMostLikedAction } from "./discover.actions";
+import * as actions from "./discover.actions";
 import * as Immutable from "immutable";
-import {StorageService} from "./../../ts/modules/base/storage"
 import { ResourcesService } from "../resources/resources.service";
 
 @Injectable()
@@ -21,7 +20,7 @@ export class DiscoverEffects {
           let orderBy = `-total_activity_${period}`
           return this.rs.projects.getProjects({discover_mode: true, order_by: orderBy}, false).map((result) => {
               let projects = Immutable.fromJS(result.data.slice(0, 5))
-              return new SetMostActiveAction(projects)
+              return new actions.SetMostActiveAction(projects)
           })
         });
 
@@ -33,9 +32,32 @@ export class DiscoverEffects {
           let orderBy = `-total_fans_${period}`
           return this.rs.projects.getProjects({discover_mode: true, order_by: orderBy}, false).map((result) => {
               let projects = Immutable.fromJS(result.data.slice(0, 5))
-              return new SetMostLikedAction(projects)
+              return new actions.SetMostLikedAction(projects)
           })
         });
 
-    constructor(private actions$: Actions, private storage: StorageService, private rs: ResourcesService) { }
+    @Effect()
+    fetchProjectsStats$: Observable<Action> = this.actions$
+        .ofType('FETCH_PROJECTS_STATS')
+        .map(toPayload)
+        .switchMap(() => {
+           return this.rs.stats.discover().map(stats => {
+               return new actions.SetProjectsStatsAction(stats.getIn(["projects", "total"]))
+           });
+        });
+
+    @Effect()
+    fetchFeaturedProjects$: Observable<Action> = this.actions$
+        .ofType('FETCH_FEATURED_PROJECTS')
+        .map(toPayload)
+        .switchMap(() => {
+           return this.rs.projects.getProjects({is_featured: true, discover_mode: true}, false)
+               .map(result => {
+                   let data = result.data.slice(0, 4);
+                   let projects = Immutable.fromJS(data);
+                   return new actions.SetFeaturedProjectsAction(projects);
+           });
+        });
+
+    constructor(private actions$: Actions, private rs: ResourcesService) { }
 }

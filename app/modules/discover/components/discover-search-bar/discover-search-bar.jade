@@ -3,68 +3,71 @@ div.discover-header
 
         h1.title(translate='DISCOVER.DISCOVER_TITLE')
 
-        // p.project-number(
-        //     *ngIf="projects",
-        //     translate="DISCOVER.DISCOVER_SUBTITLE",
-        //     [translateParams]="{ projects: projects }"
-        // )
-        //     //- translate-interpolation="messageformat"
-        //
-        // form((submit)="submitFilter()")
-        //     div.searchbox
-        //         input(
-        //             name="search"
-        //             type="text"
-        //             placeholder="{{ 'DISCOVER.SEARCH.INPUT_PLACEHOLDER' | translate }}"
-        //             ng-model="q"
-        //         )
-        //         tg-svg.search-button(
-        //             ng-click="submitFilter()"
-        //             svg-icon="icon-search"
-        //             svg-title-translate="DISCOVER.SEARCH.ACTION_TITLE"
-        //         )
-        //
-            // fieldset.searchbox-filters(ng-if="vm.filter")
-            //     input(
-            //         type='radio'
-            //         id="filter-all"
-            //         name="filter-search"
-            //     )
-            //     label(
-            //         for="filter-all"
-            //         ng-click="vm.selectFilter('all')"
-            //         ng-class="{active: vm.filter == 'all'}",
-            //     ) {{ 'DISCOVER.FILTERS.ALL' | translate }}
-            //
-            //     input(
-            //         type='radio'
-            //         id="filter-kanban"
-            //         name="filter-search"
-            //     )
-            //     label(
-            //         for="filter-kanban"
-            //         ng-class="{active: vm.filter == 'kanban'}",
-            //         ng-click="vm.selectFilter('kanban')"
-            //     ) {{ 'DISCOVER.FILTERS.KANBAN' | translate }}
-            //
-            //     input(
-            //         type='radio'
-            //         id="filter-scrum"
-            //         name="filter-search"
-            //     )
-            //     label(
-            //         for="filter-scrum"
-            //         ng-class="{active: vm.filter == 'scrum'}",
-            //         ng-click="vm.selectFilter('scrum')"
-            //     ) {{ 'DISCOVER.FILTERS.SCRUM' | translate }}
-            //
-            //     input(
-            //         type='radio'
-            //         id="filter-people"
-            //         name="filter-search"
-            //     )
-            //     label(
-            //         for="filter-people"
-            //         ng-class="{active: vm.filter == 'people'}",
-            //         ng-click="vm.selectFilter('people')"
-            //     ) {{ 'DISCOVER.FILTERS.PEOPLE' | translate }}
+        p.project-number(
+            *ngIf="projectsCount",
+            translate="DISCOVER.DISCOVER_SUBTITLE",
+            [translateParams]="{ projects: projectsCount}"
+        )
+            //- translate-interpolation="messageformat"
+        form((ngSubmit)="submitFilter()" #searchForm="ngForm")
+            div.searchbox
+                input(
+                    name="search"
+                    type="text"
+                    placeholder="{{ 'DISCOVER.SEARCH.INPUT_PLACEHOLDER' | translate }}"
+                    [(ngModel)]="q"
+                )
+                tg-svg.search-button(
+                    ng-click="submitFilter()"
+                    svg-icon="icon-search"
+                    svg-title-translate="DISCOVER.SEARCH.ACTION_TITLE"
+                )
+
+            fieldset.searchbox-filters(*ngIf="filter")
+                input(
+                    type='radio'
+                    id="filter-all"
+                    name="filter-search"
+                    [(ngModel)]="filter"
+                )
+                label(
+                    for="filter-all"
+                    "[class.active]"="filter == 'all'",
+                    (click)="filter = 'all'"
+                ) {{ 'DISCOVER.FILTERS.ALL' | translate }}
+
+                input(
+                    type='radio'
+                    id="filter-kanban"
+                    name="filter-search"
+                    [(ngModel)]="filter"
+                )
+                label(
+                    for="filter-kanban"
+                    "[class.active]"="filter == 'kanban'",
+                    (click)="filter = 'kanban'"
+                ) {{ 'DISCOVER.FILTERS.KANBAN' | translate }}
+
+                input(
+                    type='radio'
+                    id="filter-scrum"
+                    name="filter-search"
+                    [(ngModel)]="filter"
+                )
+                label(
+                    for="filter-scrum"
+                    "[class.active]"="filter == 'scrum'",
+                    (click)="filter = 'scrum'"
+                ) {{ 'DISCOVER.FILTERS.SCRUM' | translate }}
+
+                input(
+                    type='radio'
+                    id="filter-people"
+                    name="filter-search"
+                    [(ngModel)]="filter"
+                )
+                label(
+                    for="filter-people"
+                    "[class.active]"="filter == 'people'",
+                    (click)="filter = 'people'"
+                ) {{ 'DISCOVER.FILTERS.PEOPLE' | translate }}

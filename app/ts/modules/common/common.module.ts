@@ -5,6 +5,7 @@ import { Svg, LightboxClose } from './index';
 import { ProjectUrlService } from './project-url.service';
 import { ColorizeBacklogTag, ColorizeBacklogTags } from './tags.component';
 import { DateRange } from './components';
+import { MainTitle } from "./main-title.component"
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { DateRange } from './components';
         DateRange,
         Svg,
         LightboxClose,
+        MainTitle
     ],
     declarations: [
         ColorizeBacklogTag,
@@ -23,6 +25,7 @@ import { DateRange } from './components';
         DateRange,
         Svg,
         LightboxClose,
+        MainTitle,
     ],
     providers: [
         ProjectUrlService

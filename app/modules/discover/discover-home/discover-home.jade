@@ -1,10 +1,10 @@
 section.discover
     header
-        // tg-discover-search-bar((on-change)="onSubmit(q)")
+        tg-discover-search-bar((change)="onSubmit(q)", [projectsCount]="projectsCount|async")
 
     section.highlighted
         tg-most-liked([projects]="mostLikedProjects | async", (order)="onMostLikedOrder($event)")
         tg-most-active([projects]="mostActiveProjects | async", (order)="onMostActiveOrder($event)")
 
     section.featured-projects
-        // tg-featured-projects
+        tg-featured-projects([projects]="featuredProjects | async")

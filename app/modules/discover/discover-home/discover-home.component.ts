@@ -33,8 +33,10 @@ import {IState} from "../../../ts/app.store"
 export class DiscoverHome implements OnInit {
     title: string;
     description: string;
-    mostLikedProjects: any
-    mostActiveProjects: any
+    mostLikedProjects: any;
+    mostActiveProjects: any;
+    featuredProjects: any;
+    projectsCount:any;
 
     constructor(private store: Store<IState>,
                 private router: Router,
@@ -47,6 +49,8 @@ export class DiscoverHome implements OnInit {
 
         this.mostLikedProjects = this.store.select((state) => state.getIn(['discover', 'most-liked']));
         this.mostActiveProjects = this.store.select((state) => state.getIn(['discover', 'most-active']));
+        this.featuredProjects = this.store.select((state) => state.getIn(['discover', 'featured']));
+        this.projectsCount = this.store.select((state) => state.getIn(["discover", "projects-count"]))
     }
 
     ngOnInit() {
@@ -58,6 +62,14 @@ export class DiscoverHome implements OnInit {
             type: "FETCH_MOST_LIKED",
             payload: "last_week",
         });
+        this.store.dispatch({
+            type: "FETCH_PROJECTS_STATS",
+            payload: null,
+        })
+        this.store.dispatch({
+            type: "FETCH_FEATURED_PROJECTS",
+            payload: null,
+        })
     }
 
     onMostActiveOrder(newOrder) {

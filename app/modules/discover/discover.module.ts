@@ -3,6 +3,7 @@ import {RouterModule} from "@angular/router"
 import {CommonModule} from "@angular/common"
 import {TranslateModule} from "@ngx-translate/core"
 import { EffectsModule } from '@ngrx/effects';
+import { FormsModule }   from '@angular/forms';
 
 import {TgCommonModule} from '../../ts/modules/common/common.module';
 import {TgComponentsModule} from '../components/components.module';
@@ -23,6 +24,7 @@ import {DiscoverSearch} from "./discover-search/discover-search.component"
         CommonModule,
         TgCommonModule,
         TgComponentsModule,
+        FormsModule,
         TranslateModule.forChild({}),
         RouterModule.forChild([{
             path: "discover",

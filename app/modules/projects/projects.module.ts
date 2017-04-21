@@ -17,7 +17,7 @@ import { ProjectsListing } from './listing/projects-listing.component';
         TgComponentsModule,
         TranslateModule.forChild({}),
         RouterModule.forChild([
-            {path: "/projects", component: ProjectsListing},
+            {path: "projects", component: ProjectsListing},
         ]),
     ],
     exports: [

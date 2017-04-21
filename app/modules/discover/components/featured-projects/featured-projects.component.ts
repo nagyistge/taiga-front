@@ -17,22 +17,12 @@
  * File: featured-projects.controller.coffee
  */
 
-import {defineImmutableProperty} from "../../../../ts/utils"
-import {Component, OnInit} from "@angular/core"
-import {DiscoverProjectsService} from "../../services/discover-projects.service"
+import {Component, Input} from "@angular/core"
 
 @Component({
     selector: 'tg-featured-projects',
     template: require('./featured-projects.jade')(),
 })
-export class FeaturedProjects implements OnInit {
-    featured:any = []
-
-    constructor(private discoverProjects: DiscoverProjectsService) {}
-
-    ngOnInit() {
-        defineImmutableProperty(this, "featured", () => { return this.discoverProjects.featured; });
-
-        this.discoverProjects.fetchFeatured();
-    }
+export class FeaturedProjects {
+    @Input() projects:any = []
 }
