@@ -117,6 +117,7 @@
   ],
   "dependencies": {
     "@angular-redux/store": "^6.1.0",
+    "@angular/animations": "^4.0.3",
     "@angular/compiler-cli": "^4.0.2",
     "@angular/forms": "^4.0.3",
     "@angular/platform-server": "^4.0.2",

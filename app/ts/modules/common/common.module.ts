@@ -6,6 +6,7 @@ import { ProjectUrlService } from './project-url.service';
 import { ColorizeBacklogTag, ColorizeBacklogTags } from './tags.component';
 import { DateRange } from './components';
 import { MainTitle } from "./main-title.component"
+import { MessageFormatPipe } from "./message-format.pipe"
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { MainTitle } from "./main-title.component"
         DateRange,
         Svg,
         LightboxClose,
-        MainTitle
+        MainTitle,
+        MessageFormatPipe,
     ],
     declarations: [
         ColorizeBacklogTag,
@@ -26,6 +28,7 @@ import { MainTitle } from "./main-title.component"
         Svg,
         LightboxClose,
         MainTitle,
+        MessageFormatPipe,
     ],
     providers: [
         ProjectUrlService

@@ -231,7 +231,7 @@ var jadeIncludes = paths.app +'partials/includes/**/*';
 gulp.task("jade", function() {
     return gulp.src(paths.jade)
         .pipe(plumber())
-        .pipe(cached("jade"))
+        // .pipe(cached("jade"))
         .pipe(jade({pretty: true, locals:{v:version}}))
         .pipe(gulp.dest(paths.tmp));
 });
@@ -239,7 +239,7 @@ gulp.task("jade", function() {
 gulp.task("jade-inheritance", function() {
     return gulp.src(paths.jade)
         .pipe(plumber())
-        .pipe(cached("jade"))
+        // .pipe(cached("jade"))
         .pipe(jadeInheritance({basedir: "./app/"}))
         .pipe(jade({pretty: true, locals:{v: version}}))
         .pipe(gulp.dest(paths.tmp));

@@ -5,10 +5,7 @@ div.discover-header
 
         p.project-number(
             *ngIf="projectsCount",
-            translate="DISCOVER.DISCOVER_SUBTITLE",
-            [translateParams]="{ projects: projectsCount}"
-        )
-            //- translate-interpolation="messageformat"
+        ) {{ 'DISCOVER.DISCOVER_SUBTITLE' | translate | messageformat:{projects: projectsCount} }}
         form((ngSubmit)="submitFilter()" #searchForm="ngForm")
             div.searchbox
                 input(
