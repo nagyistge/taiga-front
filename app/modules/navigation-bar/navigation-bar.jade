@@ -8,7 +8,7 @@ nav.navbar(*ngIf="isEnabledHeader")
             include ../../svg/logo.svg
 
         a.logo(
-            tg-nav, name="home",
+            routerLink="/",
             *ngIf="!user.isEmpty()",
             href="#",
             title="{{'PROJECT.NAVIGATION.HOMEPAGE' | translate}}"
@@ -30,7 +30,7 @@ nav.navbar(*ngIf="isEnabledHeader")
             translate="LOGIN_COMMON.ACTION_SIGN_IN"
         )
         a.register(
-            tg-nav, name="register",
+            routerLink="/register",
             *ngIf="publicRegisterEnabled",
             href="#",
             title="{{ 'REGISTER_FORM.ACTION_SIGN_UP' | translate }}",
@@ -39,13 +39,12 @@ nav.navbar(*ngIf="isEnabledHeader")
 
     div.nav-right(*ngIf="!user.isEmpty()")
         a(
-            tg-nav, name="home",
+            routerLink="/",
             "[class.active]"="active",
             title="{{'PROJECT.NAVIGATION.DASHBOARD_TITLE' | translate}}"
         )
             tg-svg(svg-icon="icon-dashboard")
 
-        // tg-nav, name="discover",
         a(
             routerLink="/discover",
             title="{{'PROJECT.NAVIGATION.DISCOVER_TITLE' | translate}}",

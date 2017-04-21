@@ -1,11 +1,11 @@
-template(*ngIf="format !== 'text'")
+ng-template(*ngIf="format !== 'text'")
     span.belong-to-epic-pill-wrapper(*ngFor="let epic of epics")
         //TODO "[style.border-color]"="epic.get('color') | darker: -0.2"
         .belong-to-epic-pill(
             "[style.background]"="epic.get('color')"
             title="{{getTitle(epic)}}"
         )
-template(*ngIf="format === 'text'")
+ng-template(*ngIf="format === 'text'")
     span.belong-to-epic-text-wrapper(*ngFor="let epic of epics")
         a.belong-to-epic-text(
             href=""

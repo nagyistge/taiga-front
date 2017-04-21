@@ -77,6 +77,6 @@ section.projects-empty(*ngIf="!projects.size")
     tg-svg(svg-icon="icon-project")
     p(translate="HOME.EMPTY_PROJECT_LIST")
     a.create-project-button.button-green(
-        routerLink="/create-project",
+        routerLink="/project/new",
         title="{{'PROJECT.NAVIGATION.TITLE_CREATE_PROJECT' | translate}}",
         translate="PROJECT.NAVIGATION.ACTION_CREATE_PROJECT")

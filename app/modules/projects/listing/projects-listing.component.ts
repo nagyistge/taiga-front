@@ -17,20 +17,22 @@
  * File: projects-listing.controller.coffee
  */
 
-import {defineImmutableProperty} from "../../../ts/utils"
+import * as _ from "lodash"
+import "rxjs/add/operator/map"
+import {Component} from "@angular/core"
+import {Store} from "@ngrx/store"
+import {IState} from "../../../ts/app.store"
 
-export class ProjectsListingController {
-    currentUserService:any
+@Component({
+    selector: "tg-project-listing",
+    template: require("./projects-listing.jade")()
+})
+export class ProjectsListing {
+    projects:any;
 
-    static initClass() {
-        this.$inject = [
-            "tgCurrentUserService"
-        ];
-    }
-
-    constructor(currentUserService) {
-        this.currentUserService = currentUserService;
-        defineImmutableProperty(this, "projects", () => this.currentUserService.projects.get("all"));
+    constructor(private store: Store<IState>) {
+        this.projects = this.store
+                            .select((state) => state.getIn(["global", "projects"]))
+                            .map((state) => state.sortBy((i:any) => i.get('order')));
     }
 }
-ProjectsListingController.initClass();

@@ -14,6 +14,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 // TAIGA MODULES
 import { DiscoverModule } from "../modules/discover/discover.module"
 import { HomeModule } from "../modules/home/home.module"
+import { ProjectsModule } from "../modules/projects/projects.module"
 import { TgBaseModule } from './modules/base/base.module';
 import { TgServicesModule } from '../modules/services/services.module';
 import { ResourcesModule } from '../modules/resources/resources.module';
@@ -34,14 +35,6 @@ import {AppComponent} from "./app.component"
 import {GlobalEffects} from "./app.effects"
 import {rootReducer} from "./app.store"
 
-class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
-  shouldProcessUrl(url: UrlTree) {
-      return url.toString() === '/discover' || url.toString() === '/';
-  }
-  extract(url: UrlTree) { return url; }
-  merge(url: UrlTree, whole: UrlTree) { return url; }
-}
-
 export function HttpLoaderFactory(http: Http) {
     return new TranslateHttpLoader(http, `/${_version}/locales/taiga/locale-`, '.json');
 }
@@ -55,6 +48,7 @@ export function HttpLoaderFactory(http: Http) {
     RouterModule.forRoot([]),
     ResourcesModule,
     DiscoverModule,
+    ProjectsModule,
     TgCommonModule,
     TgBaseModule,
     TgServicesModule,
@@ -78,7 +72,6 @@ export function HttpLoaderFactory(http: Http) {
     AuthService,
     ProjectsService,
     ProjectUrlService,
-    { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy }
   ],
   entryComponents: [
     DateRange,

@@ -22,7 +22,6 @@
  * File: modules/common.coffee
  */
 
-import {downgradeComponent, downgradeInjectable} from "@angular/upgrade/static"
 import {Injectable, Component, Input, Output, ElementRef, EventEmitter} from "@angular/core"
 
 import {Service} from "../../classes"
@@ -47,106 +46,6 @@ import {ColorizeBacklogTags} from "./tags.component"
 import {ProjectUrlService} from "./project-url.service"
 
 export let module = angular.module("taigaCommon", []);
-// common analytics
-module.service("$tgAnalytics", AnalyticsService);
-
-// common bind scope
-module.directive("tgBindScope", ["$tgConfig", BindScope]);
-
-// Common compile html
-module.directive("tgCompileHtml", CompileHtmlDirective);
-
-// Common Components
-module.directive("tgDateRange", downgradeComponent({component: commonComponents.DateRange}));
-module.directive("tgDateSelector", ["$rootScope", "tgDatePickerConfigService", commonComponents.DateSelectorDirective]);
-module.directive("tgSprintProgressbar", commonComponents.SprintProgressBarDirective);
-module.directive("tgCreatedByDisplay", ["$tgTemplate", "$compile", "$translate", "$tgNavUrls", "tgAvatarService",
-                                        commonComponents.CreatedByDisplayDirective]);
-module.directive("tgUserDisplay", ["$tgTemplate", "$compile", "$translate", "$tgNavUrls", "tgAvatarService",
-                                   commonComponents.UserDisplayDirective]);
-module.directive("tgWatchers", ["$rootScope", "$tgConfirm", "$tgRepo", "$tgQueueModelTransformation", "$tgTemplate", "$compile",
-                                "$translate", commonComponents.WatchersDirective]);
-module.directive("tgAssignedTo", ["$rootScope", "$tgConfirm", "$tgRepo", "$tgLoading", "$tgQueueModelTransformation", "$tgTemplate", "$translate", "$compile","tgCurrentUserService", "tgAvatarService",
-                                  commonComponents.AssignedToDirective]);
-module.directive("tgBlockButton", ["$rootScope", "$tgLoading", "$tgTemplate", commonComponents.BlockButtonDirective]);
-module.directive("tgDeleteButton", ["$log", "$tgRepo", "$tgConfirm", "$tgLocation", "$tgTemplate", commonComponents.DeleteButtonDirective]);
-module.directive("tgEditableSubject", ["$rootScope", "$tgRepo", "$tgConfirm", "$tgLoading", "$tgQueueModelTransformation",
-                                       "$tgTemplate", commonComponents.EditableSubjectDirective]);
-module.directive("tgListitemEpicStatus", commonComponents.ListItemEpicStatusDirective);
-module.directive("tgListitemUsStatus", commonComponents.ListItemUsStatusDirective);
-module.directive("tgListitemTaskStatus", commonComponents.ListItemTaskStatusDirective);
-module.directive("tgListitemAssignedto", ["$tgTemplate", "$translate", "tgAvatarService", commonComponents.ListItemAssignedtoDirective]);
-module.directive("tgListitemIssueStatus", commonComponents.ListItemIssueStatusDirective);
-module.directive("tgListitemType", commonComponents.ListItemTypeDirective);
-module.directive("tgListitemPriority", commonComponents.ListItemPriorityDirective);
-module.directive("tgListitemSeverity", commonComponents.ListItemSeverityDirective);
-module.directive("tgProgressBar", ["$tgTemplate", commonComponents.TgProgressBarDirective]);
-module.directive("tgMainTitle", ["$translate",  commonComponents.TgMainTitleDirective]);
-
-// Common Confirm
-module.service("$tgConfirm", ConfirmService);
-
-// Common custom attributes
-module.directive("tgCustomAttributesValues", ["$tgTemplate", "$tgStorage", "$translate",
-                                              CustomAttributesValuesDirective]);
-
-module.directive("tgCustomAttributeValue", ["$tgTemplate", "$selectedText", "$compile", "$translate",
-                                            "tgDatePickerConfigService", "tgWysiwygService", CustomAttributeValueDirective]);
-
-// Common estimations
-module.directive("tgLbUsEstimation", ["$tgEstimationsService", "$rootScope", "$tgRepo", "$tgTemplate",
-                                      "$compile", LbUsEstimationDirective]);
-module.directive("tgUsEstimation", ["$tgEstimationsService", "$rootScope", "$tgRepo",
-                                    "$tgTemplate", "$compile", "$tgQueueModelTransformation",
-                                    "$tgConfirm", UsEstimationDirective]);
-module.factory("$tgEstimationsService", ["$tgTemplate", "$tgRepo", "$tgConfirm",
-                                         "$q", "$tgQqueue", EstimationsService]);
-
-// Common filters
-module.filter("default", commonFilters.defaultFilter);
-module.filter("yesNo", ["$translate", commonFilters.yesNoFilter]);
-module.filter("unslugify", commonFilters.unslugify);
-module.filter("momentFormat", commonFilters.momentFormat);
-module.filter("momentFromNow", commonFilters.momentFromNow);
-module.filter("sizeFormat", commonFilters.sizeFormat);
-module.filter("toMutable", commonFilters.toMutableFilter);
-module.filter("byRef", ["filterFilter", commonFilters.byRefFilter]);
-module.filter("darker", commonFilters.darkerFilter);
-module.filter("markdownToHTML", ["tgWysiwygService", commonFilters.markdownToHTML]);
-module.filter("inArray", ["$filter", commonFilters.inArray]);
-
-// Common lightboxes
-module.service("lightboxService", ["animationFrame", "$q", "$rootScope", commonLightboxes.LightboxService]);
-module.service("lightboxKeyboardNavigationService", commonLightboxes.LightboxKeyboardNavigationService);
-module.directive("lightbox", ["lightboxService", commonLightboxes.LightboxDirective]);
-module.directive("tgLbBlock", ["$rootScope", "$tgRepo", "$tgConfirm", "lightboxService", "$tgLoading", "$tgQueueModelTransformation", "$translate", commonLightboxes.BlockLightboxDirective]);
-module.directive("tgBlockingMessageInput", ["$log", "$tgTemplate", "$compile", commonLightboxes.BlockingMessageInputDirective]);
-module.directive("tgLbCreateEditUserstory", ["$tgRepo", "$tgModel", "$tgResources", "$rootScope", "lightboxService", "$tgLoading", "$translate", "$tgConfirm", "$q", "tgAttachmentsService", commonLightboxes.CreateEditUserstoryDirective ]);
-module.directive("tgLbCreateBulkUserstories", [ "$tgRepo", "$tgResources", "$rootScope", "lightboxService", "$tgLoading", "$tgModel", "$tgConfirm", commonLightboxes.CreateBulkUserstoriesDirective ]);
-module.directive("tgLbAssignedto", ["lightboxService", "lightboxKeyboardNavigationService", "$tgTemplate", "$compile", "tgAvatarService", commonLightboxes.AssignedToLightboxDirective]);
-module.directive("tgLbWatchers", ["$tgRepo", "lightboxService", "lightboxKeyboardNavigationService", "$tgTemplate", "$compile", "tgAvatarService", commonLightboxes.WatchersLightboxDirective]);
-module.directive("tgLightboxLeaveProjectWarning", ["lightboxService", commonLightboxes.LightboxLeaveProjectWarningDirective]);
-
-
-// Common loader
-module.directive("tgLoader", ["tgLoader", "$rootScope", LoaderDirective]);
-module.factory("tgLoader", Loader);
-
-// Common loading
-module.directive("tgLoading", ["$tgLoading", LoadingDirective]);
-module.factory("$tgLoading", TgLoadingService);
-
-// Common popovers
-module.directive("tgUsStatus", ["$tgRepo", "$tgTemplate", UsStatusDirective]);
-module.directive("tgRelatedTaskStatus", ["$tgRepo", "$tgTemplate", RelatedTaskStatusDirective]);
-
-// Common raven logger
-module.factory("$exceptionHandler", ["$log", "$tgConfig", ExceptionHandlerFactory]);
-
-// Common tags
-module.directive("tgTags", TagsDirective);
-module.directive("tgColorizeBacklogTags", downgradeComponent({component: ColorizeBacklogTags}));
-module.directive("tgLbTagLine", ["$tgResources", "$tgTemplate", "$compile", LbTagLineDirective]);
 
 //############################################################################
 //# Default datepicker config
@@ -373,9 +272,6 @@ module.directive("tgToggleComment", ToggleCommentDirective);
 //############################################################################
 
 
-module.factory("$projectUrl", downgradeInjectable(ProjectUrlService));
-
-
 //############################################################################
 //# Queue Q promises
 //############################################################################
@@ -542,8 +438,6 @@ export class LightboxClose {
     }
 }
 
-module.directive("tgLightboxClose", downgradeComponent({component: LightboxClose}));
-
 @Component({
     selector: "tg-svg",
     template: `
@@ -566,8 +460,6 @@ export class Svg {
         this.svgTitleTranslate = elm.nativeElement.getAttribute('svg-title-translate');
     }
 };
-
-module.directive("tgSvg", downgradeComponent({component: Svg}));
 
 let Autofocus = ($timeout, $parse, animationFrame) =>
   ({
